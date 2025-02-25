@@ -1,0 +1,24 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Launch Standalone (Chrome)",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:3003/?server=localhost:8081&app=designer&pmv=cms-test-project",
+      "preLaunchTask": "Start Standalone",
+      "postDebugTask": "Terminate All Tasks"
+    },
+    {
+      "name": "Launch Standalone Mock (Chrome)",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:3003/mock.html",
+      "preLaunchTask": "Start Standalone",
+      "postDebugTask": "Terminate All Tasks"
+    }
+  ]
+}
