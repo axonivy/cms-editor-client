@@ -1,0 +1,31 @@
+{
+  "name": "@axonivy/cms-editor-protocol",
+  "version": "13.1.0-next",
+  "private": false,
+  "license": "(EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0)",
+  "author": "Axon Ivy AG",
+  "homepage": "https://developer.axonivy.com/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/axonivy/cms-editor-client"
+  },
+  "files": [
+    "lib",
+    "src"
+  ],
+  "type": "module",
+  "types": "./lib/index.d.ts",
+  "module": "./lib/protocol.js",
+  "source": "./src/index",
+  "scripts": {
+    "clean": "rimraf lib tsconfig.tsbuildinfo",
+    "build": "tsc --build",
+    "package": "vite build",
+    "build:clean": "npm run clean && npm run generate && npm run build",
+    "generate": "node ./schemaCodegen.cjs",
+    "type": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "json-schema-to-typescript": "^15.0.4"
+  }
+}

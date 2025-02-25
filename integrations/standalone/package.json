@@ -1,0 +1,32 @@
+{
+  "name": "@axonivy/cms-editor-standalone",
+  "private": true,
+  "version": "13.1.0-next",
+  "dependencies": {
+    "@axonivy/cms-editor": "*",
+    "@axonivy/cms-editor-protocol": "*",
+    "@axonivy/jsonrpc": "~13.1.0-next.586",
+    "@axonivy/ui-components": "~13.1.0-next.586",
+    "@axonivy/ui-icons": "~13.1.0-next.586",
+    "@tanstack/react-query": "^5.64",
+    "@tanstack/react-query-devtools": "^5.64",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.7",
+    "@types/react-dom": "^19.0.3",
+    "@vitejs/plugin-react": "^4.3.4",
+    "vite": "^6.0.0"
+  },
+  "scripts": {
+    "clean": "rimraf build",
+    "build": "tsc --build",
+    "build:clean": "npm run clean && npm run build",
+    "package": "vite build",
+    "type": "tsc --noEmit",
+    "dev": "vite",
+    "serve": "vite preview"
+  },
+  "type": "module"
+}
