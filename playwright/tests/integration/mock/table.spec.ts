@@ -18,10 +18,10 @@ test.describe('table keyboard support', () => {
 
   test('toggle detail via enter', async () => {
     await editor.main.table.row(0).locator.click();
-    await expect(editor.detail).toBeVisible();
+    await expect(editor.detail.locator).toBeVisible();
     await editor.page.keyboard.press('Enter');
-    await expect(editor.detail).toBeHidden();
+    await expect(editor.detail.locator).toBeHidden();
     await editor.page.keyboard.press('Enter');
-    await expect(editor.detail).toBeVisible();
+    await expect(editor.detail.locator).toBeVisible();
   });
 });

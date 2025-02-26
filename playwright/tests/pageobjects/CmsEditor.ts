@@ -1,4 +1,5 @@
-import { expect, type Locator, type Page } from '@playwright/test';
+import { expect, type Page } from '@playwright/test';
+import { DetailPanel } from './detail/DetailPanel';
 import { MainPanel } from './main/MainPanel';
 
 export const server = process.env.BASE_URL ?? 'http://localhost:8081';
@@ -10,12 +11,12 @@ const pmv = 'cms-test-project';
 export class CmsEditor {
   readonly page: Page;
   readonly main: MainPanel;
-  readonly detail: Locator;
+  readonly detail: DetailPanel;
 
   constructor(page: Page) {
     this.page = page;
     this.main = new MainPanel(this.page);
-    this.detail = this.page.locator('.cms-editor-detail-panel');
+    this.detail = new DetailPanel(this.page);
   }
 
   static async openCms(page: Page, options?: { readonly?: boolean }) {

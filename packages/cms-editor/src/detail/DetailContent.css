@@ -1,0 +1,4 @@
+.cms-editor-detail-content {
+  padding: var(--size-3);
+  overflow: auto;
+}

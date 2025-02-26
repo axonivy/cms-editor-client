@@ -12,6 +12,7 @@ cmsData: CmsData
 cmsEditorDataContext: CmsEditorDataContext
 cmsSaveDataArgs: CmsSaveDataArgs
 editorFileContent: EditorFileContent
+string: MapStringString
 void: Void
 [k: string]: unknown
 }
@@ -41,5 +42,8 @@ export interface CmsSaveDataArgs {
 }
 export interface EditorFileContent {
   content: string;
+}
+export interface MapStringString {
+  [k: string]: string;
 }
 export interface Void {}
