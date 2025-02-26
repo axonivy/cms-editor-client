@@ -1,4 +1,10 @@
-import type { Client } from '@axonivy/cms-editor-protocol';
+import type { Client, CmsData } from '@axonivy/cms-editor-protocol';
+import { contentObjects } from './data';
 
-// eslint-disable-next-line @typescript-eslint/no-extraneous-class
-export class CmsClientMock implements Client {}
+export class CmsClientMock implements Client {
+  private cmsData: CmsData = contentObjects;
+
+  data(): Promise<CmsData> {
+    return Promise.resolve(this.cmsData);
+  }
+}
