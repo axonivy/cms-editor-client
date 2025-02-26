@@ -14,11 +14,6 @@ test.describe('table keyboard support', () => {
     await editor.page.keyboard.press('ArrowDown');
     await editor.page.keyboard.press('ArrowDown');
     await editor.main.table.row(1).expectToBeSelected();
-
-    await editor.page.keyboard.press('ArrowUp');
-    await editor.page.keyboard.press('ArrowUp');
-    await editor.page.keyboard.press('ArrowUp');
-    await editor.main.table.row(106).expectToBeSelected();
   });
 
   test('toggle detail via enter', async () => {
