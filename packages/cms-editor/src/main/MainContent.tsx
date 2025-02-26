@@ -14,6 +14,8 @@ import {
   useTableSort
 } from '@axonivy/ui-components';
 import { flexRender, getCoreRowModel, useReactTable, type ColumnDef } from '@tanstack/react-table';
+import { useVirtualizer } from '@tanstack/react-virtual';
+import { useRef } from 'react';
 import { useAppContext } from '../context/AppContext';
 import './MainContent.css';
 
@@ -34,8 +36,7 @@ export const MainContent = () => {
     {
       accessorKey: 'uri',
       header: ({ column }) => <SortableHeader column={column} name='URI' />,
-      cell: cell => <span>{cell.getValue()}</span>,
-      minSize: 50
+      cell: cell => <span>{cell.getValue()}</span>
     }
   ];
 
@@ -51,23 +52,43 @@ export const MainContent = () => {
     }
   });
 
+  const rows = table.getRowModel().rows;
+  const tableContainer = useRef<HTMLDivElement>(null);
+  const virtualizer = useVirtualizer<HTMLDivElement, HTMLTableRowElement>({
+    count: rows.length,
+    estimateSize: () => 32,
+    getScrollElement: () => tableContainer.current,
+    overscan: 20
+  });
+
   const { handleKeyDown } = useTableKeyHandler({ table, data: contentObjects });
 
   return (
-    <Flex direction='column' gap={4} onClick={() => selectRow(table)} className='cms-editor-main-content'>
-      <BasicField label='Content Objects' onClick={event => event.stopPropagation()}>
-        <Table onKeyDown={event => handleKeyDown(event, () => setDetail(!detail))}>
-          <TableResizableHeader headerGroups={table.getHeaderGroups()} onClick={() => selectRow(table)} />
-          <TableBody>
-            {table.getRowModel().rows.map(row => (
-              <SelectRow key={row.id} row={row}>
-                {row.getVisibleCells().map(cell => (
-                  <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
-                ))}
-              </SelectRow>
-            ))}
-          </TableBody>
-        </Table>
+    <Flex direction='column' onClick={() => selectRow(table)} className='cms-editor-main-content'>
+      <BasicField label='Content Objects' onClick={event => event.stopPropagation()} className='cms-editor-main-table-field'>
+        <div ref={tableContainer} className='cms-editor-main-table-container'>
+          <Table onKeyDown={event => handleKeyDown(event, () => setDetail(!detail))} className='cms-editor-main-table'>
+            <TableResizableHeader
+              headerGroups={table.getHeaderGroups()}
+              onClick={() => selectRow(table)}
+              className='cms-editor-main-table-header-row'
+            />
+            <TableBody style={{ height: `${virtualizer.getTotalSize()}px` }} className='cms-editor-main-table-body'>
+              {virtualizer.getVirtualItems().map(virtualRow => {
+                const row = rows[virtualRow.index];
+                return (
+                  <SelectRow key={row.id} row={row} style={{ transform: `translateY(${virtualRow.start}px)` }}>
+                    {row.getVisibleCells().map(cell => (
+                      <TableCell key={cell.id} style={{ width: cell.column.getSize() }}>
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </TableCell>
+                    ))}
+                  </SelectRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </div>
       </BasicField>
     </Flex>
   );

@@ -49,7 +49,7 @@ function CmsEditor(props: EditorProps) {
     <AppProvider value={{ contentObjects: data.data, selectedContentObject, setSelectedContentObject, detail, setDetail }}>
       <ResizablePanelGroup direction='horizontal'>
         <ResizablePanel defaultSize={75} minSize={50} className='cms-editor-main-panel'>
-          <Flex direction='column'>
+          <Flex direction='column' className='cms-editor-panel-content'>
             <MainToolbar title='CMS Editor main title' />
             <MainContent />
           </Flex>
@@ -58,7 +58,7 @@ function CmsEditor(props: EditorProps) {
           <>
             <ResizableHandle />
             <ResizablePanel defaultSize={25} minSize={10} className='cms-editor-detail-panel'>
-              <Flex direction='column'>
+              <Flex direction='column' className='cms-editor-panel-content'>
                 <SidebarHeader icon={IvyIcons.PenEdit} title='CMS Editor detail title' />
                 <div>detail</div>
               </Flex>
