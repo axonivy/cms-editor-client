@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useEffect, useMemo, useState } from 'react';
 import './CmsEditor.css';
 import { AppProvider } from './context/AppContext';
+import { MainContent } from './main/MainContent';
 import { MainToolbar } from './main/MainToolbar';
 import { useClient } from './protocol/ClientContextProvider';
 import { genQueryKey } from './query/query-client';
@@ -16,6 +17,7 @@ function CmsEditor(props: EditorProps) {
   useEffect(() => {
     setContext(props.context);
   }, [props]);
+  const [selectedContentObject, setSelectedContentObject] = useState<number>();
 
   const client = useClient();
 
@@ -44,19 +46,19 @@ function CmsEditor(props: EditorProps) {
   }
 
   return (
-    <AppProvider value={{ detail, setDetail }}>
+    <AppProvider value={{ contentObjects: data.data, selectedContentObject, setSelectedContentObject, detail, setDetail }}>
       <ResizablePanelGroup direction='horizontal'>
-        <ResizablePanel defaultSize={75} minSize={50}>
+        <ResizablePanel defaultSize={75} minSize={50} className='cms-editor-main-panel'>
           <Flex direction='column'>
             <MainToolbar title='CMS Editor main title' />
-            <div className='cms-editor-content'>{JSON.stringify(data.data)}</div>
+            <MainContent />
           </Flex>
         </ResizablePanel>
         {detail && (
           <>
             <ResizableHandle />
-            <ResizablePanel defaultSize={25} minSize={10}>
-              <Flex direction='column' className='cms-editor-detail-panel'>
+            <ResizablePanel defaultSize={25} minSize={10} className='cms-editor-detail-panel'>
+              <Flex direction='column'>
                 <SidebarHeader icon={IvyIcons.PenEdit} title='CMS Editor detail title' />
                 <div>detail</div>
               </Flex>
