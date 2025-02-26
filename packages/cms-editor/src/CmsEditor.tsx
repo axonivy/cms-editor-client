@@ -1,12 +1,17 @@
 import type { CmsEditorDataContext, EditorProps } from '@axonivy/cms-editor-protocol';
-import { Flex, PanelMessage, Spinner } from '@axonivy/ui-components';
+import { Flex, PanelMessage, ResizableHandle, ResizablePanel, ResizablePanelGroup, SidebarHeader, Spinner } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useMemo, useState } from 'react';
+import './CmsEditor.css';
+import { AppProvider } from './context/AppContext';
+import { MainToolbar } from './main/MainToolbar';
 import { useClient } from './protocol/ClientContextProvider';
 import { genQueryKey } from './query/query-client';
 
 function CmsEditor(props: EditorProps) {
+  const [detail, setDetail] = useState(true);
+
   const [context, setContext] = useState(props.context);
   useEffect(() => {
     setContext(props.context);
@@ -39,10 +44,27 @@ function CmsEditor(props: EditorProps) {
   }
 
   return (
-    <>
-      <h1>CMS EDITOR</h1>
-      <div className='cms-editor-content'>{JSON.stringify(data.data)}</div>
-    </>
+    <AppProvider value={{ detail, setDetail }}>
+      <ResizablePanelGroup direction='horizontal'>
+        <ResizablePanel defaultSize={75} minSize={50}>
+          <Flex direction='column'>
+            <MainToolbar title='CMS Editor main title' />
+            <div className='cms-editor-content'>{JSON.stringify(data.data)}</div>
+          </Flex>
+        </ResizablePanel>
+        {detail && (
+          <>
+            <ResizableHandle />
+            <ResizablePanel defaultSize={25} minSize={10}>
+              <Flex direction='column' className='cms-editor-detail-panel'>
+                <SidebarHeader icon={IvyIcons.PenEdit} title='CMS Editor detail title' />
+                <div>detail</div>
+              </Flex>
+            </ResizablePanel>
+          </>
+        )}
+      </ResizablePanelGroup>
+    </AppProvider>
   );
 }
 
