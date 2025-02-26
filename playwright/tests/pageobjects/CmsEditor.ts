@@ -1,4 +1,5 @@
-import { expect, type Page } from '@playwright/test';
+import { expect, type Locator, type Page } from '@playwright/test';
+import { MainToolbar } from './MainToolbar';
 
 export const server = process.env.BASE_URL ?? 'http://localhost:8081';
 export const user = 'Developer';
@@ -8,9 +9,13 @@ const pmv = 'cms-test-project';
 
 export class CmsEditor {
   readonly page: Page;
+  readonly mainToolbar: MainToolbar;
+  readonly detail: Locator;
 
   constructor(page: Page) {
     this.page = page;
+    this.mainToolbar = new MainToolbar(page);
+    this.detail = page.locator('.cms-editor-detail-panel');
   }
 
   static async openCms(page: Page, options?: { readonly?: boolean }) {
