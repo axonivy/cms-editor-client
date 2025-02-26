@@ -8,5 +8,5 @@ test.beforeEach(async ({ page }) => {
 });
 
 test('load data', async () => {
-  await expect(editor.page.locator('.cms-editor-content')).toHaveText('[{"uri":"/content","values":{"en":"object"}}]');
+  await expect(editor.main.table.row(0).column(0).locator).toHaveText('/content');
 });

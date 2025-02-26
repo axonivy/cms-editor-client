@@ -13,8 +13,8 @@ test('title', async ({ page }) => {
 
 test('toggle detail', async () => {
   await expect(editor.detail).toBeVisible();
-  await editor.mainToolbar.detailToggle.click();
+  await editor.main.toolbar.detailToggle.click();
   await expect(editor.detail).toBeHidden();
-  await editor.mainToolbar.detailToggle.click();
+  await editor.main.toolbar.detailToggle.click();
   await expect(editor.detail).toBeVisible();
 });
