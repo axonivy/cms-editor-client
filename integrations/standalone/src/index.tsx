@@ -4,10 +4,12 @@ import { Flex, HotkeysProvider, ReadonlyProvider, Spinner, ThemeProvider, toast,
 import * as React from 'react';
 import * as ReactDOM from 'react-dom/client';
 import './index.css';
-import { readonlyParam, themeParam, webSocketBaseParam } from './url-helper';
+import { appParam, pmvParam, readonlyParam, themeParam, webSocketBaseParam } from './url-helper';
 
 export async function start(): Promise<void> {
   const server = webSocketBaseParam();
+  const app = appParam();
+  const pmv = pmvParam();
   const theme = themeParam();
   const readonly = readonlyParam();
   const queryClient = initQueryClient();
@@ -37,7 +39,7 @@ export async function start(): Promise<void> {
             <QueryProvider client={queryClient}>
               <ReadonlyProvider readonly={readonly}>
                 <HotkeysProvider initiallyActiveScopes={['global']}>
-                  <CmsEditor />
+                  <CmsEditor context={{ app, pmv }} />
                 </HotkeysProvider>
               </ReadonlyProvider>
             </QueryProvider>
