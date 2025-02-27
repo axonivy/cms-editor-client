@@ -27,3 +27,11 @@ test('theme', async () => {
   await editor.main.toolbar.settings.theme.locator.click();
   await editor.expectToBeLight();
 });
+
+test('toolbar titles', async () => {
+  await expect(editor.main.toolbar.title).toHaveText('CMS - pmv-name');
+  await expect(editor.detail.toolbar.locator).toHaveText('CMS - pmv-name');
+  await editor.main.table.row(0).locator.click();
+  await expect(editor.main.toolbar.title).toHaveText('CMS - pmv-name');
+  await expect(editor.detail.toolbar.locator).toHaveText('CMS - pmv-name - /Dialogs');
+});

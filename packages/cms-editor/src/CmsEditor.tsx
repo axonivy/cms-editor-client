@@ -1,4 +1,4 @@
-import type { CmsEditorDataContext, EditorProps } from '@axonivy/cms-editor-protocol';
+import type { CmsEditorDataContext, ContentObject, EditorProps } from '@axonivy/cms-editor-protocol';
 import { Flex, PanelMessage, ResizableHandle, ResizablePanel, ResizablePanelGroup, SidebarHeader, Spinner } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
 import { useQuery } from '@tanstack/react-query';
@@ -46,12 +46,18 @@ function CmsEditor(props: EditorProps) {
     return <PanelMessage icon={IvyIcons.ErrorXMark} message={`An error has occurred: ${error.message}`} />;
   }
 
+  const contentObjects = data.data;
+  const { mainTitle, detailTitle } = toolbarTitles(
+    context.pmv,
+    selectedContentObject !== undefined ? contentObjects[selectedContentObject] : undefined
+  );
+
   return (
-    <AppProvider value={{ context, contentObjects: data.data, selectedContentObject, setSelectedContentObject, detail, setDetail }}>
+    <AppProvider value={{ context, contentObjects, selectedContentObject, setSelectedContentObject, detail, setDetail }}>
       <ResizablePanelGroup direction='horizontal'>
         <ResizablePanel defaultSize={75} minSize={50} className='cms-editor-main-panel'>
           <Flex direction='column' className='cms-editor-panel-content'>
-            <MainToolbar title='CMS Editor main title' />
+            <MainToolbar title={mainTitle} />
             <MainContent />
           </Flex>
         </ResizablePanel>
@@ -60,7 +66,7 @@ function CmsEditor(props: EditorProps) {
             <ResizableHandle />
             <ResizablePanel defaultSize={25} minSize={10} className='cms-editor-detail-panel'>
               <Flex direction='column' className='cms-editor-panel-content'>
-                <SidebarHeader icon={IvyIcons.PenEdit} title='CMS Editor detail title' />
+                <SidebarHeader icon={IvyIcons.PenEdit} title={detailTitle} className='cms-editor-detail-toolbar' />
                 <DetailContent />
               </Flex>
             </ResizablePanel>
@@ -72,3 +78,12 @@ function CmsEditor(props: EditorProps) {
 }
 
 export default CmsEditor;
+
+export const toolbarTitles = (pmv: string, contentObject?: ContentObject) => {
+  const mainTitle = `CMS - ${pmv}`;
+  let detailTitle = mainTitle;
+  if (contentObject) {
+    detailTitle += ` - ${contentObject.uri}`;
+  }
+  return { mainTitle, detailTitle };
+};

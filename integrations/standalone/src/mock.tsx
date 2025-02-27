@@ -4,7 +4,7 @@ import React from 'react';
 import * as ReactDOM from 'react-dom/client';
 import './index.css';
 import { CmsClientMock } from './mock/cms-client-mock';
-import { appParam, readonlyParam } from './url-helper';
+import { readonlyParam } from './url-helper';
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {
@@ -16,7 +16,6 @@ const client = new CmsClientMock();
 const queryClient = initQueryClient();
 
 const readonly = readonlyParam();
-const app = appParam();
 
 root.render(
   <React.StrictMode>
@@ -25,7 +24,7 @@ root.render(
         <QueryProvider client={queryClient}>
           <ReadonlyProvider readonly={readonly}>
             <HotkeysProvider initiallyActiveScopes={['global']}>
-              <CmsEditor context={{ app, pmv: '' }} />
+              <CmsEditor context={{ app: '', pmv: 'pmv-name' }} />
             </HotkeysProvider>
           </ReadonlyProvider>
         </QueryProvider>
