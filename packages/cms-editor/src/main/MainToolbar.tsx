@@ -31,7 +31,7 @@ export const MainToolbar = ({ title }: MainToolbarProps) => {
 
   return (
     <Toolbar className='cms-editor-main-toolbar'>
-      <ToolbarTitle>{title}</ToolbarTitle>
+      <ToolbarTitle className='cms-editor-main-toolbar-title'>{title}</ToolbarTitle>
       <Flex gap={1}>
         {!disabled && (
           <Popover>
