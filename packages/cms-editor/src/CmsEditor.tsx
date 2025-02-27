@@ -47,10 +47,8 @@ function CmsEditor(props: EditorProps) {
   }
 
   const contentObjects = data.data;
-  const { mainTitle, detailTitle } = toolbarTitles(
-    context.pmv,
-    selectedContentObject !== undefined ? contentObjects[selectedContentObject] : undefined
-  );
+  const contentObject = selectedContentObject !== undefined ? contentObjects[selectedContentObject] : undefined;
+  const { mainTitle, detailTitle } = toolbarTitles(context.pmv, contentObject);
 
   return (
     <AppProvider value={{ context, contentObjects, selectedContentObject, setSelectedContentObject, detail, setDetail }}>
@@ -67,7 +65,7 @@ function CmsEditor(props: EditorProps) {
             <ResizablePanel defaultSize={25} minSize={10} className='cms-editor-detail-panel'>
               <Flex direction='column' className='cms-editor-panel-content'>
                 <SidebarHeader icon={IvyIcons.PenEdit} title={detailTitle} className='cms-editor-detail-toolbar' />
-                <DetailContent />
+                <DetailContent key={contentObject?.uri} />
               </Flex>
             </ResizablePanel>
           </>
