@@ -81,7 +81,8 @@ export const toolbarTitles = (pmv: string, contentObject?: ContentObject) => {
   const mainTitle = `CMS - ${pmv}`;
   let detailTitle = mainTitle;
   if (contentObject) {
-    detailTitle += ` - ${contentObject.uri}`;
+    const lastSlashIndex = contentObject.uri.lastIndexOf('/');
+    detailTitle += ` - ${contentObject.uri.substring(lastSlashIndex + 1)}`;
   }
   return { mainTitle, detailTitle };
 };
