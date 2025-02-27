@@ -1,4 +1,4 @@
-import { BasicField, BasicInput, Flex, PanelMessage } from '@axonivy/ui-components';
+import { BasicField, Flex, PanelMessage, Textarea } from '@axonivy/ui-components';
 import { useAppContext } from '../context/AppContext';
 import { useMeta } from '../protocol/use-meta';
 import './DetailContent.css';
@@ -17,7 +17,7 @@ export const DetailContent = () => {
     <Flex direction='column' gap={4} className='cms-editor-detail-content'>
       {Object.entries(locales).map(([languageCode, displayName]) => (
         <BasicField key={languageCode} label={displayName}>
-          <BasicInput value={contentObject.values[languageCode]} />
+          <Textarea value={contentObject.values[languageCode]} />
         </BasicField>
       ))}
     </Flex>
