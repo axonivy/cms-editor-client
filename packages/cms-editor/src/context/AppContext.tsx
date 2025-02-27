@@ -1,7 +1,8 @@
-import type { ContentObject } from '@axonivy/cms-editor-protocol';
+import type { CmsEditorDataContext, ContentObject } from '@axonivy/cms-editor-protocol';
 import { createContext, useContext } from 'react';
 
 type AppContext = {
+  context: CmsEditorDataContext;
   contentObjects: Array<ContentObject>;
   selectedContentObject?: number;
   setSelectedContentObject: (index?: number) => void;
@@ -10,6 +11,7 @@ type AppContext = {
 };
 
 const appContext = createContext<AppContext>({
+  context: { app: '', pmv: '' },
   contentObjects: [],
   selectedContentObject: undefined,
   setSelectedContentObject: () => {},

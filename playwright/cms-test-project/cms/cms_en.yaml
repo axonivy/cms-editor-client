@@ -1,1 +1,4 @@
-content: object
+folder:
+  _: folder
+  stringOne: valueOne
+  stringTwo: valueTwo

@@ -6,7 +6,7 @@ export class Table {
 
   constructor(parent: Locator) {
     this.locator = parent.locator('table');
-    this.rows = this.locator.locator('tbody tr');
+    this.rows = this.locator.locator('tbody').getByRole('row');
   }
 
   row(index: number) {
@@ -45,7 +45,7 @@ export class Cell {
   readonly content: Locator;
 
   constructor(row: Locator, index: number) {
-    this.locator = row.locator('td').nth(index);
+    this.locator = row.getByRole('cell').nth(index);
     this.content = this.locator.locator('span');
   }
 }

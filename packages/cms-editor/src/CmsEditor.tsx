@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useEffect, useMemo, useState } from 'react';
 import './CmsEditor.css';
 import { AppProvider } from './context/AppContext';
+import { DetailContent } from './detail/DetailContent';
 import { MainContent } from './main/MainContent';
 import { MainToolbar } from './main/MainToolbar';
 import { useClient } from './protocol/ClientContextProvider';
@@ -46,7 +47,7 @@ function CmsEditor(props: EditorProps) {
   }
 
   return (
-    <AppProvider value={{ contentObjects: data.data, selectedContentObject, setSelectedContentObject, detail, setDetail }}>
+    <AppProvider value={{ context, contentObjects: data.data, selectedContentObject, setSelectedContentObject, detail, setDetail }}>
       <ResizablePanelGroup direction='horizontal'>
         <ResizablePanel defaultSize={75} minSize={50} className='cms-editor-main-panel'>
           <Flex direction='column' className='cms-editor-panel-content'>
@@ -60,7 +61,7 @@ function CmsEditor(props: EditorProps) {
             <ResizablePanel defaultSize={25} minSize={10} className='cms-editor-detail-panel'>
               <Flex direction='column' className='cms-editor-panel-content'>
                 <SidebarHeader icon={IvyIcons.PenEdit} title='CMS Editor detail title' />
-                <div>detail</div>
+                <DetailContent />
               </Flex>
             </ResizablePanel>
           </>

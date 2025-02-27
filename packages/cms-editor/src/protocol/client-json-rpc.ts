@@ -1,9 +1,13 @@
-import type { Client, CmsData, CmsEditorDataContext, RequestTypes } from '@axonivy/cms-editor-protocol';
+import type { Client, CmsData, CmsEditorDataContext, MetaRequestTypes, RequestTypes } from '@axonivy/cms-editor-protocol';
 import { BaseRpcClient, createMessageConnection, urlBuilder, type Connection, type MessageConnection } from '@axonivy/jsonrpc';
 
 export class ClientJsonRpc extends BaseRpcClient implements Client {
   data(context: CmsEditorDataContext): Promise<CmsData> {
     return this.sendRequest('data', context);
+  }
+
+  meta<TMeta extends keyof MetaRequestTypes>(path: TMeta, args: MetaRequestTypes[TMeta][0]): Promise<MetaRequestTypes[TMeta][1]> {
+    return this.sendRequest(path, args);
   }
 
   sendRequest<K extends keyof RequestTypes>(command: K, args: RequestTypes[K][0]): Promise<RequestTypes[K][1]> {
