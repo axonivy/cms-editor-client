@@ -1,11 +1,15 @@
-import type { Locator } from '@playwright/test';
+import type { Locator, Page } from '@playwright/test';
+import { Button } from './Button';
+import { Settings } from './Settings';
 
 export class MainToolbar {
   readonly locator: Locator;
-  readonly detailToggle: Locator;
+  readonly settings: Settings;
+  readonly detailToggle: Button;
 
-  constructor(parent: Locator) {
+  constructor(page: Page, parent: Locator) {
     this.locator = parent.locator('.cms-editor-main-toolbar');
-    this.detailToggle = this.locator.getByRole('button', { name: 'Details toggle' });
+    this.settings = new Settings(page, this.locator);
+    this.detailToggle = new Button(this.locator, { name: 'Details toggle' });
   }
 }

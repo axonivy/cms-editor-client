@@ -9,7 +9,7 @@ export class MainPanel {
 
   constructor(page: Page) {
     this.locator = page.locator('.cms-editor-main-panel');
-    this.toolbar = new MainToolbar(this.locator);
+    this.toolbar = new MainToolbar(page, this.locator);
     this.table = new Table(this.locator);
   }
 }

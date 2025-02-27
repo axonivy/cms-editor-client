@@ -12,16 +12,22 @@ test('load data', async () => {
 
   await editor.main.table.row(0).locator.click();
   await expect(editor.main.table.row(0).column(0).locator).toHaveText('/folder');
-  await expect(editor.detail.field('German')).toHaveValue('ordner');
-  await expect(editor.detail.field('English')).toHaveValue('folder');
+  await expect(editor.detail.field('German').locator).toHaveValue('ordner');
+  await expect(editor.detail.field('English').locator).toHaveValue('folder');
 
   await editor.main.table.row(1).locator.click();
   await expect(editor.main.table.row(1).column(0).locator).toHaveText('/folder/stringOne');
-  await expect(editor.detail.field('German')).toHaveValue('wertEins');
-  await expect(editor.detail.field('English')).toHaveValue('valueOne');
+  await expect(editor.detail.field('German').locator).toHaveValue('wertEins');
+  await expect(editor.detail.field('English').locator).toHaveValue('valueOne');
 
   await editor.main.table.row(2).locator.click();
   await expect(editor.main.table.row(2).column(0).locator).toHaveText('/folder/stringTwo');
-  await expect(editor.detail.field('German')).toHaveValue('');
-  await expect(editor.detail.field('English')).toHaveValue('valueTwo');
+  await expect(editor.detail.field('German').locator).toHaveValue('');
+  await expect(editor.detail.field('English').locator).toHaveValue('valueTwo');
+});
+
+test('theme', async ({ page }) => {
+  await editor.expectToBeLight();
+  editor = await CmsEditor.openCms(page, { theme: 'dark' });
+  await editor.expectToBeDark();
 });

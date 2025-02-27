@@ -1,4 +1,4 @@
-import { expect, type Page } from '@playwright/test';
+import { expect, type Locator, type Page } from '@playwright/test';
 import { DetailPanel } from './detail/DetailPanel';
 import { MainPanel } from './main/MainPanel';
 
@@ -10,16 +10,26 @@ const pmv = 'cms-test-project';
 
 export class CmsEditor {
   readonly page: Page;
+  readonly html: Locator;
   readonly main: MainPanel;
   readonly detail: DetailPanel;
 
   constructor(page: Page) {
     this.page = page;
+    this.html = this.page.locator('html');
     this.main = new MainPanel(this.page);
     this.detail = new DetailPanel(this.page);
   }
 
-  static async openCms(page: Page, options?: { readonly?: boolean }) {
+  async expectToBeLight() {
+    await expect(this.html).toHaveClass('light');
+  }
+
+  async expectToBeDark() {
+    await expect(this.html).toHaveClass('dark');
+  }
+
+  static async openCms(page: Page, options?: { readonly?: boolean; theme?: string }) {
     const serverUrl = server.replace(/^https?:\/\//, '');
     let url = `?server=${serverUrl}${ws}&app=${app}&pmv=${pmv}`;
     if (options) {

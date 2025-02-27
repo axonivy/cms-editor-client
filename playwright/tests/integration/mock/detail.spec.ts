@@ -15,6 +15,6 @@ test('empty while no selecton', async () => {
 test('a field for each locale', async () => {
   await editor.main.table.row(5).locator.click();
   await expect(editor.detail.fields).toHaveCount(2);
-  await expect(editor.detail.field('English')).toHaveValue('Case');
-  await expect(editor.detail.field('German')).toHaveValue('Fall');
+  await expect(editor.detail.field('English').locator).toHaveValue('Case');
+  await expect(editor.detail.field('German').locator).toHaveValue('Fall');
 });

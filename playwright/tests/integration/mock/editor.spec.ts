@@ -13,8 +13,17 @@ test('title', async ({ page }) => {
 
 test('toggle detail', async () => {
   await expect(editor.detail.locator).toBeVisible();
-  await editor.main.toolbar.detailToggle.click();
+  await editor.main.toolbar.detailToggle.locator.click();
   await expect(editor.detail.locator).toBeHidden();
-  await editor.main.toolbar.detailToggle.click();
+  await editor.main.toolbar.detailToggle.locator.click();
   await expect(editor.detail.locator).toBeVisible();
+});
+
+test('theme', async () => {
+  await editor.main.toolbar.settings.button.locator.click();
+  await editor.expectToBeLight();
+  await editor.main.toolbar.settings.theme.locator.click();
+  await editor.expectToBeDark();
+  await editor.main.toolbar.settings.theme.locator.click();
+  await editor.expectToBeLight();
 });
