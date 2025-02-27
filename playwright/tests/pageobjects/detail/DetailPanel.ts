@@ -1,4 +1,5 @@
 import { type Locator, type Page } from '@playwright/test';
+import { TextBox } from './TextBox';
 
 export class DetailPanel {
   readonly locator: Locator;
@@ -9,7 +10,7 @@ export class DetailPanel {
     this.fields = this.locator.getByRole('textbox');
   }
 
-  field(label: string) {
-    return this.locator.getByRole('textbox', { name: label, exact: true });
+  field(name: string) {
+    return new TextBox(this.locator, { name });
   }
 }
