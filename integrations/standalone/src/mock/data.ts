@@ -1,6 +1,7 @@
 import type { CmsData } from '@axonivy/cms-editor-protocol';
 
 export const contentObjects: CmsData = {
+  context: { app: '', pmv: '' },
   data: [
     { uri: '/Dialogs', values: {} },
     { uri: '/Dialogs/agileBPM', values: {} },
@@ -149,5 +150,6 @@ export const contentObjects: CmsData = {
     { uri: '/Dialogs/trigger/parkingLotNeeded', values: { de: 'Parkplatz benötigt', en: 'Parking Lot needed' } },
     { uri: '/Dialogs/trigger/parkingLotNr', values: { de: 'Parkplatznr.', en: 'Parking Lot Nr.' } },
     { uri: '/Dialogs/trigger/selectParkingLot', values: { de: 'Parkplatz auswählen', en: 'Select parking lot' } }
-  ]
+  ],
+  helpUrl: 'https://dev.axonivy.com'
 };

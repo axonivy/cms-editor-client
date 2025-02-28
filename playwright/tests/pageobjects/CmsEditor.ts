@@ -72,4 +72,14 @@ export class CmsEditor {
   async hideQuery() {
     await this.page.addStyleTag({ content: `.tsqd-parent-container { display: none; }` });
   }
+
+  async consoleLog() {
+    return new Promise(result => {
+      this.page.on('console', msg => {
+        if (msg.type() === 'log') {
+          result(msg.text());
+        }
+      });
+    });
+  }
 }

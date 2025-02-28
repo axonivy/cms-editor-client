@@ -45,3 +45,15 @@ test('focus jumps', async () => {
   await editor.page.keyboard.press('3');
   await expect(editor.detail.toolbar.locator).toBeFocused();
 });
+
+test('help', async () => {
+  const msg0 = editor.consoleLog();
+  await editor.detail.toolbar.help.locator.click();
+  expect(await msg0).toContain('openUrl');
+  expect(await msg0).toContain('https://dev.axonivy.com');
+
+  const msg1 = editor.consoleLog();
+  await editor.page.keyboard.press('F1');
+  expect(await msg1).toContain('openUrl');
+  expect(await msg1).toContain('https://dev.axonivy.com');
+});

@@ -1,23 +1,16 @@
 import type { CmsEditorDataContext, ContentObject, EditorProps } from '@axonivy/cms-editor-protocol';
-import {
-  Flex,
-  PanelMessage,
-  ResizableHandle,
-  ResizablePanel,
-  ResizablePanelGroup,
-  SidebarHeader,
-  Spinner,
-  useHotkeys
-} from '@axonivy/ui-components';
+import { Flex, PanelMessage, ResizableHandle, ResizablePanel, ResizablePanelGroup, Spinner, useHotkeys } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
 import { useQuery } from '@tanstack/react-query';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import './CmsEditor.css';
 import { AppProvider } from './context/AppContext';
 import { DetailContent } from './detail/DetailContent';
+import { DetailToolbar } from './detail/DetailToolbar';
 import { MainContent } from './main/MainContent';
 import { MainToolbar } from './main/MainToolbar';
 import { useClient } from './protocol/ClientContextProvider';
+import { useAction } from './protocol/use-action';
 import { genQueryKey } from './query/query-client';
 import { useKnownHotkeys } from './utils/hotkeys';
 
@@ -46,8 +39,8 @@ function CmsEditor(props: EditorProps) {
 
   const hotkeys = useKnownHotkeys();
 
-  const sidebarHeader = useRef<HTMLDivElement>(null);
-  useHotkeys(hotkeys.focusInscription.hotkey, () => sidebarHeader.current?.focus(), { scopes: ['global'] });
+  const openUrl = useAction('openUrl');
+  useHotkeys(hotkeys.openHelp.hotkey, () => openUrl(data?.helpUrl), { scopes: ['global'] });
 
   if (isPending) {
     return (
@@ -79,13 +72,7 @@ function CmsEditor(props: EditorProps) {
             <ResizableHandle />
             <ResizablePanel defaultSize={25} minSize={10} className='cms-editor-detail-panel'>
               <Flex direction='column' className='cms-editor-panel-content'>
-                <SidebarHeader
-                  icon={IvyIcons.PenEdit}
-                  title={detailTitle}
-                  tabIndex={-1}
-                  ref={sidebarHeader}
-                  className='cms-editor-detail-toolbar'
-                />
+                <DetailToolbar title={detailTitle} helpUrl={data.helpUrl} />
                 <DetailContent key={contentObject?.uri} />
               </Flex>
             </ResizablePanel>

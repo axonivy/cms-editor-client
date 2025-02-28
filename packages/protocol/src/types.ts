@@ -1,4 +1,4 @@
-import type { CmsData, CmsDataObject, CmsEditorDataContext, MapStringString } from './editor';
+import type { CmsActionArgs, CmsData, CmsDataObject, CmsEditorDataContext, MapStringString } from './editor';
 
 export type EditorProps = { context: CmsEditorDataContext };
 
@@ -8,6 +8,7 @@ export type Locales = MapStringString;
 export interface Client {
   data(context: CmsEditorDataContext): Promise<CmsData>;
   meta<TMeta extends keyof MetaRequestTypes>(path: TMeta, args: MetaRequestTypes[TMeta][0]): Promise<MetaRequestTypes[TMeta][1]>;
+  action(action: CmsActionArgs): void;
 }
 
 export interface ClientContext {
@@ -20,4 +21,8 @@ export interface MetaRequestTypes {
 
 export interface RequestTypes extends MetaRequestTypes {
   data: [CmsEditorDataContext, CmsData];
+}
+
+export interface NotificationTypes {
+  action: CmsActionArgs;
 }
