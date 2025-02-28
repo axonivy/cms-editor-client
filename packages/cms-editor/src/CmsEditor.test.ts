@@ -7,4 +7,8 @@ test('toolbarTitles', () => {
     mainTitle: 'CMS - pmv-name',
     detailTitle: 'CMS - pmv-name - content-object-uri'
   });
+  expect(toolbarTitles('pmv-name', { uri: 'folder/content-object-uri' } as ContentObject)).toEqual({
+    mainTitle: 'CMS - pmv-name',
+    detailTitle: 'CMS - pmv-name - content-object-uri'
+  });
 });
