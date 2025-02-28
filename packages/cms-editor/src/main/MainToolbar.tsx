@@ -16,10 +16,13 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
+  useHotkeys,
   useTheme
 } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
+import { useRef } from 'react';
 import { useAppContext } from '../context/AppContext';
+import { useKnownHotkeys } from '../utils/hotkeys';
 
 type MainToolbarProps = {
   title: string;
@@ -29,8 +32,13 @@ export const MainToolbar = ({ title }: MainToolbarProps) => {
   const { detail, setDetail } = useAppContext();
   const { theme, setTheme, disabled } = useTheme();
 
+  const hotkeys = useKnownHotkeys();
+
+  const firstElement = useRef<HTMLDivElement>(null);
+  useHotkeys(hotkeys.focusToolbar.hotkey, () => firstElement.current?.focus(), { scopes: ['global'] });
+
   return (
-    <Toolbar className='cms-editor-main-toolbar'>
+    <Toolbar tabIndex={-1} ref={firstElement} className='cms-editor-main-toolbar'>
       <ToolbarTitle className='cms-editor-main-toolbar-title'>{title}</ToolbarTitle>
       <Flex gap={1}>
         {!disabled && (

@@ -9,6 +9,7 @@ import {
   TableBody,
   TableCell,
   TableResizableHeader,
+  useHotkeys,
   useTableKeyHandler,
   useTableSelect,
   useTableSort
@@ -17,6 +18,7 @@ import { flexRender, getCoreRowModel, useReactTable, type ColumnDef } from '@tan
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { useRef } from 'react';
 import { useAppContext } from '../context/AppContext';
+import { useKnownHotkeys } from '../utils/hotkeys';
 import './MainContent.css';
 
 export const MainContent = () => {
@@ -63,9 +65,20 @@ export const MainContent = () => {
 
   const { handleKeyDown } = useTableKeyHandler({ table, data: contentObjects });
 
+  const hotkeys = useKnownHotkeys();
+
+  const firstElement = useRef<HTMLDivElement>(null);
+  useHotkeys(hotkeys.focusMain.hotkey, () => firstElement.current?.focus(), { scopes: ['global'] });
+
   return (
     <Flex direction='column' onClick={() => selectRow(table)} className='cms-editor-main-content'>
-      <BasicField label='Content Objects' onClick={event => event.stopPropagation()} className='cms-editor-main-table-field'>
+      <BasicField
+        label='Content Objects'
+        tabIndex={-1}
+        ref={firstElement}
+        onClick={event => event.stopPropagation()}
+        className='cms-editor-main-table-field'
+      >
         <div ref={tableContainer} className='cms-editor-main-table-container'>
           <Table onKeyDown={event => handleKeyDown(event, () => setDetail(!detail))} className='cms-editor-main-table'>
             <TableResizableHeader
