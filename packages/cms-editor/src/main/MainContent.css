@@ -1,6 +1,7 @@
 .cms-editor-main-content {
   padding: var(--size-3);
   overflow: auto;
+  height: 100%;
 }
 
 .cms-editor-main-table-field {
