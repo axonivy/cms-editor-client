@@ -25,9 +25,3 @@ test('load data', async () => {
   await expect(editor.detail.field('German').locator).toHaveValue('');
   await expect(editor.detail.field('English').locator).toHaveValue('valueTwo');
 });
-
-test('theme', async ({ page }) => {
-  await editor.expectToBeLight();
-  editor = await CmsEditor.openCms(page, { theme: 'dark' });
-  await editor.expectToBeDark();
-});

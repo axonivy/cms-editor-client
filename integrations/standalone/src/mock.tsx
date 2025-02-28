@@ -4,7 +4,7 @@ import React from 'react';
 import * as ReactDOM from 'react-dom/client';
 import './index.css';
 import { CmsClientMock } from './mock/cms-client-mock';
-import { readonlyParam } from './url-helper';
+import { readonlyParam, themeParam } from './url-helper';
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {
@@ -15,11 +15,12 @@ const root = ReactDOM.createRoot(rootElement);
 const client = new CmsClientMock();
 const queryClient = initQueryClient();
 
+const theme = themeParam();
 const readonly = readonlyParam();
 
 root.render(
   <React.StrictMode>
-    <ThemeProvider defaultTheme={'light'}>
+    <ThemeProvider defaultTheme={theme}>
       <ClientContextProvider client={client}>
         <QueryProvider client={queryClient}>
           <ReadonlyProvider readonly={readonly}>

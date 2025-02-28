@@ -18,11 +18,13 @@ export const DetailContent = () => {
       <BasicField label='URI'>
         <BasicInput value={contentObject.uri} disabled />
       </BasicField>
-      {Object.entries(locales).map(([languageCode, displayName]) => (
-        <BasicField key={languageCode} label={displayName}>
-          <Textarea value={contentObject.values[languageCode]} />
-        </BasicField>
-      ))}
+      <div className='cms-editor-locale-fields'>
+        {Object.entries(locales).map(([languageCode, displayName]) => (
+          <BasicField key={languageCode} label={displayName}>
+            <Textarea value={contentObject.values[languageCode]} />
+          </BasicField>
+        ))}
+      </div>
     </Flex>
   );
 };
