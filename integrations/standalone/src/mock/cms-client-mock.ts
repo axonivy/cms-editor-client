@@ -1,4 +1,4 @@
-import type { Client, CmsData, Locales } from '@axonivy/cms-editor-protocol';
+import type { Client, CmsActionArgs, CmsData, Locales } from '@axonivy/cms-editor-protocol';
 import { contentObjects } from './data';
 import { locales } from './meta';
 
@@ -11,5 +11,9 @@ export class CmsClientMock implements Client {
 
   meta(): Promise<Locales> {
     return Promise.resolve(locales);
+  }
+
+  action(action: CmsActionArgs): void {
+    console.log(`Action: ${JSON.stringify(action)}`);
   }
 }

@@ -17,7 +17,7 @@ void: Void
 [k: string]: unknown
 }
 export interface CmsActionArgs {
-  actionId: string;
+  actionId: "openUrl";
   context: CmsEditorDataContext;
   payload: string;
 }
@@ -26,7 +26,9 @@ export interface CmsEditorDataContext {
   pmv: string;
 }
 export interface CmsData {
+  context: CmsEditorDataContext;
   data: CmsDataObject[];
+  helpUrl: string;
 }
 export interface CmsDataObject {
   uri: string;
