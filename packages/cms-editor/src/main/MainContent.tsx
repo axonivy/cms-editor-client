@@ -10,11 +10,12 @@ import {
   TableCell,
   TableResizableHeader,
   useHotkeys,
+  useTableGlobalFilter,
   useTableKeyHandler,
   useTableSelect,
   useTableSort
 } from '@axonivy/ui-components';
-import { flexRender, getCoreRowModel, useReactTable, type ColumnDef } from '@tanstack/react-table';
+import { flexRender, getCoreRowModel, useReactTable, type ColumnDef, type Row } from '@tanstack/react-table';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { useRef } from 'react';
 import { useAppContext } from '../context/AppContext';
@@ -34,6 +35,8 @@ export const MainContent = () => {
 
   const sort = useTableSort();
 
+  const globalFilter = useTableGlobalFilter();
+
   const columns: Array<ColumnDef<ContentObject, string>> = [
     {
       accessorKey: 'uri',
@@ -45,12 +48,15 @@ export const MainContent = () => {
   const table = useReactTable({
     ...selection.options,
     ...sort.options,
+    ...globalFilter.options,
     data: contentObjects,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    globalFilterFn,
     state: {
       ...selection.tableState,
-      ...sort.tableState
+      ...sort.tableState,
+      ...globalFilter.tableState
     }
   });
 
@@ -79,6 +85,7 @@ export const MainContent = () => {
         onClick={event => event.stopPropagation()}
         className='cms-editor-main-table-field'
       >
+        {globalFilter.filter}
         <div ref={tableContainer} className='cms-editor-main-table-container'>
           <Table onKeyDown={event => handleKeyDown(event, () => setDetail(!detail))} className='cms-editor-main-table'>
             <TableResizableHeader
@@ -105,4 +112,12 @@ export const MainContent = () => {
       </BasicField>
     </Flex>
   );
+};
+
+export const globalFilterFn = (row: Row<ContentObject>, _columnId: string, filterValue: string) => {
+  filterValue = filterValue.toLowerCase();
+  if (row.original.uri.toLowerCase().includes(filterValue)) {
+    return true;
+  }
+  return Object.values(row.original.values).some(value => value.toLowerCase().includes(filterValue));
 };

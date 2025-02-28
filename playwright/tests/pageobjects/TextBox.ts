@@ -7,7 +7,7 @@ export class TextBox {
     if (options?.name) {
       this.locator = parent.getByRole('textbox', { name: options.name, exact: true });
     } else {
-      this.locator.getByRole('textbox').first();
+      this.locator = parent.getByRole('textbox').first();
     }
   }
 }
