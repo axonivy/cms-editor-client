@@ -1,6 +1,6 @@
 import { type Locator, type Page } from '@playwright/test';
-import { DetailToolbar } from './DetailToolbar';
 import { TextBox } from '../TextBox';
+import { DetailToolbar } from './DetailToolbar';
 
 export class DetailPanel {
   readonly locator: Locator;
@@ -12,7 +12,7 @@ export class DetailPanel {
     this.locator = page.locator('.cms-editor-detail-panel');
     this.toolbar = new DetailToolbar(this.locator);
     this.uri = new TextBox(this.locator, { name: 'URI' });
-    this.locales = this.locator.getByRole('textbox', { disabled: false });
+    this.locales = this.locator.locator('.cms-editor-locale-fields').getByRole('textbox');
   }
 
   field(name: string) {

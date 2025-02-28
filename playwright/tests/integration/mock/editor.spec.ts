@@ -19,13 +19,29 @@ test('toggle detail', async () => {
   await expect(editor.detail.locator).toBeVisible();
 });
 
-test('theme', async () => {
-  await editor.main.toolbar.settings.button.locator.click();
-  await editor.expectToBeLight();
-  await editor.main.toolbar.settings.theme.locator.click();
-  await editor.expectToBeDark();
-  await editor.main.toolbar.settings.theme.locator.click();
-  await editor.expectToBeLight();
+test.describe('theme', () => {
+  test('settings', async () => {
+    await editor.main.toolbar.settings.button.locator.click();
+    await editor.expectToBeLight();
+    await editor.main.toolbar.settings.theme.locator.click();
+    await editor.expectToBeDark();
+    await editor.main.toolbar.settings.theme.locator.click();
+    await editor.expectToBeLight();
+  });
+
+  test('url-param', async () => {
+    await editor.expectToBeLight();
+    editor = await CmsEditor.openCms(editor.page, { theme: 'dark' });
+    await editor.expectToBeDark();
+  });
+});
+
+test('readonly', async () => {
+  await editor.main.table.row(0).locator.click();
+  await expect(editor.detail.field('English').locator).toBeEnabled();
+  editor = await CmsEditor.openCms(editor.page, { readonly: true });
+  await editor.main.table.row(0).locator.click();
+  await expect(editor.detail.field('English').locator).toBeDisabled();
 });
 
 test('toolbar titles', async () => {
