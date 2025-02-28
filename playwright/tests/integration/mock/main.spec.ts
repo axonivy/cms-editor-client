@@ -7,6 +7,13 @@ test.beforeEach(async ({ page }) => {
   editor = await CmsEditor.openMock(page);
 });
 
+test('search', async () => {
+  await editor.main.search.locator.fill('hello');
+  await expect(editor.main.table.rows).toHaveCount(0);
+  await editor.main.search.locator.fill('tasks');
+  await expect(editor.main.table.rows).toHaveCount(3);
+});
+
 test.describe('table keyboard support', () => {
   test('move selection via arrowKey', async () => {
     await editor.main.table.expectToHaveNoSelection();

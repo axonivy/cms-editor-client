@@ -1,6 +1,6 @@
 import { type Locator, type Page } from '@playwright/test';
 import { DetailToolbar } from './DetailToolbar';
-import { TextBox } from './TextBox';
+import { TextBox } from '../TextBox';
 
 export class DetailPanel {
   readonly locator: Locator;
