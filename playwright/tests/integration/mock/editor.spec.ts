@@ -35,3 +35,13 @@ test('toolbar titles', async () => {
   await expect(editor.main.toolbar.title).toHaveText('CMS - pmv-name');
   await expect(editor.detail.toolbar.locator).toHaveText('CMS - pmv-name - Dialogs');
 });
+
+test('focus jumps', async () => {
+  await expect(editor.main.toolbar.locator).not.toBeFocused();
+  await editor.page.keyboard.press('1');
+  await expect(editor.main.toolbar.locator).toBeFocused();
+  await editor.page.keyboard.press('2');
+  await expect(editor.main.locator.locator('.cms-editor-main-table-field')).toBeFocused();
+  await editor.page.keyboard.press('3');
+  await expect(editor.detail.toolbar.locator).toBeFocused();
+});
