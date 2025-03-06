@@ -1,9 +1,9 @@
-import type { CmsActionArgs, CmsData, CmsDataObject, CmsEditorDataContext, MapStringString } from './editor';
+import type { CmsActionArgs, CmsData, CmsDataObject, CmsEditorDataContext, MapLocaleString } from './editor';
 
 export type EditorProps = { context: CmsEditorDataContext };
 
 export type { CmsDataObject as ContentObject };
-export type Locales = MapStringString;
+export type Locales = MapLocaleString;
 
 export interface Client {
   data(context: CmsEditorDataContext): Promise<CmsData>;
