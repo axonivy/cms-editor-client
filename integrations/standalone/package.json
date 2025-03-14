@@ -5,9 +5,9 @@
   "dependencies": {
     "@axonivy/cms-editor": "*",
     "@axonivy/cms-editor-protocol": "*",
-    "@axonivy/jsonrpc": "~13.1.0-next.586",
-    "@axonivy/ui-components": "~13.1.0-next.586",
-    "@axonivy/ui-icons": "~13.1.0-next.586",
+    "@axonivy/jsonrpc": "~13.1.0-next.598",
+    "@axonivy/ui-components": "~13.1.0-next.598",
+    "@axonivy/ui-icons": "~13.1.0-next.598",
     "@tanstack/react-query": "^5.64",
     "@tanstack/react-query-devtools": "^5.64",
     "react": "^19.0.0",
