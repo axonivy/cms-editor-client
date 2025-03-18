@@ -11,7 +11,7 @@ type AppContext = {
 };
 
 const appContext = createContext<AppContext>({
-  context: { app: '', pmv: '' },
+  context: { app: '', pmv: '', file: '' },
   contentObjects: [],
   selectedContentObject: undefined,
   setSelectedContentObject: () => {},

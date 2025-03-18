@@ -1,7 +1,7 @@
 import type { CmsData } from '@axonivy/cms-editor-protocol';
 
 export const contentObjects: CmsData = {
-  context: { app: '', pmv: '' },
+  context: { app: '', pmv: '', file: '' },
   data: [
     { uri: '/Dialogs', values: {} },
     { uri: '/Dialogs/agileBPM', values: {} },
