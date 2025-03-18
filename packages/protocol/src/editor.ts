@@ -23,6 +23,7 @@ export interface CmsActionArgs {
 }
 export interface CmsEditorDataContext {
   app: string;
+  file: string;
   pmv: string;
 }
 export interface CmsData {
