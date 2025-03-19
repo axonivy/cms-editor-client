@@ -49,7 +49,7 @@ test('toolbar titles', async () => {
   await expect(editor.detail.toolbar.locator).toHaveText('CMS - pmv-name');
   await editor.main.table.row(0).locator.click();
   await expect(editor.main.toolbar.title).toHaveText('CMS - pmv-name');
-  await expect(editor.detail.toolbar.locator).toHaveText('CMS - pmv-name - Dialogs');
+  await expect(editor.detail.toolbar.locator).toHaveText('CMS - pmv-name - AddTask');
 });
 
 test('focus jumps', async () => {

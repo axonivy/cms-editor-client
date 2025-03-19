@@ -54,7 +54,7 @@ function CmsEditor(props: EditorProps) {
     return <PanelMessage icon={IvyIcons.ErrorXMark} message={`An error has occurred: ${error.message}`} />;
   }
 
-  const contentObjects = data.data;
+  const contentObjects = data.data.filter((contentObject: ContentObject) => contentObject.type !== 'FOLDER');
   const contentObject = selectedContentObject !== undefined ? contentObjects[selectedContentObject] : undefined;
   const { mainTitle, detailTitle } = toolbarTitles(context.pmv, contentObject);
 

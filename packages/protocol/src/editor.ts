@@ -6,15 +6,17 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
+export type ContentObjectType = ("STRING" | "FILE" | "FOLDER")
+
 export interface CMS {
-cmsActionArgs: CmsActionArgs
-cmsData: CmsData
-cmsEditorDataContext: CmsEditorDataContext
-cmsSaveDataArgs: CmsSaveDataArgs
-editorFileContent: EditorFileContent
-string: MapLocaleString
-void: Void
-[k: string]: unknown
+  cmsActionArgs: CmsActionArgs;
+  cmsData: CmsData;
+  cmsEditorDataContext: CmsEditorDataContext;
+  cmsSaveDataArgs: CmsSaveDataArgs;
+  editorFileContent: EditorFileContent;
+  string: MapLocaleString;
+  void: Void;
+  [k: string]: unknown;
 }
 export interface CmsActionArgs {
   actionId: "openUrl";
@@ -32,6 +34,7 @@ export interface CmsData {
   helpUrl: string;
 }
 export interface CmsDataObject {
+  type: ContentObjectType;
   uri: string;
   values: MapLocaleString;
 }
