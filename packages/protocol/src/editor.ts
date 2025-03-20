@@ -11,10 +11,11 @@ export type ContentObjectType = ("STRING" | "FILE" | "FOLDER")
 export interface CMS {
   cmsActionArgs: CmsActionArgs;
   cmsData: CmsData;
+  cmsDataArgs: CmsDataArgs;
+  cmsDataObject: CmsDataObject;
   cmsEditorDataContext: CmsEditorDataContext;
-  cmsSaveDataArgs: CmsSaveDataArgs;
-  editorFileContent: EditorFileContent;
-  string: MapLocaleString;
+  cmsReadArgs: CmsReadArgs;
+  string: string[];
   void: Void;
   [k: string]: unknown;
 }
@@ -36,17 +37,17 @@ export interface CmsData {
 export interface CmsDataObject {
   type: ContentObjectType;
   uri: string;
-  values: MapLocaleString;
+  values: MapStringString;
 }
-export interface MapLocaleString {
+export interface MapStringString {
   [k: string]: string;
 }
-export interface CmsSaveDataArgs {
+export interface CmsDataArgs {
   context: CmsEditorDataContext;
-  data: string;
-  directSave: boolean;
+  languageTags: string[];
 }
-export interface EditorFileContent {
-  content: string;
+export interface CmsReadArgs {
+  context: CmsEditorDataContext;
+  uri: string;
 }
 export interface Void {}

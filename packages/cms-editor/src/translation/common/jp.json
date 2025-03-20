@@ -1,0 +1,13 @@
+{
+  "hotkey": {
+    "focusInscription": "__MISSING_TRANSLATION__",
+    "focusMain": "__MISSING_TRANSLATION__",
+    "focusToolbar": "__MISSING_TRANSLATION__",
+    "help": "__MISSING_TRANSLATION__"
+  },
+  "label": {
+    "details": "__MISSING_TRANSLATION__",
+    "settings": "__MISSING_TRANSLATION__",
+    "theme": "__MISSING_TRANSLATION__"
+  }
+}

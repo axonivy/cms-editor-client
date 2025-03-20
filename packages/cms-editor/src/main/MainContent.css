@@ -17,15 +17,12 @@
   display: grid;
 }
 
-.cms-editor-main-table-header-row {
-  display: flex;
+.cms-editor-main-table thead {
+  height: 36px;
+  white-space: nowrap;
 }
 
-.cms-editor-main-table-header-row > th:last-child {
-  flex-grow: 1;
-}
-
-.cms-editor-main-table-body tr {
+.cms-editor-main-table tr {
   display: flex;
   position: absolute;
   width: 100%;
@@ -33,15 +30,15 @@
   box-sizing: border-box;
 }
 
-.cms-editor-main-table-body td {
-  align-content: center;
-}
-
-.cms-editor-main-table-body tr > td:last-child {
+.cms-editor-main-table tr > *:last-child {
   flex-grow: 1;
 }
 
-.cms-editor-main-table-body span {
+.cms-editor-main-table th {
+  overflow: hidden;
+}
+
+.cms-editor-main-table span {
   display: block;
   white-space: nowrap;
   overflow: hidden;

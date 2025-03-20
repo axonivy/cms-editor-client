@@ -1,4 +1,4 @@
-import type { Client, CmsActionArgs, CmsData, Locales } from '@axonivy/cms-editor-protocol';
+import type { Client, CmsActionArgs, CmsData, CmsDataObject, CmsReadArgs } from '@axonivy/cms-editor-protocol';
 import { contentObjects } from './data';
 import { locales } from './meta';
 
@@ -9,7 +9,11 @@ export class CmsClientMock implements Client {
     return Promise.resolve(this.cmsData);
   }
 
-  meta(): Promise<Locales> {
+  read(args: CmsReadArgs): Promise<CmsDataObject> {
+    return Promise.resolve(this.cmsData.data.find(data => data.uri === args.uri) ?? ({} as CmsDataObject));
+  }
+
+  meta(): Promise<Array<string>> {
     return Promise.resolve(locales);
   }
 

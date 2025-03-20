@@ -2,11 +2,17 @@ import { expect, type Locator } from '@playwright/test';
 
 export class Table {
   readonly locator: Locator;
+  readonly headers: Locator;
   readonly rows: Locator;
 
   constructor(parent: Locator) {
     this.locator = parent.locator('table');
+    this.headers = this.locator.locator('th');
     this.rows = this.locator.locator('tbody').getByRole('row');
+  }
+
+  header(index: number) {
+    return new Header(this.headers, index);
   }
 
   row(index: number) {
@@ -17,6 +23,16 @@ export class Table {
     for (let i = 0; i < (await this.rows.count()); i++) {
       await this.row(i).expectToBeUnselected();
     }
+  }
+}
+
+export class Header {
+  readonly locator: Locator;
+  readonly content: Locator;
+
+  constructor(headers: Locator, index: number) {
+    this.locator = headers.nth(index);
+    this.content = this.locator.locator('span');
   }
 }
 
