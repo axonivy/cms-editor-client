@@ -10,3 +10,5 @@ playwright-report
 target
 
 .ivy-engine
+
+**/translation/**/*_old.json

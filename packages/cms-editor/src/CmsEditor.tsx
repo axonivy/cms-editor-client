@@ -13,9 +13,11 @@ import { useClient } from './protocol/ClientContextProvider';
 import { useAction } from './protocol/use-action';
 import { genQueryKey } from './query/query-client';
 import { useKnownHotkeys } from './utils/hotkeys';
+import { useTranslation } from 'react-i18next';
 
 function CmsEditor(props: EditorProps) {
   const [detail, setDetail] = useState(true);
+  const { t } = useTranslation();
 
   const [context, setContext] = useState(props.context);
   useEffect(() => {
@@ -51,7 +53,7 @@ function CmsEditor(props: EditorProps) {
   }
 
   if (isError) {
-    return <PanelMessage icon={IvyIcons.ErrorXMark} message={`An error has occurred: ${error.message}`} />;
+    return <PanelMessage icon={IvyIcons.ErrorXMark} message={t('error', { error: error })} />;
   }
 
   const contentObjects = data.data.filter((contentObject: ContentObject) => contentObject.type !== 'FOLDER');

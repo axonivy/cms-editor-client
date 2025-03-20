@@ -4,10 +4,10 @@
     "types": ["vite/client", "node"],
     "jsx": "preserve",
     "rootDir": ".",
-    "rootDirs": ["src"],
+    "rootDirs": ["./"],
     "outDir": "lib"
   },
-  "include": ["src"],
+  "include": ["src", "i18n.ts"],
   "references": [
     { "path": "../../packages/cms-editor/tsconfig.json" },
     { "path": "../../packages/protocol/tsconfig.json" }

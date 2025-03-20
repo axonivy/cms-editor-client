@@ -2,15 +2,17 @@ import { BasicField, BasicInput, Flex, PanelMessage, Textarea } from '@axonivy/u
 import { useAppContext } from '../context/AppContext';
 import { useMeta } from '../protocol/use-meta';
 import './DetailContent.css';
+import { useTranslation } from 'react-i18next';
 
 export const DetailContent = () => {
+  const { t } = useTranslation();
   const { context, contentObjects, selectedContentObject } = useAppContext();
   const locales = useMeta('meta/locales', context, {}).data;
 
   const contentObject = selectedContentObject !== undefined ? contentObjects[selectedContentObject] : undefined;
 
   if (!contentObject) {
-    return <PanelMessage message='Select a Content Object to edit its values.' />;
+    return <PanelMessage message={t('emptyDetail')} />;
   }
 
   return (

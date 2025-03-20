@@ -1,0 +1,8 @@
+{
+  "contentObjects": "Content Objects",
+  "emptyDetail": "Select a Content Object to edit its values.",
+  "error": "An error has occurred: {{error}}",
+  "toolbar": {
+    "detailsToggle": "Details toggle"
+  }
+}

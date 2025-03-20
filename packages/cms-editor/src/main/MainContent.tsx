@@ -21,8 +21,10 @@ import { useRef } from 'react';
 import { useAppContext } from '../context/AppContext';
 import { useKnownHotkeys } from '../utils/hotkeys';
 import './MainContent.css';
+import { useTranslation } from 'react-i18next';
 
 export const MainContent = () => {
+  const { t } = useTranslation();
   const { contentObjects, setSelectedContentObject, detail, setDetail } = useAppContext();
 
   const selection = useTableSelect<ContentObject>({
@@ -79,7 +81,7 @@ export const MainContent = () => {
   return (
     <Flex direction='column' onClick={() => selectRow(table)} className='cms-editor-main-content'>
       <BasicField
-        label='Content Objects'
+        label={t('contentObjects')}
         tabIndex={-1}
         ref={firstElement}
         onClick={event => event.stopPropagation()}
