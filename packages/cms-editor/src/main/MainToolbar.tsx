@@ -49,10 +49,10 @@ export const MainToolbar = ({ title }: MainToolbarProps) => {
               <Tooltip>
                 <TooltipTrigger asChild>
                   <PopoverTrigger asChild>
-                    <Button icon={IvyIcons.Settings} size='large' aria-label={t('common:settings')} />
+                    <Button icon={IvyIcons.Settings} size='large' aria-label={t('common:label.settings')} />
                   </PopoverTrigger>
                 </TooltipTrigger>
-                <TooltipContent>{t('common:settings')}</TooltipContent>
+                <TooltipContent>{t('common:label.settings')}</TooltipContent>
               </Tooltip>
             </TooltipProvider>
             <PopoverContent sideOffset={12}>
@@ -62,14 +62,14 @@ export const MainToolbar = ({ title }: MainToolbarProps) => {
                     <Label>
                       <Flex alignItems='center' gap={1}>
                         <IvyIcon icon={IvyIcons.DarkMode} />
-                        {t('common:theme')}
+                        {t('common:label.theme')}
                       </Flex>
                     </Label>
                     <Switch
                       defaultChecked={theme === 'dark'}
                       onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
                       size='small'
-                      aria-label={t('common:theme')}
+                      aria-label={t('common:label.theme')}
                     />
                   </Field>
                 </Flex>
@@ -85,10 +85,10 @@ export const MainToolbar = ({ title }: MainToolbarProps) => {
                 icon={IvyIcons.LayoutSidebarRightCollapse}
                 size='large'
                 onClick={() => setDetail(!detail)}
-                aria-label={t('toolbar.detailsToggle')}
+                aria-label={t('common:label.details')}
               />
             </TooltipTrigger>
-            <TooltipContent>{t('toolbar.detailsToggle')}</TooltipContent>
+            <TooltipContent>{t('common:label.details')}</TooltipContent>
           </Tooltip>
         </TooltipProvider>
       </Flex>

@@ -53,7 +53,7 @@ function CmsEditor(props: EditorProps) {
   }
 
   if (isError) {
-    return <PanelMessage icon={IvyIcons.ErrorXMark} message={t('error', { error: error })} />;
+    return <PanelMessage icon={IvyIcons.ErrorXMark} message={t('message.error', { error })} />;
   }
 
   const contentObjects = data.data.filter((contentObject: ContentObject) => contentObject.type !== 'FOLDER');

@@ -1,8 +1,9 @@
 {
-  "contentObjects": "Inhaltsobjekte",
-  "emptyDetail": "Wähle ein Inhaltsobjekt aus um es zu bearbeiten.",
-  "error": "Ein fehler ist aufgetreten: {{error}}",
-  "toolbar": {
-    "detailsToggle": "Detail Schalter"
+  "label": {
+    "contentObjects": "Inhaltsobjekte"
+  },
+  "message": {
+    "emptyDetail": "Wähle ein Inhaltsobjekt aus um es zu bearbeiten.",
+    "error": "Ein fehler ist aufgetreten: {{error}}"
   }
 }

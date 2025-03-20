@@ -81,7 +81,7 @@ export const MainContent = () => {
   return (
     <Flex direction='column' onClick={() => selectRow(table)} className='cms-editor-main-content'>
       <BasicField
-        label={t('contentObjects')}
+        label={t('label.contentObjects')}
         tabIndex={-1}
         ref={firstElement}
         onClick={event => event.stopPropagation()}

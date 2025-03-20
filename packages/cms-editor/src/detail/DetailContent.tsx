@@ -12,7 +12,7 @@ export const DetailContent = () => {
   const contentObject = selectedContentObject !== undefined ? contentObjects[selectedContentObject] : undefined;
 
   if (!contentObject) {
-    return <PanelMessage message={t('emptyDetail')} />;
+    return <PanelMessage message={t('message.emptyDetail')} />;
   }
 
   return (

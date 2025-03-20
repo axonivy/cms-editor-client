@@ -5,6 +5,9 @@
     "focusToolbar": "Fokus Toolbar ({{hotkey}})",
     "help": "Hilfe öffnen ({{hotkey}})"
   },
-  "settings": "Einstellungen",
-  "theme": "Thema"
+  "label": {
+    "details": "Details",
+    "settings": "Einstellungen",
+    "theme": "Thema"
+  }
 }
