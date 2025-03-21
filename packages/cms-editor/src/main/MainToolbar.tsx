@@ -23,12 +23,14 @@ import { IvyIcons } from '@axonivy/ui-icons';
 import { useRef } from 'react';
 import { useAppContext } from '../context/AppContext';
 import { useKnownHotkeys } from '../utils/hotkeys';
+import { useTranslation } from 'react-i18next';
 
 type MainToolbarProps = {
   title: string;
 };
 
 export const MainToolbar = ({ title }: MainToolbarProps) => {
+  const { t } = useTranslation();
   const { detail, setDetail } = useAppContext();
   const { theme, setTheme, disabled } = useTheme();
 
@@ -47,10 +49,10 @@ export const MainToolbar = ({ title }: MainToolbarProps) => {
               <Tooltip>
                 <TooltipTrigger asChild>
                   <PopoverTrigger asChild>
-                    <Button icon={IvyIcons.Settings} size='large' aria-label='Settings' />
+                    <Button icon={IvyIcons.Settings} size='large' aria-label={t('common:label.settings')} />
                   </PopoverTrigger>
                 </TooltipTrigger>
-                <TooltipContent>Settings</TooltipContent>
+                <TooltipContent>{t('common:label.settings')}</TooltipContent>
               </Tooltip>
             </TooltipProvider>
             <PopoverContent sideOffset={12}>
@@ -60,14 +62,14 @@ export const MainToolbar = ({ title }: MainToolbarProps) => {
                     <Label>
                       <Flex alignItems='center' gap={1}>
                         <IvyIcon icon={IvyIcons.DarkMode} />
-                        Theme
+                        {t('common:label.theme')}
                       </Flex>
                     </Label>
                     <Switch
                       defaultChecked={theme === 'dark'}
                       onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
                       size='small'
-                      aria-label='Theme'
+                      aria-label={t('common:label.theme')}
                     />
                   </Field>
                 </Flex>
@@ -83,10 +85,10 @@ export const MainToolbar = ({ title }: MainToolbarProps) => {
                 icon={IvyIcons.LayoutSidebarRightCollapse}
                 size='large'
                 onClick={() => setDetail(!detail)}
-                aria-label='Details toggle'
+                aria-label={t('common:label.details')}
               />
             </TooltipTrigger>
-            <TooltipContent>Details toggle</TooltipContent>
+            <TooltipContent>{t('common:label.details')}</TooltipContent>
           </Tooltip>
         </TooltipProvider>
       </Flex>

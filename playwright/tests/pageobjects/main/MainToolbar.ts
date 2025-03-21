@@ -12,6 +12,6 @@ export class MainToolbar {
     this.locator = parent.locator('.cms-editor-main-toolbar');
     this.title = this.locator.locator('.cms-editor-main-toolbar-title');
     this.settings = new Settings(page, this.locator);
-    this.detailToggle = new Button(this.locator, { name: 'Details toggle' });
+    this.detailToggle = new Button(this.locator, { name: 'Details' });
   }
 }

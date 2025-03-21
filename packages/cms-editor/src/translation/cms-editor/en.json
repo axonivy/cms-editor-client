@@ -1,0 +1,9 @@
+{
+  "label": {
+    "contentObjects": "Content Objects"
+  },
+  "message": {
+    "emptyDetail": "Select a Content Object to edit its values.",
+    "error": "An error has occurred: {{error}}"
+  }
+}

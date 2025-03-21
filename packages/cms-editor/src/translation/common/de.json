@@ -1,0 +1,13 @@
+{
+  "hotkey": {
+    "focusInscription": "Fokus Inscription ({{hotkey}})",
+    "focusMain": "Fokus Main ({{hotkey}})",
+    "focusToolbar": "Fokus Toolbar ({{hotkey}})",
+    "help": "Hilfe öffnen ({{hotkey}})"
+  },
+  "label": {
+    "details": "Details",
+    "settings": "Einstellungen",
+    "theme": "Thema"
+  }
+}
