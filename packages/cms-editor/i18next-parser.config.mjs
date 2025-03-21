@@ -2,7 +2,7 @@ export default {
   defaultNamespace: 'cms-editor',
   defaultValue: '__MISSING_TRANSLATION__',
   keepRemoved: false,
-  locales: ['en', 'de', 'jp'],
+  locales: ['en', 'de', 'ja'],
   output: 'src/translation/$NAMESPACE/$LOCALE.json',
   pluralSeparator: '_',
   input: ['src/**/*.ts', 'src/**/*.tsx'],

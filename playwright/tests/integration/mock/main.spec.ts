@@ -35,7 +35,7 @@ test.describe('table keyboard support', () => {
 
 test('show column for client locale if it is present in the cms', async () => {
   editor.page.addInitScript(() => {
-    window.localStorage.setItem('i18nextLng', 'jp');
+    window.localStorage.setItem('i18nextLng', 'ja');
   });
   await editor.page.reload();
   await expect(editor.main.table.headers).toHaveCount(1);
