@@ -34,7 +34,8 @@
   flex-grow: 1;
 }
 
-.cms-editor-main-table th {
+.cms-editor-main-table th,
+.cms-editor-main-table th .ui-flex {
   overflow: hidden;
 }
 
