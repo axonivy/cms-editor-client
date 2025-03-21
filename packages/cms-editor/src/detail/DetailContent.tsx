@@ -43,7 +43,7 @@ export const DetailContent = () => {
   }
 
   if (isError) {
-    return <PanelMessage icon={IvyIcons.ErrorXMark} message={`An error has occurred: ${error.message}`} />;
+    return <PanelMessage icon={IvyIcons.ErrorXMark} message={t('message.error', { error })} />;
   }
 
   return (
