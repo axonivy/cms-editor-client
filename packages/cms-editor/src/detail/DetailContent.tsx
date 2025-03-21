@@ -1,18 +1,49 @@
-import { BasicField, BasicInput, Flex, PanelMessage, Textarea } from '@axonivy/ui-components';
-import { useAppContext } from '../context/AppContext';
-import { useMeta } from '../protocol/use-meta';
-import './DetailContent.css';
+import { BasicField, BasicInput, Flex, PanelMessage, Spinner, Textarea } from '@axonivy/ui-components';
+import { IvyIcons } from '@axonivy/ui-icons';
+import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
+import { useAppContext } from '../context/AppContext';
+import { useClient } from '../protocol/ClientContextProvider';
+import { useMeta } from '../protocol/use-meta';
+import { genQueryKey } from '../query/query-client';
+import { useClientLanguage } from '../utils/use-client-language';
+import './DetailContent.css';
 
 export const DetailContent = () => {
   const { t } = useTranslation();
   const { context, contentObjects, selectedContentObject } = useAppContext();
-  const locales = useMeta('meta/locales', context, {}).data;
 
-  const contentObject = selectedContentObject !== undefined ? contentObjects[selectedContentObject] : undefined;
+  const { languageDisplayName } = useClientLanguage();
 
-  if (!contentObject) {
+  const client = useClient();
+  const uri = selectedContentObject !== undefined ? contentObjects[selectedContentObject].uri : '';
+  const {
+    data: contentObject,
+    isPending,
+    isError,
+    error
+  } = useQuery({
+    queryKey: genQueryKey('read', context, uri),
+    queryFn: async () => await client.read({ context, uri }),
+    structuralSharing: false
+  });
+
+  const locales = useMeta('meta/locales', context, []).data;
+
+  if (selectedContentObject == undefined) {
     return <PanelMessage message={t('message.emptyDetail')} />;
+  }
+
+  if (isPending) {
+    return (
+      <Flex alignItems='center' justifyContent='center' style={{ width: '100%', height: '100%' }}>
+        <Spinner />
+      </Flex>
+    );
+  }
+
+  if (isError) {
+    return <PanelMessage icon={IvyIcons.ErrorXMark} message={t('message.error', { error })} />;
   }
 
   return (
@@ -21,9 +52,9 @@ export const DetailContent = () => {
         <BasicInput value={contentObject.uri} disabled />
       </BasicField>
       <Flex direction='column' gap={4} className='cms-editor-locale-fields'>
-        {Object.entries(locales).map(([languageCode, displayName]) => (
-          <BasicField key={languageCode} label={displayName}>
-            <Textarea value={contentObject.values[languageCode]} />
+        {locales.map(languageTag => (
+          <BasicField key={languageTag} label={languageDisplayName.of(languageTag)}>
+            <Textarea value={contentObject.values[languageTag]} />
           </BasicField>
         ))}
       </Flex>

@@ -2,7 +2,9 @@ import type {
   Client,
   CmsActionArgs,
   CmsData,
-  CmsEditorDataContext,
+  CmsDataArgs,
+  CmsDataObject,
+  CmsReadArgs,
   MetaRequestTypes,
   NotificationTypes,
   RequestTypes
@@ -10,8 +12,12 @@ import type {
 import { BaseRpcClient, createMessageConnection, urlBuilder, type Connection, type MessageConnection } from '@axonivy/jsonrpc';
 
 export class ClientJsonRpc extends BaseRpcClient implements Client {
-  data(context: CmsEditorDataContext): Promise<CmsData> {
-    return this.sendRequest('data', context);
+  data(args: CmsDataArgs): Promise<CmsData> {
+    return this.sendRequest('data', args);
+  }
+
+  read(args: CmsReadArgs): Promise<CmsDataObject> {
+    return this.sendRequest('read', args);
   }
 
   meta<TMeta extends keyof MetaRequestTypes>(path: TMeta, args: MetaRequestTypes[TMeta][0]): Promise<MetaRequestTypes[TMeta][1]> {

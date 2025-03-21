@@ -18,14 +18,16 @@ import {
 import { flexRender, getCoreRowModel, useReactTable, type ColumnDef, type Row } from '@tanstack/react-table';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { useRef } from 'react';
-import { useAppContext } from '../context/AppContext';
-import { useKnownHotkeys } from '../utils/hotkeys';
-import './MainContent.css';
 import { useTranslation } from 'react-i18next';
+import { useAppContext } from '../context/AppContext';
+import { useMeta } from '../protocol/use-meta';
+import { useKnownHotkeys } from '../utils/hotkeys';
+import { useClientLanguage } from '../utils/use-client-language';
+import './MainContent.css';
 
 export const MainContent = () => {
   const { t } = useTranslation();
-  const { contentObjects, setSelectedContentObject, detail, setDetail } = useAppContext();
+  const { context, contentObjects, setSelectedContentObject, detail, setDetail } = useAppContext();
 
   const selection = useTableSelect<ContentObject>({
     onSelect: selectedRows => {
@@ -43,9 +45,26 @@ export const MainContent = () => {
     {
       accessorKey: 'uri',
       header: ({ column }) => <SortableHeader column={column} name='URI' />,
-      cell: cell => <span>{cell.getValue()}</span>
+      cell: cell => <span>{cell.getValue()}</span>,
+      minSize: 200,
+      size: 500,
+      maxSize: 1000
     }
   ];
+
+  const locales = useMeta('meta/locales', context, []).data;
+  const { clientLanguageTag, languageDisplayName } = useClientLanguage();
+  if (locales.includes(clientLanguageTag)) {
+    columns.push({
+      id: clientLanguageTag,
+      accessorFn: co => co.values[clientLanguageTag],
+      header: ({ column }) => <SortableHeader column={column} name={languageDisplayName.of(clientLanguageTag) ?? clientLanguageTag} />,
+      cell: cell => <span>{cell.getValue()}</span>,
+      minSize: 200,
+      size: 500,
+      maxSize: 1000
+    });
+  }
 
   const table = useReactTable({
     ...selection.options,
@@ -90,12 +109,8 @@ export const MainContent = () => {
         {globalFilter.filter}
         <div ref={tableContainer} className='cms-editor-main-table-container'>
           <Table onKeyDown={event => handleKeyDown(event, () => setDetail(!detail))} className='cms-editor-main-table'>
-            <TableResizableHeader
-              headerGroups={table.getHeaderGroups()}
-              onClick={() => selectRow(table)}
-              className='cms-editor-main-table-header-row'
-            />
-            <TableBody style={{ height: `${virtualizer.getTotalSize()}px` }} className='cms-editor-main-table-body'>
+            <TableResizableHeader headerGroups={table.getHeaderGroups()} onClick={() => selectRow(table)} />
+            <TableBody style={{ height: `${virtualizer.getTotalSize()}px` }}>
               {virtualizer.getVirtualItems().map(virtualRow => {
                 const row = rows[virtualRow.index];
                 return (

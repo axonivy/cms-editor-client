@@ -9,7 +9,7 @@ test.beforeEach(async ({ page }) => {
 
 test('empty while no selecton', async () => {
   await expect(editor.detail.locales).toHaveCount(0);
-  await expect(editor.detail.locator.locator('p')).toHaveText('Select a Content Object to edit its values.');
+  await expect(editor.detail.message).toHaveText('Select a Content Object to edit its values.');
 });
 
 test('uri', async () => {

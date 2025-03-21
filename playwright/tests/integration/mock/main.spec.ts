@@ -32,3 +32,30 @@ test.describe('table keyboard support', () => {
     await expect(editor.detail.locator).toBeVisible();
   });
 });
+
+test('show column for client locale if it is present in the cms', async () => {
+  editor.page.addInitScript(() => {
+    window.localStorage.setItem('i18nextLng', 'ja');
+  });
+  await editor.page.reload();
+  await expect(editor.main.table.headers).toHaveCount(1);
+  await expect(editor.main.table.header(0).content).toHaveText('URI');
+
+  editor.page.addInitScript(() => {
+    window.localStorage.setItem('i18nextLng', 'en');
+  });
+  await editor.page.reload();
+  await expect(editor.main.table.headers).toHaveCount(2);
+  await expect(editor.main.table.header(0).content).toHaveText('URI');
+  await expect(editor.main.table.header(1).content).toHaveText('English');
+  await expect(editor.main.table.row(2).column(1).content).toHaveText('Case');
+
+  editor.page.addInitScript(() => {
+    window.localStorage.setItem('i18nextLng', 'de');
+  });
+  await editor.page.reload();
+  await expect(editor.main.table.headers).toHaveCount(2);
+  await expect(editor.main.table.header(0).content).toHaveText('URI');
+  await expect(editor.main.table.header(1).content).toHaveText('Deutsch');
+  await expect(editor.main.table.row(2).column(1).content).toHaveText('Fall');
+});
