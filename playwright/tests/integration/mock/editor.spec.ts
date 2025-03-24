@@ -37,9 +37,11 @@ test.describe('theme', () => {
 });
 
 test('readonly', async () => {
+  await expect(editor.main.add.trigger.locator).toBeVisible();
   await editor.main.table.row(0).locator.click();
   await expect(editor.detail.field('English').locator).toBeEnabled();
   editor = await CmsEditor.openCms(editor.page, { readonly: true });
+  await expect(editor.main.add.trigger.locator).toBeHidden();
   await editor.main.table.row(0).locator.click();
   await expect(editor.detail.field('English').locator).toBeDisabled();
 });

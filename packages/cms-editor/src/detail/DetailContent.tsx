@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useAppContext } from '../context/AppContext';
 import { useClient } from '../protocol/ClientContextProvider';
 import { useMeta } from '../protocol/use-meta';
-import { genQueryKey } from '../query/query-client';
+import { useQueryKeys } from '../query/query-client';
 import { useClientLanguage } from '../utils/use-client-language';
 import './DetailContent.css';
 
@@ -16,6 +16,8 @@ export const DetailContent = () => {
   const { languageDisplayName } = useClientLanguage();
 
   const client = useClient();
+  const { readKey } = useQueryKeys();
+
   const uri = selectedContentObject !== undefined ? contentObjects[selectedContentObject].uri : '';
   const {
     data: contentObject,
@@ -23,7 +25,7 @@ export const DetailContent = () => {
     isError,
     error
   } = useQuery({
-    queryKey: genQueryKey('read', context, uri),
+    queryKey: readKey({ context, uri }),
     queryFn: async () => await client.read({ context, uri }),
     structuralSharing: false
   });

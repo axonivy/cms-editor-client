@@ -1,4 +1,15 @@
 {
+  "dialog": {
+    "addContentObject": {
+      "create": "Create Content Object",
+      "createTooltip": "Hold {{modifier}} to add an additional Content Object.",
+      "description": "Choose the name, namespace, and values of the Content Object you want to add.",
+      "title": "Add Content Object"
+    }
+  },
+  "hotkey": {
+    "addContentObject": "Add Content Object ({{hotkey}})"
+  },
   "label": {
     "contentObjects": "Content Objects"
   },

@@ -1,4 +1,4 @@
-import { type Locator, type Page } from '@playwright/test';
+import { expect, type Locator, type Page } from '@playwright/test';
 import { TextBox } from '../TextBox';
 import { DetailToolbar } from './DetailToolbar';
 
@@ -19,5 +19,12 @@ export class DetailPanel {
 
   field(name: string) {
     return new TextBox(this.locator, { name });
+  }
+
+  async expectToHaveValues(uri: string, values: Record<string, string>) {
+    await expect(this.uri.locator).toHaveValue(uri);
+    for (const [language, value] of Object.entries(values)) {
+      await expect(this.field(language).locator).toHaveValue(value);
+    }
   }
 }

@@ -5,7 +5,7 @@ export class Button {
 
   constructor(parent: Locator, options?: { name?: string }) {
     if (options?.name) {
-      this.locator = parent.getByRole('button', { name: options.name, exact: true });
+      this.locator = parent.getByRole('button', { name: options.name });
     } else {
       this.locator = parent.getByRole('button').first();
     }

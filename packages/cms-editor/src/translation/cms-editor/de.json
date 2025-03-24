@@ -1,4 +1,15 @@
 {
+  "dialog": {
+    "addContentObject": {
+      "create": "Inhaltsobjekt erstellen",
+      "createTooltip": "Halte {{modifier}} um ein weiteres Inhaltsobjekt zu erstellen.",
+      "description": "Wählen Sie den Namen, den Namensbereich und die Werte des Inhaltsobjekts, das Sie hinzufügen möchten.",
+      "title": "Inhaltsobjekt hinzufügen"
+    }
+  },
+  "hotkey": {
+    "addContentObject": "Inhaltsobjekt hinzufügen ({{hotkey}})"
+  },
   "label": {
     "contentObjects": "Inhaltsobjekte"
   },

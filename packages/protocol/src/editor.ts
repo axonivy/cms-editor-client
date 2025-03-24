@@ -10,6 +10,7 @@ export type ContentObjectType = ("STRING" | "FILE" | "FOLDER")
 
 export interface CMS {
   cmsActionArgs: CmsActionArgs;
+  cmsCreateArgs: CmsCreateArgs;
   cmsData: CmsData;
   cmsDataArgs: CmsDataArgs;
   cmsDataObject: CmsDataObject;
@@ -29,10 +30,9 @@ export interface CmsEditorDataContext {
   file: string;
   pmv: string;
 }
-export interface CmsData {
+export interface CmsCreateArgs {
+  contentObject: CmsDataObject;
   context: CmsEditorDataContext;
-  data: CmsDataObject[];
-  helpUrl: string;
 }
 export interface CmsDataObject {
   type: ContentObjectType;
@@ -41,6 +41,11 @@ export interface CmsDataObject {
 }
 export interface MapStringString {
   [k: string]: string;
+}
+export interface CmsData {
+  context: CmsEditorDataContext;
+  data: CmsDataObject[];
+  helpUrl: string;
 }
 export interface CmsDataArgs {
   context: CmsEditorDataContext;

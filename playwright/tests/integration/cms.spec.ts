@@ -11,12 +11,10 @@ test('load data', async () => {
   await expect(editor.main.table.rows).toHaveCount(2);
 
   await editor.main.table.row(0).locator.click();
-  await expect(editor.main.table.row(0).column(0).locator).toHaveText('/folder/stringOne');
-  await expect(editor.detail.field('German').locator).toHaveValue('wertEins');
-  await expect(editor.detail.field('English').locator).toHaveValue('valueOne');
+  await editor.main.table.row(0).expectToHaveValues('/folder/stringOne', 'valueOne');
+  await editor.detail.expectToHaveValues('/folder/stringOne', { English: 'valueOne', German: 'wertEins' });
 
   await editor.main.table.row(1).locator.click();
-  await expect(editor.main.table.row(1).column(0).locator).toHaveText('/folder/stringTwo');
-  await expect(editor.detail.field('German').locator).toHaveValue('');
-  await expect(editor.detail.field('English').locator).toHaveValue('valueTwo');
+  await editor.main.table.row(1).expectToHaveValues('/folder/stringTwo', 'valueTwo');
+  await editor.detail.expectToHaveValues('/folder/stringTwo', { English: 'valueTwo', German: '' });
 });

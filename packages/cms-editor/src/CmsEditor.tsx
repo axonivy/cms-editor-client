@@ -1,8 +1,8 @@
-import type { CmsDataArgs, ContentObject, EditorProps } from '@axonivy/cms-editor-protocol';
+import type { ContentObject, EditorProps } from '@axonivy/cms-editor-protocol';
 import { Flex, PanelMessage, ResizableHandle, ResizablePanel, ResizablePanelGroup, Spinner, useHotkeys } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
 import { useQuery } from '@tanstack/react-query';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import './CmsEditor.css';
 import { AppProvider } from './context/AppContext';
@@ -12,7 +12,7 @@ import { MainContent } from './main/MainContent';
 import { MainToolbar } from './main/MainToolbar';
 import { useClient } from './protocol/ClientContextProvider';
 import { useAction } from './protocol/use-action';
-import { genQueryKey } from './query/query-client';
+import { useQueryKeys } from './query/query-client';
 import { useKnownHotkeys } from './utils/hotkeys';
 import { useClientLanguage } from './utils/use-client-language';
 
@@ -27,16 +27,11 @@ function CmsEditor(props: EditorProps) {
   const [selectedContentObject, setSelectedContentObject] = useState<number>();
 
   const client = useClient();
-
-  const queryKeys = useMemo(() => {
-    return {
-      data: (args: CmsDataArgs) => genQueryKey('data', args)
-    };
-  }, []);
+  const { dataKey } = useQueryKeys();
 
   const { clientLanguageTag } = useClientLanguage();
   const { data, isPending, isError, error } = useQuery({
-    queryKey: queryKeys.data({ context, languageTags: [clientLanguageTag] }),
+    queryKey: dataKey({ context, languageTags: [clientLanguageTag] }),
     queryFn: async () => await client.data({ context, languageTags: [clientLanguageTag] }),
     structuralSharing: false
   });

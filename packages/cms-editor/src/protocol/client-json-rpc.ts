@@ -1,6 +1,7 @@
 import type {
   Client,
   CmsActionArgs,
+  CmsCreateArgs,
   CmsData,
   CmsDataArgs,
   CmsDataObject,
@@ -14,6 +15,10 @@ import { BaseRpcClient, createMessageConnection, urlBuilder, type Connection, ty
 export class ClientJsonRpc extends BaseRpcClient implements Client {
   data(args: CmsDataArgs): Promise<CmsData> {
     return this.sendRequest('data', args);
+  }
+
+  create(args: CmsCreateArgs): void {
+    this.sendRequest('create', args);
   }
 
   read(args: CmsReadArgs): Promise<CmsDataObject> {

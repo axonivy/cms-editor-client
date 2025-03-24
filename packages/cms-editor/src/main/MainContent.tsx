@@ -10,6 +10,7 @@ import {
   TableCell,
   TableResizableHeader,
   useHotkeys,
+  useReadonly,
   useTableGlobalFilter,
   useTableKeyHandler,
   useTableSelect,
@@ -24,6 +25,7 @@ import { useMeta } from '../protocol/use-meta';
 import { useKnownHotkeys } from '../utils/hotkeys';
 import { useClientLanguage } from '../utils/use-client-language';
 import './MainContent.css';
+import { MainControl } from './control/MainControl';
 
 export const MainContent = () => {
   const { t } = useTranslation();
@@ -97,10 +99,13 @@ export const MainContent = () => {
   const firstElement = useRef<HTMLDivElement>(null);
   useHotkeys(hotkeys.focusMain.hotkey, () => firstElement.current?.focus(), { scopes: ['global'] });
 
+  const readonly = useReadonly();
+
   return (
     <Flex direction='column' onClick={() => selectRow(table)} className='cms-editor-main-content'>
       <BasicField
         label={t('label.contentObjects')}
+        control={!readonly && <MainControl table={table} />}
         tabIndex={-1}
         ref={firstElement}
         onClick={event => event.stopPropagation()}

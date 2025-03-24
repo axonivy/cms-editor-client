@@ -7,6 +7,8 @@
   },
   "label": {
     "details": "Details",
+    "name": "Name",
+    "namespace": "Namespace",
     "settings": "Settings",
     "theme": "Theme"
   }
