@@ -105,7 +105,7 @@ export const MainContent = () => {
     <Flex direction='column' onClick={() => selectRow(table)} className='cms-editor-main-content'>
       <BasicField
         label={t('label.contentObjects')}
-        control={!readonly && <MainControl table={table} />}
+        control={!readonly && <MainControl selectRow={(rowId: string) => selectRow(table, rowId)} />}
         tabIndex={-1}
         ref={firstElement}
         onClick={event => event.stopPropagation()}

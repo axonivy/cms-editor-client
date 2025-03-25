@@ -6,14 +6,13 @@ export const initQueryClient = () => {
   return new QueryClient();
 };
 
-export const useQueryKeys = () => {
-  return useMemo(() => {
+export const useQueryKeys = () =>
+  useMemo(() => {
     return {
       dataKey: (args: CmsDataArgs) => genQueryKey('data', args),
       readKey: (args: CmsReadArgs) => genQueryKey('read', args)
     };
   }, []);
-};
 
 export const genQueryKey = (...args: unknown[]) => {
   return ['cms-editor', ...args];

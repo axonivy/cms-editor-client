@@ -1,31 +1,33 @@
-import type { Locator, Page } from '@playwright/test';
-import { TextBox } from '../TextBox';
-import { Button } from './Button';
+import { expect, type Locator, type Page } from '@playwright/test';
 
 export class AddContentObject {
   readonly locator: Locator;
-  readonly trigger: Button;
-  readonly name: TextBox;
-  readonly namespace: TextBox;
+  readonly trigger: Locator;
+  readonly name: Locator;
+  readonly namespace: Locator;
   readonly defaultLocaleLabel: Locator;
-  readonly defaultLocaleTextbox: TextBox;
-  readonly create: Button;
+  readonly defaultLocaleTextbox: Locator;
+  readonly error: Locator;
+  readonly create: Locator;
 
   constructor(page: Page, parent: Locator) {
     this.locator = page.getByRole('dialog');
-    this.trigger = new Button(parent.locator('.cms-editor-main-control'));
-    this.name = new TextBox(this.locator, { name: 'Name' });
-    this.namespace = new TextBox(this.locator, { name: 'Namespace' });
+    this.trigger = parent.locator('.cms-editor-main-control').getByRole('button').first();
+    this.name = this.locator.getByRole('textbox', { name: 'Name', exact: true });
+    this.namespace = this.locator.getByRole('textbox', { name: 'Namespace' });
     this.defaultLocaleLabel = this.locator.locator('.cms-editor-add-dialog-default-locale').locator('label');
-    this.defaultLocaleTextbox = new TextBox(this.locator.locator('.cms-editor-add-dialog-default-locale'));
-    this.create = new Button(this.locator, { name: 'Create Content Object' });
+    this.defaultLocaleTextbox = this.locator.locator('.cms-editor-add-dialog-default-locale').getByRole('textbox');
+    this.error = this.locator.locator('.cms-editor-add-dialog-error-message');
+    this.create = this.locator.getByRole('button', { name: 'Create Content Object' });
   }
 
   async add(name: string, namespace: string, value: string) {
-    await this.trigger.locator.click();
-    await this.name.locator.fill(name);
-    await this.namespace.locator.fill(namespace);
-    await this.defaultLocaleTextbox.locator.fill(value);
-    await this.create.locator.click();
+    await this.trigger.click();
+    await expect(this.locator).toBeVisible();
+    await this.name.fill(name);
+    await this.namespace.fill(namespace);
+    await this.defaultLocaleTextbox.fill(value);
+    await this.create.click();
+    await expect(this.locator).toBeHidden();
   }
 }

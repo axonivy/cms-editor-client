@@ -8,9 +8,9 @@ test.beforeEach(async ({ page }) => {
 });
 
 test('search', async () => {
-  await editor.main.search.locator.fill('hello');
+  await editor.main.search.fill('hello');
   await expect(editor.main.table.rows).toHaveCount(0);
-  await editor.main.search.locator.fill('tasks');
+  await editor.main.search.fill('tasks');
   await expect(editor.main.table.rows).toHaveCount(3);
 });
 

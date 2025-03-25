@@ -12,7 +12,7 @@ test('translation', async () => {
   await expect(editor.main.table.header(1).content).toHaveText('English');
   await expect(editor.detail.message).toHaveText('Select a Content Object to edit its values.');
   await editor.main.table.row(0).locator.click();
-  await expect(editor.detail.field('German').locator).toBeVisible();
+  await expect(editor.detail.textbox('German')).toBeVisible();
 
   editor.page.addInitScript(() => {
     window.localStorage.setItem('i18nextLng', 'de');
@@ -22,5 +22,5 @@ test('translation', async () => {
   await expect(editor.main.table.header(1).content).toHaveText('Deutsch');
   await expect(editor.detail.message).toHaveText('Wähle ein Inhaltsobjekt aus um es zu bearbeiten.');
   await editor.main.table.row(0).locator.click();
-  await expect(editor.detail.field('Deutsch').locator).toBeVisible();
+  await expect(editor.detail.textbox('Deutsch')).toBeVisible();
 });

@@ -1,4 +1,4 @@
-import type { CmsData, ContentObject, MapStringString } from '@axonivy/cms-editor-protocol';
+import type { CmsCreateArgs, CmsData, ContentObject, MapStringString } from '@axonivy/cms-editor-protocol';
 import {
   BasicField,
   Button,
@@ -12,7 +12,7 @@ import {
   Flex,
   hotkeyText,
   Input,
-  selectRow,
+  Message,
   Textarea,
   Tooltip,
   TooltipContent,
@@ -21,8 +21,7 @@ import {
   useHotkeys
 } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
-import { useQueryClient } from '@tanstack/react-query';
-import { type Table } from '@tanstack/react-table';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAppContext } from '../../context/AppContext';
@@ -33,15 +32,18 @@ import { useKnownHotkeys } from '../../utils/hotkeys';
 import { useClientLanguage } from '../../utils/use-client-language';
 
 type AddContentObjectProps = {
-  table: Table<ContentObject>;
+  selectRow: (rowId: string) => void;
 };
 
-export const AddContentObject = ({ table }: AddContentObjectProps) => {
+export const AddContentObject = ({ selectRow }: AddContentObjectProps) => {
   const { t } = useTranslation();
   const { context, contentObjects, selectedContentObject, setSelectedContentObject } = useAppContext();
 
   const [open, setOpen] = useState(false);
   const onOpenChange = (open: boolean) => {
+    if (isPending) {
+      return;
+    }
     setOpen(open);
     if (open) {
       initializeDialog();
@@ -63,26 +65,37 @@ export const AddContentObject = ({ table }: AddContentObjectProps) => {
   };
 
   const changeValue = (languageTag: string, value: string) => {
-    const newValues = structuredClone(values);
-    newValues[languageTag] = value;
-    setValues(newValues);
+    setValues(values => ({
+      ...values,
+      [languageTag]: value
+    }));
   };
 
   const client = useClient();
   const queryClient = useQueryClient();
   const { dataKey } = useQueryKeys();
+
+  const { mutate, isPending, isError, error } = useMutation({
+    mutationFn: async (args: CmsCreateArgs) => client.create(args),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: genQueryKey('data') })
+  });
+
   const addContentObject = (event: React.MouseEvent<HTMLButtonElement> | KeyboardEvent) => {
     const uri = `${namespace}/${name}`;
-    client.create({ context, contentObject: { uri, type: 'STRING', values } });
-    queryClient.invalidateQueries({ queryKey: genQueryKey('data') }).then(() => {
-      const data: CmsData | undefined = queryClient.getQueryData(dataKey({ context, languageTags: [clientLanguageTag] }));
-      const selectedContentObject = data?.data
-        .filter((contentObject: ContentObject) => contentObject.type !== 'FOLDER')
-        .findIndex(co => co.uri === uri);
-      setSelectedContentObject(selectedContentObject);
-      selectRow(table, String(selectedContentObject));
-      setOpen(event.ctrlKey || event.metaKey);
-    });
+    mutate(
+      { context, contentObject: { uri, type: 'STRING', values } },
+      {
+        onSuccess: () => {
+          const data: CmsData | undefined = queryClient.getQueryData(dataKey({ context, languageTags: [clientLanguageTag] }));
+          const selectedContentObject = data?.data
+            .filter((contentObject: ContentObject) => contentObject.type !== 'FOLDER')
+            .findIndex(co => co.uri === uri);
+          setSelectedContentObject(selectedContentObject);
+          selectRow(String(selectedContentObject));
+          setOpen(event.ctrlKey || event.metaKey);
+        }
+      }
+    );
   };
 
   const { addContentObject: shortcut } = useKnownHotkeys();
@@ -107,27 +120,36 @@ export const AddContentObject = ({ table }: AddContentObjectProps) => {
         </DialogHeader>
         <DialogDescription>{t('dialog.addContentObject.description')}</DialogDescription>
         <Flex direction='column' gap={3} ref={enter} tabIndex={-1}>
-          <BasicField label={t('common:label.name')} aria-label={t('common:label.name')}>
-            <Input value={name} onChange={event => setName(event.target.value)} />
+          <BasicField label={t('common:label.name')}>
+            <Input value={name} onChange={event => setName(event.target.value)} disabled={isPending} />
           </BasicField>
-          <BasicField label={t('common:label.namespace')} aria-label={t('common:label.namespace')}>
-            <Input value={namespace} onChange={event => setNamespace(event.target.value)} />
+          <BasicField label={t('common:label.namespace')}>
+            <Input value={namespace} onChange={event => setNamespace(event.target.value)} disabled={isPending} />
           </BasicField>
           {isClientLanguageInCms && (
-            <BasicField
-              label={languageDisplayName.of(clientLanguageTag)}
-              aria-label={languageDisplayName.of(clientLanguageTag)}
-              className='cms-editor-add-dialog-default-locale'
-            >
-              <Textarea value={values[clientLanguageTag]} onChange={event => changeValue(clientLanguageTag, event.target.value)} />
+            <BasicField label={languageDisplayName.of(clientLanguageTag)} className='cms-editor-add-dialog-default-locale'>
+              <Textarea
+                value={values[clientLanguageTag]}
+                onChange={event => changeValue(clientLanguageTag, event.target.value)}
+                disabled={isPending}
+              />
             </BasicField>
           )}
+          {isError && <Message variant='error' message={t('message.error', { error })} className='cms-editor-add-dialog-error-message' />}
         </Flex>
         <DialogFooter>
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant='primary' size='large' aria-label={t('dialog.addContentObject.create')} onClick={addContentObject}>
+                <Button
+                  variant='primary'
+                  size='large'
+                  aria-label={t('dialog.addContentObject.create')}
+                  onClick={addContentObject}
+                  disabled={isPending}
+                  icon={isPending ? IvyIcons.Spinner : undefined}
+                  spin
+                >
                   {t('dialog.addContentObject.create')}
                 </Button>
               </TooltipTrigger>

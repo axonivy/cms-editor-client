@@ -9,7 +9,13 @@ export class CmsClientMock implements Client {
     return Promise.resolve(this.cmsData);
   }
 
-  create(args: CmsCreateArgs): void {
+  async create(args: CmsCreateArgs): Promise<void> {
+    const uri = args.contentObject.uri;
+    if (uri.endsWith('IsPending')) {
+      await new Promise(res => setTimeout(res, 1000));
+    } else if (uri.endsWith('IsError')) {
+      throw Error('error message');
+    }
     this.cmsData.data.push(args.contentObject);
     this.cmsData.data.sort((co1, co2) => co1.uri.localeCompare(co2.uri));
   }
