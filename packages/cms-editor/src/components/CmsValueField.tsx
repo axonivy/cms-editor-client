@@ -7,7 +7,8 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-  useReadonly
+  useReadonly,
+  type MessageData
 } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
 import { type ChangeEvent, type Dispatch, type SetStateAction } from 'react';
@@ -19,9 +20,10 @@ type CmsValueFieldProps = {
   setValues: Dispatch<SetStateAction<MapStringString>>;
   languageTag: string;
   disabled?: boolean;
+  message?: MessageData;
 };
 
-export const CmsValueField = ({ values, setValues, languageTag, disabled }: CmsValueFieldProps) => {
+export const CmsValueField = ({ values, setValues, languageTag, disabled, message }: CmsValueFieldProps) => {
   const { t } = useTranslation();
   const { languageDisplayName } = useAppContext();
 
@@ -61,6 +63,7 @@ export const CmsValueField = ({ values, setValues, languageTag, disabled }: CmsV
         )
       }
       className='cms-editor-value-field'
+      message={message}
     >
       <Textarea
         value={isValuePresent ? value : ''}

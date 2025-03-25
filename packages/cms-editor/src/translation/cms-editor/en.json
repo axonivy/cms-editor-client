@@ -15,7 +15,12 @@
   },
   "message": {
     "emptyDetail": "Select a Content Object to edit its values.",
-    "error": "An error has occurred: {{error}}"
+    "emptyName": "Name cannot be empty.",
+    "error": "An error has occurred: {{error}}",
+    "nameIsTaken": "Name is already present in this Namespace.",
+    "namespaceInfo": "Folder structure of Content Object (e.g. '/Dialog/Label').",
+    "notAllowedChar": "Character '{{- character}}' is not allowed.",
+    "noValues": "Value cannot be empty."
   },
   "value": {
     "delete": "Delete value",
