@@ -54,6 +54,13 @@ export class Row {
   async expectToBeUnselected() {
     await expect(this.locator).toHaveAttribute('data-state', 'unselected');
   }
+
+  async expectToHaveValues(...values: Array<string>) {
+    for (let i = 0; i < values.length; i++) {
+      const column = this.column(i);
+      await expect(column.content).toHaveText(values[i]);
+    }
+  }
 }
 
 export class Cell {

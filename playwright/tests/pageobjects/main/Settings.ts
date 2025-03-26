@@ -1,13 +1,11 @@
 import type { Locator, Page } from '@playwright/test';
-import { Button } from './Button';
-import { Switch } from './Switch';
 
 export class Settings {
-  readonly button: Button;
-  readonly theme: Switch;
+  readonly button: Locator;
+  readonly theme: Locator;
 
   constructor(page: Page, parent: Locator) {
-    this.button = new Button(parent, { name: 'Settings' });
-    this.theme = new Switch(page, { name: 'Theme' });
+    this.button = parent.getByRole('button', { name: 'Settings' });
+    this.theme = page.getByRole('switch', { name: 'Theme' });
   }
 }

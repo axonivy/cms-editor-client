@@ -1,23 +1,29 @@
-import { type Locator, type Page } from '@playwright/test';
-import { TextBox } from '../TextBox';
+import { expect, type Locator, type Page } from '@playwright/test';
 import { DetailToolbar } from './DetailToolbar';
 
 export class DetailPanel {
   readonly locator: Locator;
   readonly toolbar: DetailToolbar;
-  readonly uri: TextBox;
+  readonly uri: Locator;
   readonly locales: Locator;
   readonly message: Locator;
 
   constructor(page: Page) {
     this.locator = page.locator('.cms-editor-detail-panel');
     this.toolbar = new DetailToolbar(this.locator);
-    this.uri = new TextBox(this.locator, { name: 'URI' });
+    this.uri = this.locator.getByRole('textbox', { name: 'URI' });
     this.locales = this.locator.locator('.cms-editor-locale-fields').getByRole('textbox');
     this.message = this.locator.locator('p');
   }
 
-  field(name: string) {
-    return new TextBox(this.locator, { name });
+  textbox(name: string) {
+    return this.locator.getByRole('textbox', { name });
+  }
+
+  async expectToHaveValues(uri: string, values: Record<string, string>) {
+    await expect(this.uri).toHaveValue(uri);
+    for (const [language, value] of Object.entries(values)) {
+      await expect(this.textbox(language)).toHaveValue(value);
+    }
   }
 }

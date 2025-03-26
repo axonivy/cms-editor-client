@@ -13,19 +13,19 @@ test('title', async ({ page }) => {
 
 test('toggle detail', async () => {
   await expect(editor.detail.locator).toBeVisible();
-  await editor.main.toolbar.detailToggle.locator.click();
+  await editor.main.toolbar.detailToggle.click();
   await expect(editor.detail.locator).toBeHidden();
-  await editor.main.toolbar.detailToggle.locator.click();
+  await editor.main.toolbar.detailToggle.click();
   await expect(editor.detail.locator).toBeVisible();
 });
 
 test.describe('theme', () => {
   test('settings', async () => {
-    await editor.main.toolbar.settings.button.locator.click();
+    await editor.main.toolbar.settings.button.click();
     await editor.expectToBeLight();
-    await editor.main.toolbar.settings.theme.locator.click();
+    await editor.main.toolbar.settings.theme.click();
     await editor.expectToBeDark();
-    await editor.main.toolbar.settings.theme.locator.click();
+    await editor.main.toolbar.settings.theme.click();
     await editor.expectToBeLight();
   });
 
@@ -37,11 +37,13 @@ test.describe('theme', () => {
 });
 
 test('readonly', async () => {
+  await expect(editor.main.add.trigger).toBeVisible();
   await editor.main.table.row(0).locator.click();
-  await expect(editor.detail.field('English').locator).toBeEnabled();
+  await expect(editor.detail.textbox('English')).toBeEnabled();
   editor = await CmsEditor.openCms(editor.page, { readonly: true });
+  await expect(editor.main.add.trigger).toBeHidden();
   await editor.main.table.row(0).locator.click();
-  await expect(editor.detail.field('English').locator).toBeDisabled();
+  await expect(editor.detail.textbox('English')).toBeDisabled();
 });
 
 test('toolbar titles', async () => {
@@ -64,7 +66,7 @@ test('focus jumps', async () => {
 
 test('help', async () => {
   const msg0 = editor.consoleLog();
-  await editor.detail.toolbar.help.locator.click();
+  await editor.detail.toolbar.help.click();
   expect(await msg0).toContain('openUrl');
   expect(await msg0).toContain('https://dev.axonivy.com');
 

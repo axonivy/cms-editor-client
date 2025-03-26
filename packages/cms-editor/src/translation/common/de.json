@@ -7,6 +7,8 @@
   },
   "label": {
     "details": "Details",
+    "name": "Name",
+    "namespace": "Namensbereich",
     "settings": "Einstellungen",
     "theme": "Thema"
   }
