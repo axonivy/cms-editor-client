@@ -8,6 +8,8 @@ type AppContext = {
   setSelectedContentObject: (index?: number) => void;
   detail: boolean;
   setDetail: (visible: boolean) => void;
+  defaultLanguageTag: string;
+  languageDisplayName: Intl.DisplayNames;
 };
 
 const appContext = createContext<AppContext>({
@@ -16,7 +18,9 @@ const appContext = createContext<AppContext>({
   selectedContentObject: undefined,
   setSelectedContentObject: () => {},
   detail: true,
-  setDetail: () => {}
+  setDetail: () => {},
+  defaultLanguageTag: '',
+  languageDisplayName: new Intl.DisplayNames(undefined, { type: 'language' })
 });
 
 export const AppProvider = appContext.Provider;

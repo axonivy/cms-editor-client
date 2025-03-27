@@ -1,8 +1,9 @@
-import type { ContentObject, EditorProps } from '@axonivy/cms-editor-protocol';
+import type { CmsEditorDataContext, ContentObject, EditorProps } from '@axonivy/cms-editor-protocol';
 import { Flex, PanelMessage, ResizableHandle, ResizablePanel, ResizablePanelGroup, Spinner, useHotkeys } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
 import { useQuery } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
+import i18next from 'i18next';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import './CmsEditor.css';
 import { AppProvider } from './context/AppContext';
@@ -12,9 +13,9 @@ import { MainContent } from './main/MainContent';
 import { MainToolbar } from './main/MainToolbar';
 import { useClient } from './protocol/ClientContextProvider';
 import { useAction } from './protocol/use-action';
+import { useMeta } from './protocol/use-meta';
 import { useQueryKeys } from './query/query-client';
 import { useKnownHotkeys } from './utils/hotkeys';
-import { useClientLanguage } from './utils/use-client-language';
 
 function CmsEditor(props: EditorProps) {
   const [detail, setDetail] = useState(true);
@@ -29,10 +30,10 @@ function CmsEditor(props: EditorProps) {
   const client = useClient();
   const { dataKey } = useQueryKeys();
 
-  const { clientLanguageTag } = useClientLanguage();
+  const { defaultLanguageTag, languageDisplayName } = useLanguage(context);
   const { data, isPending, isError, error } = useQuery({
-    queryKey: dataKey({ context, languageTags: [clientLanguageTag] }),
-    queryFn: async () => await client.data({ context, languageTags: [clientLanguageTag] }),
+    queryKey: dataKey({ context, languageTags: [defaultLanguageTag] }),
+    queryFn: async () => await client.data({ context, languageTags: [defaultLanguageTag] }),
     structuralSharing: false
   });
 
@@ -58,7 +59,18 @@ function CmsEditor(props: EditorProps) {
   const { mainTitle, detailTitle } = toolbarTitles(context.pmv, contentObject);
 
   return (
-    <AppProvider value={{ context, contentObjects, selectedContentObject, setSelectedContentObject, detail, setDetail }}>
+    <AppProvider
+      value={{
+        context,
+        contentObjects,
+        selectedContentObject,
+        setSelectedContentObject,
+        detail,
+        setDetail,
+        defaultLanguageTag,
+        languageDisplayName
+      }}
+    >
       <ResizablePanelGroup direction='horizontal'>
         <ResizablePanel defaultSize={75} minSize={50} className='cms-editor-main-panel'>
           <Flex direction='column' className='cms-editor-panel-content'>
@@ -92,4 +104,24 @@ export const toolbarTitles = (pmv: string, contentObject?: ContentObject) => {
     detailTitle += ` - ${contentObject.uri.substring(lastSlashIndex + 1)}`;
   }
   return { mainTitle, detailTitle };
+};
+
+export const useLanguage = (context: CmsEditorDataContext) => {
+  const clientLanguageTag = i18next.language;
+  const languageDisplayName = useMemo(() => new Intl.DisplayNames([clientLanguageTag], { type: 'language' }), [clientLanguageTag]);
+
+  const locales = useMeta('meta/locales', context, []);
+  const defaultLanguageTag = useMemo(() => defaultLanguage(locales.data, clientLanguageTag), [locales.data, clientLanguageTag]);
+
+  return { defaultLanguageTag, languageDisplayName };
+};
+
+const defaultLanguage = (locales: Array<string>, clientLanguageTag: string) => {
+  if (locales.includes(clientLanguageTag) || locales.length === 0) {
+    return clientLanguageTag;
+  }
+  if (locales.includes('en')) {
+    return 'en';
+  }
+  return locales[0];
 };

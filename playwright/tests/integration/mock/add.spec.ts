@@ -22,10 +22,10 @@ test('default values', async () => {
   await expect(editor.main.add.defaultLocaleTextbox).toHaveValue('');
 });
 
-test('show field for value of client locale if it is present in the cms', async ({ page }) => {
+test('show field for value of default language', async ({ page }) => {
   editor = await CmsEditor.openMock(page, { lng: 'ja' });
   await editor.main.add.trigger.click();
-  await expect(editor.main.add.defaultLocaleLabel).toBeHidden();
+  await expect(editor.main.add.defaultLocaleLabel).toHaveText('英語');
 
   editor = await CmsEditor.openMock(page, { lng: 'en' });
   await editor.main.add.trigger.click();
