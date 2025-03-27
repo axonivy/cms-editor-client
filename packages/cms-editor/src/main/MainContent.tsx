@@ -21,15 +21,13 @@ import { useVirtualizer } from '@tanstack/react-virtual';
 import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAppContext } from '../context/AppContext';
-import { useMeta } from '../protocol/use-meta';
 import { useKnownHotkeys } from '../utils/hotkeys';
-import { useClientLanguage } from '../utils/use-client-language';
 import './MainContent.css';
 import { MainControl } from './control/MainControl';
 
 export const MainContent = () => {
   const { t } = useTranslation();
-  const { context, contentObjects, setSelectedContentObject, detail, setDetail } = useAppContext();
+  const { contentObjects, setSelectedContentObject, detail, setDetail, defaultLanguageTag, languageDisplayName } = useAppContext();
 
   const selection = useTableSelect<ContentObject>({
     onSelect: selectedRows => {
@@ -51,22 +49,17 @@ export const MainContent = () => {
       minSize: 200,
       size: 500,
       maxSize: 1000
-    }
-  ];
-
-  const locales = useMeta('meta/locales', context, []).data;
-  const { clientLanguageTag, languageDisplayName } = useClientLanguage();
-  if (locales.includes(clientLanguageTag)) {
-    columns.push({
-      id: clientLanguageTag,
-      accessorFn: co => co.values[clientLanguageTag],
-      header: ({ column }) => <SortableHeader column={column} name={languageDisplayName.of(clientLanguageTag) ?? clientLanguageTag} />,
+    },
+    {
+      id: defaultLanguageTag,
+      accessorFn: co => co.values[defaultLanguageTag],
+      header: ({ column }) => <SortableHeader column={column} name={languageDisplayName.of(defaultLanguageTag) ?? defaultLanguageTag} />,
       cell: cell => <span>{cell.getValue()}</span>,
       minSize: 200,
       size: 500,
       maxSize: 1000
-    });
-  }
+    }
+  ];
 
   const table = useReactTable({
     ...selection.options,

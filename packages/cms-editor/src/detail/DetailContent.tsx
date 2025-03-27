@@ -6,14 +6,11 @@ import { useAppContext } from '../context/AppContext';
 import { useClient } from '../protocol/ClientContextProvider';
 import { useMeta } from '../protocol/use-meta';
 import { useQueryKeys } from '../query/query-client';
-import { useClientLanguage } from '../utils/use-client-language';
 import './DetailContent.css';
 
 export const DetailContent = () => {
   const { t } = useTranslation();
-  const { context, contentObjects, selectedContentObject } = useAppContext();
-
-  const { languageDisplayName } = useClientLanguage();
+  const { context, contentObjects, selectedContentObject, languageDisplayName } = useAppContext();
 
   const client = useClient();
   const { readKey } = useQueryKeys();

@@ -22,14 +22,12 @@ import {
 } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAppContext } from '../../context/AppContext';
 import { useClient } from '../../protocol/ClientContextProvider';
-import { useMeta } from '../../protocol/use-meta';
 import { genQueryKey, useQueryKeys } from '../../query/query-client';
 import { useKnownHotkeys } from '../../utils/hotkeys';
-import { useClientLanguage } from '../../utils/use-client-language';
 
 type AddContentObjectProps = {
   selectRow: (rowId: string) => void;
@@ -37,7 +35,8 @@ type AddContentObjectProps = {
 
 export const AddContentObject = ({ selectRow }: AddContentObjectProps) => {
   const { t } = useTranslation();
-  const { context, contentObjects, selectedContentObject, setSelectedContentObject } = useAppContext();
+  const { context, contentObjects, selectedContentObject, setSelectedContentObject, defaultLanguageTag, languageDisplayName } =
+    useAppContext();
 
   const [open, setOpen] = useState(false);
   const onOpenChange = (open: boolean) => {
@@ -54,14 +53,10 @@ export const AddContentObject = ({ selectRow }: AddContentObjectProps) => {
   const [namespace, setNamespace] = useState('');
   const [values, setValues] = useState<MapStringString>({});
 
-  const locales = useMeta('meta/locales', context, []).data;
-  const { clientLanguageTag, languageDisplayName } = useClientLanguage();
-  const isClientLanguageInCms = useMemo(() => locales.includes(clientLanguageTag), [clientLanguageTag, locales]);
-
   const initializeDialog = () => {
     setName('NewContentObject');
     setNamespace(initialNamespace(contentObjects, selectedContentObject));
-    setValues(isClientLanguageInCms ? { [clientLanguageTag]: '' } : {});
+    setValues({ [defaultLanguageTag]: '' });
   };
 
   const changeValue = (languageTag: string, value: string) => {
@@ -86,7 +81,7 @@ export const AddContentObject = ({ selectRow }: AddContentObjectProps) => {
       { context, contentObject: { uri, type: 'STRING', values } },
       {
         onSuccess: () => {
-          const data: CmsData | undefined = queryClient.getQueryData(dataKey({ context, languageTags: [clientLanguageTag] }));
+          const data: CmsData | undefined = queryClient.getQueryData(dataKey({ context, languageTags: [defaultLanguageTag] }));
           const selectedContentObject = data?.data
             .filter((contentObject: ContentObject) => contentObject.type !== 'FOLDER')
             .findIndex(co => co.uri === uri);
@@ -126,15 +121,13 @@ export const AddContentObject = ({ selectRow }: AddContentObjectProps) => {
           <BasicField label={t('common:label.namespace')}>
             <Input value={namespace} onChange={event => setNamespace(event.target.value)} disabled={isPending} />
           </BasicField>
-          {isClientLanguageInCms && (
-            <BasicField label={languageDisplayName.of(clientLanguageTag)} className='cms-editor-add-dialog-default-locale'>
-              <Textarea
-                value={values[clientLanguageTag]}
-                onChange={event => changeValue(clientLanguageTag, event.target.value)}
-                disabled={isPending}
-              />
-            </BasicField>
-          )}
+          <BasicField label={languageDisplayName.of(defaultLanguageTag)} className='cms-editor-add-dialog-default-locale'>
+            <Textarea
+              value={values[defaultLanguageTag]}
+              onChange={event => changeValue(defaultLanguageTag, event.target.value)}
+              disabled={isPending}
+            />
+          </BasicField>
           {isError && <Message variant='error' message={t('message.error', { error })} className='cms-editor-add-dialog-error-message' />}
         </Flex>
         <DialogFooter>
