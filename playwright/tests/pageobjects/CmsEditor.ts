@@ -33,12 +33,12 @@ export class CmsEditor {
     const serverUrl = server.replace(/^https?:\/\//, '');
     let url = `?server=${serverUrl}${ws}&app=${app}&pmv=${pmv}`;
     if (options) {
-      url += `${this.params(options)}`;
+      url += `&${this.params(options)}`;
     }
     return this.openUrl(page, url);
   }
 
-  static async openMock(page: Page, options?: { readonly?: boolean; app?: string }) {
+  static async openMock(page: Page, options?: { readonly?: boolean; app?: string; lng?: string }) {
     let params = '';
     if (options) {
       params = '?';
@@ -50,8 +50,8 @@ export class CmsEditor {
   private static params(options: Record<string, string | boolean>) {
     let params = '';
     params += Object.entries(options)
-      .map(([key, value]) => `&${key}=${value}`)
-      .join('');
+      .map(([key, value]) => `${key}=${value}`)
+      .join('&');
     return params;
   }
 

@@ -1,7 +1,7 @@
-import { deCommonTranslation, deTranslation, enCommonTranslation, enTranslation } from '@axonivy/cms-editor';
 import i18n from 'i18next';
-import LanguageDetector from 'i18next-browser-languagedetector';
 import { initReactI18next } from 'react-i18next';
+import { enTranslation, deTranslation, enCommonTranslation, deCommonTranslation } from '@axonivy/cms-editor';
+import LanguageDetector from 'i18next-browser-languagedetector';
 
 export const initTranslation = () => {
   if (i18n.isInitializing || i18n.isInitialized) return;
@@ -17,6 +17,9 @@ export const initTranslation = () => {
       resources: {
         en: { 'cms-editor': enTranslation, common: enCommonTranslation },
         de: { 'cms-editor': deTranslation, common: deCommonTranslation }
+      },
+      detection: {
+        order: ['querystring']
       }
     });
 };
