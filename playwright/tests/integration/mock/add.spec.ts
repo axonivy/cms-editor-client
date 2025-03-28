@@ -22,25 +22,16 @@ test('default values', async () => {
   await expect(editor.main.add.defaultLocaleTextbox).toHaveValue('');
 });
 
-test('show field for value of client locale if it is present in the cms', async () => {
-  editor.page.addInitScript(() => {
-    window.localStorage.setItem('i18nextLng', 'ja');
-  });
-  await editor.page.reload();
+test('show field for value of client locale if it is present in the cms', async ({ page }) => {
+  editor = await CmsEditor.openMock(page, { lng: 'ja' });
   await editor.main.add.trigger.click();
   await expect(editor.main.add.defaultLocaleLabel).toBeHidden();
 
-  editor.page.addInitScript(() => {
-    window.localStorage.setItem('i18nextLng', 'en');
-  });
-  await editor.page.reload();
+  editor = await CmsEditor.openMock(page, { lng: 'en' });
   await editor.main.add.trigger.click();
   await expect(editor.main.add.defaultLocaleLabel).toHaveText('English');
 
-  editor.page.addInitScript(() => {
-    window.localStorage.setItem('i18nextLng', 'de');
-  });
-  await editor.page.reload();
+  editor = await CmsEditor.openMock(page, { lng: 'de' });
   await editor.main.add.trigger.click();
   await expect(editor.main.add.defaultLocaleLabel).toHaveText('Deutsch');
 });

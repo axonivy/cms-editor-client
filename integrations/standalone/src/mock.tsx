@@ -5,7 +5,7 @@ import * as ReactDOM from 'react-dom/client';
 import './index.css';
 import { CmsClientMock } from './mock/cms-client-mock';
 import { readonlyParam, themeParam } from './url-helper';
-import { initTranslation } from '../i18n';
+import { initTranslation } from './i18n';
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {
