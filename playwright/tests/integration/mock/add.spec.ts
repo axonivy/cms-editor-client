@@ -19,21 +19,21 @@ test('default values', async () => {
   await editor.main.add.trigger.click();
   await expect(editor.main.add.name).toHaveValue('NewContentObject');
   await expect(editor.main.add.namespace).toHaveValue('/Dialogs/agileBPM/define_WF');
-  await expect(editor.main.add.defaultLocaleTextbox).toHaveValue('');
+  await expect(editor.main.add.value.textbox).toHaveValue('');
 });
 
 test('show field for value of default language', async ({ page }) => {
   editor = await CmsEditor.openMock(page, { lng: 'ja' });
   await editor.main.add.trigger.click();
-  await expect(editor.main.add.defaultLocaleLabel).toHaveText('英語');
+  await expect(editor.main.add.value.label).toHaveText('英語');
 
   editor = await CmsEditor.openMock(page, { lng: 'en' });
   await editor.main.add.trigger.click();
-  await expect(editor.main.add.defaultLocaleLabel).toHaveText('English');
+  await expect(editor.main.add.value.label).toHaveText('English');
 
   editor = await CmsEditor.openMock(page, { lng: 'de' });
   await editor.main.add.trigger.click();
-  await expect(editor.main.add.defaultLocaleLabel).toHaveText('Deutsch');
+  await expect(editor.main.add.value.label).toHaveText('Deutsch');
 });
 
 test('keyboard support', async () => {
@@ -65,7 +65,8 @@ test('disable dialog while create request is pending', async () => {
   await add.create.click();
   await expect(add.name).toBeDisabled();
   await expect(add.namespace).toBeDisabled();
-  await expect(add.defaultLocaleTextbox).toBeDisabled();
+  await expect(add.value.delete).toBeDisabled();
+  await expect(add.value.textbox).toBeDisabled();
   await expect(add.create).toBeDisabled();
   await editor.page.keyboard.press('Escape');
   await expect(add.locator).toBeVisible();

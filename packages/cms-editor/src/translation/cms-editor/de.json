@@ -16,5 +16,9 @@
   "message": {
     "emptyDetail": "Wähle ein Inhaltsobjekt aus um es zu bearbeiten.",
     "error": "Ein fehler ist aufgetreten: {{error}}"
+  },
+  "value": {
+    "delete": "Wert löschen",
+    "noValue": "[kein Wert]"
   }
 }

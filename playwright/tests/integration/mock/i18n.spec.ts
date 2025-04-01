@@ -7,12 +7,12 @@ test('translation', async ({ page }) => {
   await expect(editor.main.table.header(1).content).toHaveText('English');
   await expect(editor.detail.message).toHaveText('Select a Content Object to edit its values.');
   await editor.main.table.row(0).locator.click();
-  await expect(editor.detail.textbox('German')).toBeVisible();
+  await expect(editor.detail.value('German').locator).toBeVisible();
 
   editor = await CmsEditor.openMock(page, { lng: 'de' });
   await expect(editor.main.label).toHaveText('Inhaltsobjekte');
   await expect(editor.main.table.header(1).content).toHaveText('Deutsch');
   await expect(editor.detail.message).toHaveText('Wähle ein Inhaltsobjekt aus um es zu bearbeiten.');
   await editor.main.table.row(0).locator.click();
-  await expect(editor.detail.textbox('Deutsch')).toBeVisible();
+  await expect(editor.detail.value('Deutsch').locator).toBeVisible();
 });

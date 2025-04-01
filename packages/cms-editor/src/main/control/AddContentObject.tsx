@@ -13,7 +13,6 @@ import {
   hotkeyText,
   Input,
   Message,
-  Textarea,
   Tooltip,
   TooltipContent,
   TooltipProvider,
@@ -24,6 +23,8 @@ import { IvyIcons } from '@axonivy/ui-icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { CmsValueField } from '../../components/CmsValueField';
+import { CmsValueFieldProvider } from '../../components/CmsValueFieldContext';
 import { useAppContext } from '../../context/AppContext';
 import { useClient } from '../../protocol/ClientContextProvider';
 import { genQueryKey, useQueryKeys } from '../../query/query-client';
@@ -35,8 +36,7 @@ type AddContentObjectProps = {
 
 export const AddContentObject = ({ selectRow }: AddContentObjectProps) => {
   const { t } = useTranslation();
-  const { context, contentObjects, selectedContentObject, setSelectedContentObject, defaultLanguageTag, languageDisplayName } =
-    useAppContext();
+  const { context, contentObjects, selectedContentObject, setSelectedContentObject, defaultLanguageTag } = useAppContext();
 
   const [open, setOpen] = useState(false);
   const onOpenChange = (open: boolean) => {
@@ -57,13 +57,6 @@ export const AddContentObject = ({ selectRow }: AddContentObjectProps) => {
     setName('NewContentObject');
     setNamespace(initialNamespace(contentObjects, selectedContentObject));
     setValues({ [defaultLanguageTag]: '' });
-  };
-
-  const changeValue = (languageTag: string, value: string) => {
-    setValues(values => ({
-      ...values,
-      [languageTag]: value
-    }));
   };
 
   const client = useClient();
@@ -121,13 +114,9 @@ export const AddContentObject = ({ selectRow }: AddContentObjectProps) => {
           <BasicField label={t('common:label.namespace')}>
             <Input value={namespace} onChange={event => setNamespace(event.target.value)} disabled={isPending} />
           </BasicField>
-          <BasicField label={languageDisplayName.of(defaultLanguageTag)} className='cms-editor-add-dialog-default-locale'>
-            <Textarea
-              value={values[defaultLanguageTag]}
-              onChange={event => changeValue(defaultLanguageTag, event.target.value)}
-              disabled={isPending}
-            />
-          </BasicField>
+          <CmsValueFieldProvider value={{ values, setValues }}>
+            <CmsValueField languageTag={defaultLanguageTag} disabled={isPending} />
+          </CmsValueFieldProvider>
           {isError && <Message variant='error' message={t('message.error', { error })} className='cms-editor-add-dialog-error-message' />}
         </Flex>
         <DialogFooter>

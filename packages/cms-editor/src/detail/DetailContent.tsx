@@ -1,7 +1,9 @@
-import { BasicField, BasicInput, Flex, PanelMessage, Spinner, Textarea } from '@axonivy/ui-components';
+import { BasicField, BasicInput, Flex, PanelMessage, Spinner } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
+import { CmsValueField } from '../components/CmsValueField';
+import { CmsValueFieldProvider } from '../components/CmsValueFieldContext';
 import { useAppContext } from '../context/AppContext';
 import { useClient } from '../protocol/ClientContextProvider';
 import { useMeta } from '../protocol/use-meta';
@@ -10,7 +12,7 @@ import './DetailContent.css';
 
 export const DetailContent = () => {
   const { t } = useTranslation();
-  const { context, contentObjects, selectedContentObject, languageDisplayName } = useAppContext();
+  const { context, contentObjects, selectedContentObject } = useAppContext();
 
   const client = useClient();
   const { readKey } = useQueryKeys();
@@ -50,12 +52,12 @@ export const DetailContent = () => {
       <BasicField label='URI'>
         <BasicInput value={contentObject.uri} disabled />
       </BasicField>
-      <Flex direction='column' gap={4} className='cms-editor-locale-fields'>
-        {locales.map(languageTag => (
-          <BasicField key={languageTag} label={languageDisplayName.of(languageTag)}>
-            <Textarea value={contentObject.values[languageTag]} />
-          </BasicField>
-        ))}
+      <Flex direction='column' gap={4}>
+        <CmsValueFieldProvider value={{ values: contentObject.values, setValues: () => {} }}>
+          {locales.map(languageTag => (
+            <CmsValueField key={languageTag} languageTag={languageTag} />
+          ))}
+        </CmsValueFieldProvider>
       </Flex>
     </Flex>
   );

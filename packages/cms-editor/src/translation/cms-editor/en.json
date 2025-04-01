@@ -16,5 +16,9 @@
   "message": {
     "emptyDetail": "Select a Content Object to edit its values.",
     "error": "An error has occurred: {{error}}"
+  },
+  "value": {
+    "delete": "Delete value",
+    "noValue": "[no value]"
   }
 }

@@ -1,0 +1,51 @@
+import { fireEvent, screen } from '@testing-library/react';
+import i18n from 'i18next';
+import { useState } from 'react';
+import { initReactI18next } from 'react-i18next';
+import { customRender } from '../context/test-utils/test-utils';
+import { CmsValueField } from './CmsValueField';
+import { CmsValueFieldProvider } from './CmsValueFieldContext';
+
+test('value state', () => {
+  renderCmsValueField();
+
+  expect(screen.getByLabelText('English')).toHaveValue('');
+  expect(screen.getByLabelText('English')).toHaveAttribute('placeholder', 'value.noValue');
+  expect(screen.getByRole('button')).toBeDisabled();
+
+  fireEvent.change(screen.getByLabelText('English'), { target: { value: 'value' } });
+  expect(screen.getByLabelText('English')).toHaveValue('value');
+  expect(screen.getByLabelText('English')).not.toHaveAttribute('placeholder', expect.anything());
+  expect(screen.getByRole('button')).toBeEnabled();
+
+  fireEvent.click(screen.getByRole('button'));
+  expect(screen.getByLabelText('English')).toHaveValue('');
+  expect(screen.getByLabelText('English')).toHaveAttribute('placeholder', 'value.noValue');
+  expect(screen.getByRole('button')).toBeDisabled();
+});
+
+test('readonly', () => {
+  renderCmsValueField(true);
+
+  expect(screen.getByLabelText('English')).toBeDisabled();
+  expect(screen.queryByRole('button')).not.toBeInTheDocument();
+});
+
+const renderCmsValueField = (readonly?: boolean) => {
+  i18n.use(initReactI18next).init({ resources: {} });
+  return customRender(<TestWrapper />, {
+    wrapperProps: {
+      readonlyContext: { readonly },
+      appContext: { languageDisplayName: new Intl.DisplayNames(['en'], { type: 'language' }) }
+    }
+  });
+};
+
+const TestWrapper = () => {
+  const [values, setValues] = useState({});
+  return (
+    <CmsValueFieldProvider value={{ values, setValues }}>
+      <CmsValueField languageTag='en' />
+    </CmsValueFieldProvider>
+  );
+};

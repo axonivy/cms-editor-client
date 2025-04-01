@@ -38,12 +38,8 @@ test.describe('theme', () => {
 
 test('readonly', async () => {
   await expect(editor.main.add.trigger).toBeVisible();
-  await editor.main.table.row(0).locator.click();
-  await expect(editor.detail.textbox('English')).toBeEnabled();
   editor = await CmsEditor.openCms(editor.page, { readonly: true });
   await expect(editor.main.add.trigger).toBeHidden();
-  await editor.main.table.row(0).locator.click();
-  await expect(editor.detail.textbox('English')).toBeDisabled();
 });
 
 test('toolbar titles', async () => {
