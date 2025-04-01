@@ -13,8 +13,8 @@ import { MainToolbar } from './main/MainToolbar';
 import { useClient } from './protocol/ClientContextProvider';
 import { useAction } from './protocol/use-action';
 import { useQueryKeys } from './query/query-client';
+import { useLanguage } from './use-language';
 import { useKnownHotkeys } from './utils/hotkeys';
-import { useClientLanguage } from './utils/use-client-language';
 
 function CmsEditor(props: EditorProps) {
   const [detail, setDetail] = useState(true);
@@ -29,10 +29,10 @@ function CmsEditor(props: EditorProps) {
   const client = useClient();
   const { dataKey } = useQueryKeys();
 
-  const { clientLanguageTag } = useClientLanguage();
+  const { defaultLanguageTag, languageDisplayName } = useLanguage(context);
   const { data, isPending, isError, error } = useQuery({
-    queryKey: dataKey({ context, languageTags: [clientLanguageTag] }),
-    queryFn: async () => await client.data({ context, languageTags: [clientLanguageTag] }),
+    queryKey: dataKey({ context, languageTags: [defaultLanguageTag] }),
+    queryFn: async () => await client.data({ context, languageTags: [defaultLanguageTag] }),
     structuralSharing: false
   });
 
@@ -58,7 +58,18 @@ function CmsEditor(props: EditorProps) {
   const { mainTitle, detailTitle } = toolbarTitles(context.pmv, contentObject);
 
   return (
-    <AppProvider value={{ context, contentObjects, selectedContentObject, setSelectedContentObject, detail, setDetail }}>
+    <AppProvider
+      value={{
+        context,
+        contentObjects,
+        selectedContentObject,
+        setSelectedContentObject,
+        detail,
+        setDetail,
+        defaultLanguageTag,
+        languageDisplayName
+      }}
+    >
       <ResizablePanelGroup direction='horizontal'>
         <ResizablePanel defaultSize={75} minSize={50} className='cms-editor-main-panel'>
           <Flex direction='column' className='cms-editor-panel-content'>

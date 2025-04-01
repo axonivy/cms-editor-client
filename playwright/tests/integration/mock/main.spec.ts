@@ -33,10 +33,12 @@ test.describe('table keyboard support', () => {
   });
 });
 
-test('show column for client locale if it is present in the cms', async ({ page }) => {
+test('show column for default language', async ({ page }) => {
   editor = await CmsEditor.openMock(page, { lng: 'ja' });
-  await expect(editor.main.table.headers).toHaveCount(1);
+  await expect(editor.main.table.headers).toHaveCount(2);
   await expect(editor.main.table.header(0).content).toHaveText('URI');
+  await expect(editor.main.table.header(1).content).toHaveText('英語');
+  await expect(editor.main.table.row(2).column(1).content).toHaveText('Case');
 
   editor = await CmsEditor.openMock(page, { lng: 'en' });
   await expect(editor.main.table.headers).toHaveCount(2);
