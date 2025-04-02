@@ -1,4 +1,5 @@
 import { expect, type Locator, type Page } from '@playwright/test';
+import { Textbox } from '../abstract/Textbox';
 import { CmsValueField } from '../components/CmsValueField';
 import { DetailToolbar } from './DetailToolbar';
 
@@ -6,7 +7,7 @@ export class DetailPanel {
   readonly page: Page;
   readonly locator: Locator;
   readonly toolbar: DetailToolbar;
-  readonly uri: Locator;
+  readonly uri: Textbox;
   readonly values: Locator;
   readonly message: Locator;
 
@@ -14,7 +15,7 @@ export class DetailPanel {
     this.page = page;
     this.locator = this.page.locator('.cms-editor-detail-panel');
     this.toolbar = new DetailToolbar(this.locator);
-    this.uri = this.locator.getByRole('textbox', { name: 'URI' });
+    this.uri = new Textbox(this.locator, { name: 'URI' });
     this.values = this.locator.locator('.cms-editor-value-field');
     this.message = this.locator.locator('p');
   }
@@ -24,9 +25,9 @@ export class DetailPanel {
   }
 
   async expectToHaveValues(uri: string, values: Record<string, string>) {
-    await expect(this.uri).toHaveValue(uri);
+    await expect(this.uri.locator).toHaveValue(uri);
     for (const [language, value] of Object.entries(values)) {
-      await expect(this.value(language).textbox).toHaveValue(value);
+      await expect(this.value(language).textbox.locator).toHaveValue(value);
     }
   }
 }

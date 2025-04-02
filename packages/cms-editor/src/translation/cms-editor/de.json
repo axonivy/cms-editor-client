@@ -15,7 +15,12 @@
   },
   "message": {
     "emptyDetail": "Wähle ein Inhaltsobjekt aus um es zu bearbeiten.",
-    "error": "Ein fehler ist aufgetreten: {{error}}"
+    "emptyName": "Name darf nicht leer sein.",
+    "error": "Ein fehler ist aufgetreten: {{error}}",
+    "nameIsTaken": "Name ist bereits vorhanden in diesem Namensbereich.",
+    "namespaceInfo": "Ordnerstruktur des Inhaltsobjekts (z.B. '/Dialog/Label').",
+    "notAllowedChar": "Zeichen '{{- character}}' ist nicht erlaubt.",
+    "noValues": "Wert darf nicht leer sein."
   },
   "value": {
     "delete": "Wert löschen",

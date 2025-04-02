@@ -1,10 +1,11 @@
 import type { Locator, Page } from '@playwright/test';
+import { Textbox } from '../abstract/Textbox';
 
 export class CmsValueField {
   readonly locator: Locator;
   readonly label: Locator;
   readonly delete: Locator;
-  readonly textbox: Locator;
+  readonly textbox: Textbox;
 
   constructor(page: Page, parent: Locator, options?: { label?: string; nth?: number }) {
     if (options?.label) {
@@ -14,6 +15,6 @@ export class CmsValueField {
     }
     this.label = this.locator.locator('label');
     this.delete = this.locator.getByRole('button');
-    this.textbox = this.locator.getByRole('textbox');
+    this.textbox = new Textbox(this.locator);
   }
 }

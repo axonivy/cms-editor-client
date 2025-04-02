@@ -15,16 +15,16 @@ test('empty while no selecton', async () => {
 test('uri', async () => {
   const uri = editor.detail.uri;
   await editor.main.table.row(0).locator.click();
-  await expect(uri).toBeDisabled();
-  await expect(uri).toHaveValue('/Dialogs/agileBPM/define_WF/AddTask');
+  await expect(uri.locator).toBeDisabled();
+  await expect(uri.locator).toHaveValue('/Dialogs/agileBPM/define_WF/AddTask');
   await editor.main.table.row(1).locator.click();
-  await expect(uri).toBeDisabled();
-  await expect(uri).toHaveValue('/Dialogs/agileBPM/define_WF/AdhocWorkflowTasks');
+  await expect(uri.locator).toBeDisabled();
+  await expect(uri.locator).toHaveValue('/Dialogs/agileBPM/define_WF/AdhocWorkflowTasks');
 });
 
 test('a field for each locale', async () => {
   await editor.main.table.row(2).locator.click();
   await expect(editor.detail.values).toHaveCount(2);
-  await expect(editor.detail.value('English').textbox).toHaveValue('Case');
-  await expect(editor.detail.value('German').textbox).toHaveValue('Fall');
+  await expect(editor.detail.value('English').textbox.locator).toHaveValue('Case');
+  await expect(editor.detail.value('German').textbox.locator).toHaveValue('Fall');
 });

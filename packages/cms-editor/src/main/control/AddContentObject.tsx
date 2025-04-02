@@ -28,6 +28,7 @@ import { useAppContext } from '../../context/AppContext';
 import { useClient } from '../../protocol/ClientContextProvider';
 import { genQueryKey, useQueryKeys } from '../../query/query-client';
 import { useKnownHotkeys } from '../../utils/hotkeys';
+import { useValidateAddContentObject } from './use-validate-add-content-object';
 
 type AddContentObjectProps = {
   selectRow: (rowId: string) => void;
@@ -85,9 +86,21 @@ export const AddContentObject = ({ selectRow }: AddContentObjectProps) => {
     );
   };
 
+  const { nameMessage, valuesMessage } = useValidateAddContentObject(name, namespace, values, contentObjects);
+  const allInputsValid = !nameMessage && !valuesMessage;
+
   const { addContentObject: shortcut } = useKnownHotkeys();
   useHotkeys(shortcut.hotkey, () => onOpenChange(true), { scopes: ['global'], keyup: true, enabled: !open });
-  const enter = useHotkeys(['Enter', 'mod+Enter'], e => addContentObject(e), { scopes: ['global'], enabled: open, enableOnFormTags: true });
+  const enter = useHotkeys(
+    ['Enter', 'mod+Enter'],
+    e => {
+      if (!allInputsValid) {
+        return;
+      }
+      addContentObject(e);
+    },
+    { scopes: ['global'], enabled: open, enableOnFormTags: true }
+  );
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -107,13 +120,19 @@ export const AddContentObject = ({ selectRow }: AddContentObjectProps) => {
         </DialogHeader>
         <DialogDescription>{t('dialog.addContentObject.description')}</DialogDescription>
         <Flex direction='column' gap={3} ref={enter} tabIndex={-1}>
-          <BasicField label={t('common:label.name')}>
+          <BasicField label={t('common:label.name')} message={nameMessage}>
             <Input value={name} onChange={event => setName(event.target.value)} disabled={isPending} />
           </BasicField>
-          <BasicField label={t('common:label.namespace')}>
+          <BasicField label={t('common:label.namespace')} message={{ variant: 'info', message: t('message.namespaceInfo') }}>
             <Input value={namespace} onChange={event => setNamespace(event.target.value)} disabled={isPending} />
           </BasicField>
-          <CmsValueField values={values} setValues={setValues} languageTag={defaultLanguageTag} disabled={isPending} />
+          <CmsValueField
+            values={values}
+            setValues={setValues}
+            languageTag={defaultLanguageTag}
+            disabled={isPending}
+            message={valuesMessage}
+          />
           {isError && <Message variant='error' message={t('message.error', { error })} className='cms-editor-add-dialog-error-message' />}
         </Flex>
         <DialogFooter>
@@ -125,7 +144,7 @@ export const AddContentObject = ({ selectRow }: AddContentObjectProps) => {
                   size='large'
                   aria-label={t('dialog.addContentObject.create')}
                   onClick={addContentObject}
-                  disabled={isPending}
+                  disabled={!allInputsValid || isPending}
                   icon={isPending ? IvyIcons.Spinner : undefined}
                   spin
                 >

@@ -17,9 +17,9 @@ test('add', async () => {
 test('default values', async () => {
   await editor.main.table.row(0).locator.click();
   await editor.main.add.trigger.click();
-  await expect(editor.main.add.name).toHaveValue('NewContentObject');
-  await expect(editor.main.add.namespace).toHaveValue('/Dialogs/agileBPM/define_WF');
-  await expect(editor.main.add.value.textbox).toHaveValue('');
+  await expect(editor.main.add.name.locator).toHaveValue('NewContentObject');
+  await expect(editor.main.add.namespace.locator).toHaveValue('/Dialogs/agileBPM/define_WF');
+  await expect(editor.main.add.value.textbox.locator).toHaveValue('');
 });
 
 test('show field for value of default language', async ({ page }) => {
@@ -48,10 +48,10 @@ test('keyboard support', async () => {
 
   await add.trigger.click();
   await expect(add.locator).toBeVisible();
-  await add.namespace.fill('/A');
+  await add.namespace.locator.fill('/A');
   await keyboard.press('ControlOrMeta+Enter');
   await expect(add.locator).toBeVisible();
-  await add.name.fill('TestContentObject');
+  await add.name.locator.fill('TestContentObject');
   await keyboard.press('Enter');
   await expect(add.locator).toBeHidden();
   await expect(editor.main.table.row(0).column(0).content).toHaveText('/A/NewContentObject');
@@ -61,12 +61,12 @@ test('keyboard support', async () => {
 test('disable dialog while create request is pending', async () => {
   const add = editor.main.add;
   await add.trigger.click();
-  await add.name.fill('IsPending');
+  await add.name.locator.fill('IsPending');
   await add.create.click();
-  await expect(add.name).toBeDisabled();
-  await expect(add.namespace).toBeDisabled();
+  await expect(add.name.locator).toBeDisabled();
+  await expect(add.namespace.locator).toBeDisabled();
   await expect(add.value.delete).toBeDisabled();
-  await expect(add.value.textbox).toBeDisabled();
+  await expect(add.value.textbox.locator).toBeDisabled();
   await expect(add.create).toBeDisabled();
   await editor.page.keyboard.press('Escape');
   await expect(add.locator).toBeVisible();
@@ -75,10 +75,37 @@ test('disable dialog while create request is pending', async () => {
 
 test('show error if create request is error', async () => {
   const add = editor.main.add;
-  await expect(add.error).toBeHidden();
+  await expect(add.error.locator).toBeHidden();
   await add.trigger.click();
-  await add.name.fill('IsError');
+  await add.name.locator.fill('IsError');
   await add.create.click();
   await expect(add.locator).toBeVisible();
-  await expect(add.error).toHaveText('An error has occurred: Error: error message');
+  await add.error.expectToBeError('An error has occurred: Error: error message');
+});
+
+test('validation', async () => {
+  const add = editor.main.add;
+  await add.trigger.click();
+  const nameMessage = await add.name.message();
+  const namespaceMessage = await add.namespace.message();
+  const valueMessage = await add.value.textbox.message();
+
+  await namespaceMessage.expectToBeInfo("Folder structure of Content Object (e.g. '/Dialog/Label').");
+  await expect(add.create).toBeEnabled();
+
+  await add.name.locator.clear();
+  await nameMessage.expectToBeError('Name cannot be empty.');
+  await expect(add.create).toBeDisabled();
+  await editor.page.keyboard.press('Enter');
+  await expect(add.locator).toBeVisible();
+
+  await add.name.locator.fill('name');
+  await add.value.delete.click();
+  await valueMessage.expectToBeError('Value cannot be empty.');
+  await expect(add.create).toBeDisabled();
+  await editor.page.keyboard.press('Enter');
+  await expect(add.locator).toBeVisible();
+
+  await add.value.textbox.locator.fill('value');
+  await expect(add.create).toBeEnabled();
 });
