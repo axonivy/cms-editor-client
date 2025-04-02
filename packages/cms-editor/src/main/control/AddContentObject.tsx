@@ -2,6 +2,7 @@ import type { CmsCreateArgs, CmsData, ContentObject, MapStringString } from '@ax
 import {
   BasicField,
   Button,
+  Combobox,
   Dialog,
   DialogContent,
   DialogDescription,
@@ -124,7 +125,13 @@ export const AddContentObject = ({ selectRow }: AddContentObjectProps) => {
             <Input value={name} onChange={event => setName(event.target.value)} disabled={isPending} />
           </BasicField>
           <BasicField label={t('common:label.namespace')} message={{ variant: 'info', message: t('message.namespaceInfo') }}>
-            <Input value={namespace} onChange={event => setNamespace(event.target.value)} disabled={isPending} />
+            <Combobox
+              value={namespace}
+              onChange={setNamespace}
+              onInput={event => setNamespace(event.currentTarget.value)}
+              options={namespaceOptions(contentObjects)}
+              disabled={isPending}
+            />
           </BasicField>
           <CmsValueField
             values={values}
@@ -166,4 +173,8 @@ export const initialNamespace = (contentObjects: Array<ContentObject>, selectedC
   }
   const uri = contentObjects[selectedContentObject].uri;
   return uri.substring(0, uri.lastIndexOf('/'));
+};
+
+export const namespaceOptions = (contentObjects: Array<ContentObject>) => {
+  return [...new Set(contentObjects.map(co => co.uri.substring(0, co.uri.lastIndexOf('/'))))].map(option => ({ value: option }));
 };

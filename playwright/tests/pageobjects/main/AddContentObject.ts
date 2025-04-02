@@ -2,12 +2,13 @@ import { expect, type Locator, type Page } from '@playwright/test';
 import { Message } from '../abstract/Message';
 import { Textbox } from '../abstract/Textbox';
 import { CmsValueField } from '../components/CmsValueField';
+import { Combobox } from '../abstract/Combobox';
 
 export class AddContentObject {
   readonly locator: Locator;
   readonly trigger: Locator;
   readonly name: Textbox;
-  readonly namespace: Textbox;
+  readonly namespace: Combobox;
   readonly value: CmsValueField;
   readonly error: Message;
   readonly create: Locator;
@@ -16,7 +17,7 @@ export class AddContentObject {
     this.locator = page.getByRole('dialog');
     this.trigger = parent.locator('.cms-editor-main-control').getByRole('button').first();
     this.name = new Textbox(this.locator, { name: 'Name' });
-    this.namespace = new Textbox(this.locator, { name: 'Namespace' });
+    this.namespace = new Combobox(this.locator, { name: 'Namespace' });
     this.value = new CmsValueField(page, this.locator);
     this.error = new Message(this.locator, { className: 'cms-editor-add-dialog-error-message' });
     this.create = this.locator.getByRole('button', { name: 'Create Content Object' });

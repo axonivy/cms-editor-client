@@ -19,6 +19,14 @@ test('default values', async () => {
   await editor.main.add.trigger.click();
   await expect(editor.main.add.name.locator).toHaveValue('NewContentObject');
   await expect(editor.main.add.namespace.locator).toHaveValue('/Dialogs/agileBPM/define_WF');
+  await editor.main.add.namespace.expectToHaveOptions(
+    '/Dialogs/agileBPM/define_WF',
+    '/Dialogs/agileBPM/task_Form',
+    '/Dialogs/general',
+    '/Dialogs/procurementRequest',
+    '/Dialogs/signal',
+    '/Dialogs/trigger'
+  );
   await expect(editor.main.add.value.textbox.locator).toHaveValue('');
 });
 
