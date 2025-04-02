@@ -2,12 +2,16 @@ import type { Client, CmsEditorDataContext, ContentObject } from '@axonivy/cms-e
 import { ReadonlyProvider } from '@axonivy/ui-components';
 import { QueryClient } from '@tanstack/react-query';
 import { render, renderHook, type RenderHookOptions, type RenderOptions } from '@testing-library/react';
+import i18n from 'i18next';
 import type { ReactNode } from 'react';
+import { initReactI18next } from 'react-i18next';
+import { enCommonTranslation, enTranslation } from '../..';
 import { ClientContextProvider } from '../../protocol/ClientContextProvider';
 import { QueryProvider } from '../../query/QueryProvider';
 import { AppProvider } from '../AppContext';
 
 type ContextHelperProps = {
+  clientLanguage?: string;
   readonlyContext?: {
     readonly?: boolean;
   };
@@ -26,7 +30,24 @@ type ContextHelperProps = {
   };
 };
 
-const ContextHelper = ({ readonlyContext, clientContext, appContext, children }: ContextHelperProps & { children: ReactNode }) => {
+const initTranslation = (clientLanguage?: string) => {
+  if (i18n.isInitializing || i18n.isInitialized) return;
+  i18n.use(initReactI18next).init({
+    lng: clientLanguage ?? 'en',
+    fallbackLng: 'en',
+    ns: ['cms-editor'],
+    defaultNS: 'cms-editor',
+    resources: { en: { 'cms-editor': enTranslation, common: enCommonTranslation } }
+  });
+};
+
+const ContextHelper = ({
+  clientLanguage,
+  readonlyContext,
+  clientContext,
+  appContext,
+  children
+}: ContextHelperProps & { children: ReactNode }) => {
   const readonly = readonlyContext?.readonly !== undefined ? readonlyContext.readonly : false;
 
   const client = (clientContext?.client ?? {}) as Client;
@@ -41,6 +62,8 @@ const ContextHelper = ({ readonlyContext, clientContext, appContext, children }:
     defaultLanguageTag: appContext?.defaultLanguageTag ?? '',
     languageDisplayName: appContext?.languageDisplayName ?? ({} as Intl.DisplayNames)
   };
+
+  initTranslation(clientLanguage);
 
   return (
     <ReadonlyProvider readonly={readonly}>

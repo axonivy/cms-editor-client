@@ -1,7 +1,5 @@
 import { fireEvent, screen } from '@testing-library/react';
-import i18n from 'i18next';
 import { useState } from 'react';
-import { initReactI18next } from 'react-i18next';
 import { customRender } from '../context/test-utils/test-utils';
 import { CmsValueField } from './CmsValueField';
 import { CmsValueFieldProvider } from './CmsValueFieldContext';
@@ -10,7 +8,7 @@ test('value state', () => {
   renderCmsValueField();
 
   expect(screen.getByLabelText('English')).toHaveValue('');
-  expect(screen.getByLabelText('English')).toHaveAttribute('placeholder', 'value.noValue');
+  expect(screen.getByLabelText('English')).toHaveAttribute('placeholder', '[no value]');
   expect(screen.getByRole('button')).toBeDisabled();
 
   fireEvent.change(screen.getByLabelText('English'), { target: { value: 'value' } });
@@ -20,7 +18,7 @@ test('value state', () => {
 
   fireEvent.click(screen.getByRole('button'));
   expect(screen.getByLabelText('English')).toHaveValue('');
-  expect(screen.getByLabelText('English')).toHaveAttribute('placeholder', 'value.noValue');
+  expect(screen.getByLabelText('English')).toHaveAttribute('placeholder', '[no value]');
   expect(screen.getByRole('button')).toBeDisabled();
 });
 
@@ -32,7 +30,6 @@ test('readonly', () => {
 });
 
 const renderCmsValueField = (readonly?: boolean) => {
-  i18n.use(initReactI18next).init({ resources: {} });
   return customRender(<TestWrapper />, {
     wrapperProps: {
       readonlyContext: { readonly },
