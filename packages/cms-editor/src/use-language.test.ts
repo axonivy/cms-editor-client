@@ -1,6 +1,5 @@
 import type { Client, CmsEditorDataContext } from '@axonivy/cms-editor-protocol';
 import { waitFor } from '@testing-library/react';
-import i18next from 'i18next';
 import { customRenderHook } from './context/test-utils/test-utils';
 import { useLanguage } from './use-language';
 
@@ -23,9 +22,8 @@ test('useLanguage', async () => {
 });
 
 const renderLanguageHook = (clientLanguage: string, locales: Array<string>) => {
-  i18next.language = clientLanguage;
   return customRenderHook(() => useLanguage({} as CmsEditorDataContext), {
-    wrapperProps: { clientContext: { client: new TestClient(locales) } }
+    wrapperProps: { clientLanguage: clientLanguage, clientContext: { client: new TestClient(locales) } }
   });
 };
 

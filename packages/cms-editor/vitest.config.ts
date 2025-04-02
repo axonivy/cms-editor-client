@@ -1,5 +1,5 @@
-import { defineConfig } from 'vitest/config';
 import { resolve } from 'path';
+import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   test: {
@@ -10,6 +10,7 @@ export default defineConfig({
     },
     globals: true,
     environment: 'jsdom',
+    setupFiles: ['src/context/test-utils/setup-tests.tsx'],
     css: false,
     reporters: process.env.CI ? ['basic', 'junit'] : ['default'],
     outputFile: 'report.xml'

@@ -1,24 +1,86 @@
-import type { Client } from '@axonivy/cms-editor-protocol';
+import type { Client, CmsEditorDataContext, ContentObject } from '@axonivy/cms-editor-protocol';
+import { ReadonlyProvider } from '@axonivy/ui-components';
 import { QueryClient } from '@tanstack/react-query';
-import { renderHook, type RenderHookOptions } from '@testing-library/react';
+import { render, renderHook, type RenderHookOptions, type RenderOptions } from '@testing-library/react';
+import i18n from 'i18next';
 import type { ReactNode } from 'react';
+import { initReactI18next } from 'react-i18next';
+import { enCommonTranslation, enTranslation } from '../..';
 import { ClientContextProvider } from '../../protocol/ClientContextProvider';
 import { QueryProvider } from '../../query/QueryProvider';
+import { AppProvider } from '../AppContext';
 
 type ContextHelperProps = {
+  clientLanguage?: string;
+  readonlyContext?: {
+    readonly?: boolean;
+  };
   clientContext?: {
     client?: Partial<Client>;
   };
+  appContext?: {
+    context?: CmsEditorDataContext;
+    contentObjects?: Array<ContentObject>;
+    selectedContentObject?: number;
+    setSelectedContentObject?: (index?: number) => void;
+    detail?: boolean;
+    setDetail?: (visible: boolean) => void;
+    defaultLanguageTag?: string;
+    languageDisplayName?: Intl.DisplayNames;
+  };
 };
 
-const ContextHelper = ({ clientContext, children }: ContextHelperProps & { children: ReactNode }) => {
+const initTranslation = (clientLanguage?: string) => {
+  if (i18n.isInitializing || i18n.isInitialized) return;
+  i18n.use(initReactI18next).init({
+    lng: clientLanguage ?? 'en',
+    fallbackLng: 'en',
+    ns: ['cms-editor'],
+    defaultNS: 'cms-editor',
+    resources: { en: { 'cms-editor': enTranslation, common: enCommonTranslation } }
+  });
+};
+
+const ContextHelper = ({
+  clientLanguage,
+  readonlyContext,
+  clientContext,
+  appContext,
+  children
+}: ContextHelperProps & { children: ReactNode }) => {
+  const readonly = readonlyContext?.readonly !== undefined ? readonlyContext.readonly : false;
+
   const client = (clientContext?.client ?? {}) as Client;
 
+  const aContext = {
+    context: appContext?.context ?? ({} as CmsEditorDataContext),
+    contentObjects: appContext?.contentObjects ?? [],
+    selectedContentObject: appContext?.selectedContentObject,
+    setSelectedContentObject: appContext?.setSelectedContentObject ?? (() => {}),
+    detail: appContext?.detail !== undefined ? appContext.detail : true,
+    setDetail: appContext?.setDetail ?? (() => {}),
+    defaultLanguageTag: appContext?.defaultLanguageTag ?? '',
+    languageDisplayName: appContext?.languageDisplayName ?? ({} as Intl.DisplayNames)
+  };
+
+  initTranslation(clientLanguage);
+
   return (
-    <ClientContextProvider client={client}>
-      <QueryProvider client={new QueryClient()}>{children}</QueryProvider>
-    </ClientContextProvider>
+    <ReadonlyProvider readonly={readonly}>
+      <ClientContextProvider client={client}>
+        <QueryProvider client={new QueryClient()}>
+          <AppProvider value={aContext}>{children}</AppProvider>
+        </QueryProvider>
+      </ClientContextProvider>
+    </ReadonlyProvider>
   );
+};
+
+export const customRender = (ui: React.ReactElement, options?: RenderOptions & { wrapperProps: ContextHelperProps }) => {
+  return render(ui, {
+    wrapper: props => <ContextHelper {...props} {...options?.wrapperProps} />,
+    ...options
+  });
 };
 
 export const customRenderHook = <Result, Props>(
