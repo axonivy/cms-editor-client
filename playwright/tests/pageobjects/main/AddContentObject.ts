@@ -1,8 +1,8 @@
 import { expect, type Locator, type Page } from '@playwright/test';
+import { Combobox } from '../abstract/Combobox';
 import { Message } from '../abstract/Message';
 import { Textbox } from '../abstract/Textbox';
 import { CmsValueField } from '../components/CmsValueField';
-import { Combobox } from '../abstract/Combobox';
 
 export class AddContentObject {
   readonly locator: Locator;
@@ -15,7 +15,7 @@ export class AddContentObject {
 
   constructor(page: Page, parent: Locator) {
     this.locator = page.getByRole('dialog');
-    this.trigger = parent.locator('.cms-editor-main-control').getByRole('button').first();
+    this.trigger = parent.getByRole('button').first();
     this.name = new Textbox(this.locator, { name: 'Name' });
     this.namespace = new Combobox(this.locator, { name: 'Namespace' });
     this.value = new CmsValueField(page, this.locator);

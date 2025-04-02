@@ -1,4 +1,14 @@
-import type { CmsActionArgs, CmsCreateArgs, CmsData, CmsDataArgs, CmsDataObject, CmsEditorDataContext, CmsReadArgs, Void } from './editor';
+import type {
+  CmsActionArgs,
+  CmsCreateArgs,
+  CmsData,
+  CmsDataArgs,
+  CmsDataObject,
+  CmsDeleteArgs,
+  CmsEditorDataContext,
+  CmsReadArgs,
+  Void
+} from './editor';
 
 export type EditorProps = { context: CmsEditorDataContext };
 
@@ -8,6 +18,7 @@ export interface Client {
   data(args: CmsDataArgs): Promise<CmsData>;
   create(args: CmsCreateArgs): void;
   read(args: CmsReadArgs): Promise<CmsDataObject>;
+  delete(args: CmsDeleteArgs): void;
   meta<TMeta extends keyof MetaRequestTypes>(path: TMeta, args: MetaRequestTypes[TMeta][0]): Promise<MetaRequestTypes[TMeta][1]>;
   action(action: CmsActionArgs): void;
 }
@@ -24,6 +35,7 @@ export interface RequestTypes extends MetaRequestTypes {
   data: [CmsDataArgs, CmsData];
   create: [CmsCreateArgs, Void];
   read: [CmsReadArgs, CmsDataObject];
+  delete: [CmsDeleteArgs, Void];
 }
 
 export interface NotificationTypes {

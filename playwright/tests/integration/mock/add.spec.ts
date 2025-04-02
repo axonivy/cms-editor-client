@@ -8,7 +8,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 test('add', async () => {
-  await editor.main.add.add('TestContentObject', '/A/TestNamespace', 'TestValue');
+  await editor.main.control.add.add('TestContentObject', '/A/TestNamespace', 'TestValue');
   await editor.main.table.row(0).expectToBeSelected();
   await editor.main.table.row(0).expectToHaveValues('/A/TestNamespace/TestContentObject', 'TestValue');
   await editor.detail.expectToHaveValues('/A/TestNamespace/TestContentObject', { English: 'TestValue', German: '' });
@@ -16,10 +16,10 @@ test('add', async () => {
 
 test('default values', async () => {
   await editor.main.table.row(0).locator.click();
-  await editor.main.add.trigger.click();
-  await expect(editor.main.add.name.locator).toHaveValue('NewContentObject');
-  await expect(editor.main.add.namespace.locator).toHaveValue('/Dialogs/agileBPM/define_WF');
-  await editor.main.add.namespace.expectToHaveOptions(
+  await editor.main.control.add.trigger.click();
+  await expect(editor.main.control.add.name.locator).toHaveValue('NewContentObject');
+  await expect(editor.main.control.add.namespace.locator).toHaveValue('/Dialogs/agileBPM/define_WF');
+  await editor.main.control.add.namespace.expectToHaveOptions(
     '/Dialogs/agileBPM/define_WF',
     '/Dialogs/agileBPM/task_Form',
     '/Dialogs/general',
@@ -27,25 +27,25 @@ test('default values', async () => {
     '/Dialogs/signal',
     '/Dialogs/trigger'
   );
-  await expect(editor.main.add.value.textbox.locator).toHaveValue('');
+  await expect(editor.main.control.add.value.textbox.locator).toHaveValue('');
 });
 
 test('show field for value of default language', async ({ page }) => {
   editor = await CmsEditor.openMock(page, { lng: 'ja' });
-  await editor.main.add.trigger.click();
-  await expect(editor.main.add.value.label).toHaveText('英語');
+  await editor.main.control.add.trigger.click();
+  await expect(editor.main.control.add.value.label).toHaveText('英語');
 
   editor = await CmsEditor.openMock(page, { lng: 'en' });
-  await editor.main.add.trigger.click();
-  await expect(editor.main.add.value.label).toHaveText('English');
+  await editor.main.control.add.trigger.click();
+  await expect(editor.main.control.add.value.label).toHaveText('English');
 
   editor = await CmsEditor.openMock(page, { lng: 'de' });
-  await editor.main.add.trigger.click();
-  await expect(editor.main.add.value.label).toHaveText('Deutsch');
+  await editor.main.control.add.trigger.click();
+  await expect(editor.main.control.add.value.label).toHaveText('Deutsch');
 });
 
 test('keyboard support', async () => {
-  const add = editor.main.add;
+  const add = editor.main.control.add;
   const keyboard = editor.page.keyboard;
 
   await expect(add.locator).toBeHidden();
@@ -67,7 +67,7 @@ test('keyboard support', async () => {
 });
 
 test('disable dialog while create request is pending', async () => {
-  const add = editor.main.add;
+  const add = editor.main.control.add;
   await add.trigger.click();
   await add.name.locator.fill('IsPending');
   await add.create.click();
@@ -82,7 +82,7 @@ test('disable dialog while create request is pending', async () => {
 });
 
 test('show error if create request is error', async () => {
-  const add = editor.main.add;
+  const add = editor.main.control.add;
   await expect(add.error.locator).toBeHidden();
   await add.trigger.click();
   await add.name.locator.fill('IsError');
@@ -92,7 +92,7 @@ test('show error if create request is error', async () => {
 });
 
 test('validation', async () => {
-  const add = editor.main.add;
+  const add = editor.main.control.add;
   await add.trigger.click();
   const nameMessage = await add.name.message();
   const namespaceMessage = await add.namespace.message();

@@ -14,6 +14,7 @@ export interface CMS {
   cmsData: CmsData;
   cmsDataArgs: CmsDataArgs;
   cmsDataObject: CmsDataObject;
+  cmsDeleteArgs: CmsDeleteArgs;
   cmsEditorDataContext: CmsEditorDataContext;
   cmsReadArgs: CmsReadArgs;
   string: string[];
@@ -50,6 +51,10 @@ export interface CmsData {
 export interface CmsDataArgs {
   context: CmsEditorDataContext;
   languageTags: string[];
+}
+export interface CmsDeleteArgs {
+  context: CmsEditorDataContext;
+  uri: string;
 }
 export interface CmsReadArgs {
   context: CmsEditorDataContext;
