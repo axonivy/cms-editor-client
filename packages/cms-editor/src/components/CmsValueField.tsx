@@ -1,3 +1,4 @@
+import type { MapStringString } from '@axonivy/cms-editor-protocol';
 import {
   BasicField,
   Button,
@@ -9,20 +10,20 @@ import {
   useReadonly
 } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
-import { type ChangeEvent } from 'react';
+import { type ChangeEvent, type Dispatch, type SetStateAction } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAppContext } from '../context/AppContext';
-import { useCmsValueFieldContext } from './CmsValueFieldContext';
 
 type CmsValueFieldProps = {
+  values: MapStringString;
+  setValues: Dispatch<SetStateAction<MapStringString>>;
   languageTag: string;
   disabled?: boolean;
 };
 
-export const CmsValueField = ({ languageTag, disabled }: CmsValueFieldProps) => {
+export const CmsValueField = ({ values, setValues, languageTag, disabled }: CmsValueFieldProps) => {
   const { t } = useTranslation();
   const { languageDisplayName } = useAppContext();
-  const { values, setValues } = useCmsValueFieldContext();
 
   const value = values[languageTag];
   const isValuePresent = value !== undefined;

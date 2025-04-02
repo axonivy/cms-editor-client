@@ -24,7 +24,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CmsValueField } from '../../components/CmsValueField';
-import { CmsValueFieldProvider } from '../../components/CmsValueFieldContext';
 import { useAppContext } from '../../context/AppContext';
 import { useClient } from '../../protocol/ClientContextProvider';
 import { genQueryKey, useQueryKeys } from '../../query/query-client';
@@ -114,9 +113,7 @@ export const AddContentObject = ({ selectRow }: AddContentObjectProps) => {
           <BasicField label={t('common:label.namespace')}>
             <Input value={namespace} onChange={event => setNamespace(event.target.value)} disabled={isPending} />
           </BasicField>
-          <CmsValueFieldProvider value={{ values, setValues }}>
-            <CmsValueField languageTag={defaultLanguageTag} disabled={isPending} />
-          </CmsValueFieldProvider>
+          <CmsValueField values={values} setValues={setValues} languageTag={defaultLanguageTag} disabled={isPending} />
           {isError && <Message variant='error' message={t('message.error', { error })} className='cms-editor-add-dialog-error-message' />}
         </Flex>
         <DialogFooter>

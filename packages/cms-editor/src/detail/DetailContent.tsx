@@ -3,7 +3,6 @@ import { IvyIcons } from '@axonivy/ui-icons';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { CmsValueField } from '../components/CmsValueField';
-import { CmsValueFieldProvider } from '../components/CmsValueFieldContext';
 import { useAppContext } from '../context/AppContext';
 import { useClient } from '../protocol/ClientContextProvider';
 import { useMeta } from '../protocol/use-meta';
@@ -53,11 +52,9 @@ export const DetailContent = () => {
         <BasicInput value={contentObject.uri} disabled />
       </BasicField>
       <Flex direction='column' gap={4}>
-        <CmsValueFieldProvider value={{ values: contentObject.values, setValues: () => {} }}>
-          {locales.map(languageTag => (
-            <CmsValueField key={languageTag} languageTag={languageTag} />
-          ))}
-        </CmsValueFieldProvider>
+        {locales.map(languageTag => (
+          <CmsValueField key={languageTag} values={contentObject.values} setValues={() => {}} languageTag={languageTag} />
+        ))}
       </Flex>
     </Flex>
   );

@@ -2,7 +2,6 @@ import { fireEvent, screen } from '@testing-library/react';
 import { useState } from 'react';
 import { customRender } from '../context/test-utils/test-utils';
 import { CmsValueField } from './CmsValueField';
-import { CmsValueFieldProvider } from './CmsValueFieldContext';
 
 test('value state', () => {
   renderCmsValueField();
@@ -40,9 +39,5 @@ const renderCmsValueField = (readonly?: boolean) => {
 
 const TestWrapper = () => {
   const [values, setValues] = useState({});
-  return (
-    <CmsValueFieldProvider value={{ values, setValues }}>
-      <CmsValueField languageTag='en' />
-    </CmsValueFieldProvider>
-  );
+  return <CmsValueField values={values} setValues={setValues} languageTag='en' />;
 };
