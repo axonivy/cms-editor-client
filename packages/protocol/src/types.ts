@@ -5,8 +5,10 @@ import type {
   CmsDataArgs,
   CmsDataObject,
   CmsDeleteArgs,
+  CmsDeleteValueArgs,
   CmsEditorDataContext,
   CmsReadArgs,
+  CmsUpdateValueArgs,
   Void
 } from './editor';
 
@@ -18,6 +20,8 @@ export interface Client {
   data(args: CmsDataArgs): Promise<CmsData>;
   create(args: CmsCreateArgs): void;
   read(args: CmsReadArgs): Promise<CmsDataObject>;
+  updateValue(args: CmsUpdateValueArgs): void;
+  deleteValue(args: CmsDeleteValueArgs): void;
   delete(args: CmsDeleteArgs): void;
   meta<TMeta extends keyof MetaRequestTypes>(path: TMeta, args: MetaRequestTypes[TMeta][0]): Promise<MetaRequestTypes[TMeta][1]>;
   action(action: CmsActionArgs): void;
@@ -35,6 +39,8 @@ export interface RequestTypes extends MetaRequestTypes {
   data: [CmsDataArgs, CmsData];
   create: [CmsCreateArgs, Void];
   read: [CmsReadArgs, CmsDataObject];
+  updateValue: [CmsUpdateValueArgs, Void];
+  deleteValue: [CmsDeleteValueArgs, Void];
   delete: [CmsDeleteArgs, Void];
 }
 

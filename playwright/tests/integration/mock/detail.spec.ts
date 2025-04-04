@@ -28,3 +28,40 @@ test('a field for each locale', async () => {
   await expect(editor.detail.value('English').textbox.locator).toHaveValue('Case');
   await expect(editor.detail.value('German').textbox.locator).toHaveValue('Fall');
 });
+
+test('delete value', async () => {
+  const row = editor.main.table.row(2);
+  await row.locator.click();
+
+  const englishValue = editor.detail.value('English');
+  const germanValue = editor.detail.value('German');
+
+  await englishValue.expectToHaveState({
+    isDeleteButtonEnabled: true,
+    value: 'Case',
+    placeholder: '',
+    message: ''
+  });
+  await germanValue.expectToHaveState({
+    isDeleteButtonEnabled: true,
+    value: 'Fall',
+    placeholder: '',
+    message: ''
+  });
+  await expect(row.column(1).content).toHaveText('Case');
+
+  await englishValue.delete.click();
+  await englishValue.expectToHaveState({
+    isDeleteButtonEnabled: false,
+    value: '',
+    placeholder: '[no value]',
+    message: ''
+  });
+  await germanValue.expectToHaveState({
+    isDeleteButtonEnabled: false,
+    value: 'Fall',
+    placeholder: '',
+    message: 'The last value cannot be deleted.'
+  });
+  await expect(row.column(1).content).toHaveText('');
+});

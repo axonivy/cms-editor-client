@@ -1,4 +1,4 @@
-import { type Locator } from '@playwright/test';
+import { expect, type Locator } from '@playwright/test';
 import { Message } from './Message';
 
 export class Textbox {
@@ -20,5 +20,13 @@ export class Textbox {
       throw new Error('aria-describedby attribute is missing');
     }
     return new Message(this.parent, { id: describedBy });
+  }
+
+  async expectToHaveNoPlaceholder() {
+    expect(await this.locator.getAttribute('placeholder')).toBeNull();
+  }
+
+  async expectToHavePlaceholder(placeholder: string) {
+    await expect(this.locator).toHaveAttribute('placeholder', placeholder);
   }
 }
