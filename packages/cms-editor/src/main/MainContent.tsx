@@ -24,7 +24,7 @@ import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAppContext } from '../context/AppContext';
 import { useClient } from '../protocol/ClientContextProvider';
-import { genQueryKey, useQueryKeys } from '../query/query-client';
+import { useQueryKeys } from '../query/query-client';
 import { useKnownHotkeys } from '../utils/hotkeys';
 import './MainContent.css';
 import { MainControl } from './control/MainControl';
@@ -112,25 +112,27 @@ export const MainContent = () => {
   const { dataKey } = useQueryKeys();
 
   const { mutate } = useMutation({
-    mutationFn: async (args: CmsDeleteArgs) => client.delete(args),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: genQueryKey('data') })
+    mutationFn: async (args: CmsDeleteArgs) => {
+      const data = queryClient.setQueryData<CmsData>(dataKey({ context, languageTags: [defaultLanguageTag] }), data => {
+        if (!data) {
+          return;
+        }
+        return { ...data, data: data.data.filter(co => co.uri !== args.uri) };
+      });
+      if (data !== undefined && selectedContentObject !== undefined) {
+        const contentObjects = data?.data.filter(co => co.type !== 'FOLDER');
+        const selection = adjustSelectionAfterDeletionOfRow(contentObjects, table, selectedContentObject);
+        setSelectedContentObject(selection);
+      }
+      client.delete(args);
+    }
   });
 
   const deleteContentObject = () => {
     if (selectedContentObject === undefined) {
       return;
     }
-    mutate(
-      { context, uri: contentObjects[selectedContentObject].uri },
-      {
-        onSuccess: () => {
-          const data: CmsData | undefined = queryClient.getQueryData(dataKey({ context, languageTags: [defaultLanguageTag] }));
-          const contentObjects = data?.data.filter((contentObject: ContentObject) => contentObject.type !== 'FOLDER');
-          const selection = adjustSelectionAfterDeletionOfRow(contentObjects, table, selectedContentObject);
-          setSelectedContentObject(selection);
-        }
-      }
-    );
+    mutate({ context, uri: contentObjects[selectedContentObject].uri });
   };
 
   const ref = useHotkeys(hotkeys.deleteContentObject.hotkey, () => deleteContentObject(), { scopes: ['global'], enabled: !readonly });
