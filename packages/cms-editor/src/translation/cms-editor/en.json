@@ -8,7 +8,8 @@
     }
   },
   "hotkey": {
-    "addContentObject": "Add Content Object ({{hotkey}})"
+    "addContentObject": "Add Content Object ({{hotkey}})",
+    "deleteContentObject": "Delete Content Object ({{hotkey}})"
   },
   "label": {
     "contentObjects": "Content Objects"

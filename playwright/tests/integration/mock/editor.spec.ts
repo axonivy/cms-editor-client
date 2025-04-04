@@ -37,9 +37,9 @@ test.describe('theme', () => {
 });
 
 test('readonly', async () => {
-  await expect(editor.main.add.trigger).toBeVisible();
+  await expect(editor.main.control.locator).toBeVisible();
   editor = await CmsEditor.openCms(editor.page, { readonly: true });
-  await expect(editor.main.add.trigger).toBeHidden();
+  await expect(editor.main.control.locator).toBeHidden();
 });
 
 test('toolbar titles', async () => {

@@ -1,5 +1,6 @@
-import { type ContentObject } from '@axonivy/cms-editor-protocol';
+import { type CmsData, type CmsDeleteArgs, type ContentObject } from '@axonivy/cms-editor-protocol';
 import {
+  adjustSelectionAfterDeletionOfRow,
   BasicField,
   Flex,
   SelectRow,
@@ -16,18 +17,30 @@ import {
   useTableSelect,
   useTableSort
 } from '@axonivy/ui-components';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { flexRender, getCoreRowModel, useReactTable, type ColumnDef, type Row } from '@tanstack/react-table';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAppContext } from '../context/AppContext';
+import { useClient } from '../protocol/ClientContextProvider';
+import { useQueryKeys } from '../query/query-client';
 import { useKnownHotkeys } from '../utils/hotkeys';
 import './MainContent.css';
 import { MainControl } from './control/MainControl';
 
 export const MainContent = () => {
   const { t } = useTranslation();
-  const { contentObjects, setSelectedContentObject, detail, setDetail, defaultLanguageTag, languageDisplayName } = useAppContext();
+  const {
+    context,
+    contentObjects,
+    selectedContentObject,
+    setSelectedContentObject,
+    detail,
+    setDetail,
+    defaultLanguageTag,
+    languageDisplayName
+  } = useAppContext();
 
   const selection = useTableSelect<ContentObject>({
     onSelect: selectedRows => {
@@ -94,11 +107,49 @@ export const MainContent = () => {
 
   const readonly = useReadonly();
 
+  const client = useClient();
+  const queryClient = useQueryClient();
+  const { dataKey } = useQueryKeys();
+
+  const { mutate } = useMutation({
+    mutationFn: async (args: CmsDeleteArgs) => {
+      const data = queryClient.setQueryData<CmsData>(dataKey({ context, languageTags: [defaultLanguageTag] }), data => {
+        if (!data) {
+          return;
+        }
+        return { ...data, data: data.data.filter(co => co.uri !== args.uri) };
+      });
+      if (data !== undefined && selectedContentObject !== undefined) {
+        const contentObjects = data?.data.filter(co => co.type !== 'FOLDER');
+        const selection = adjustSelectionAfterDeletionOfRow(contentObjects, table, selectedContentObject);
+        setSelectedContentObject(selection);
+      }
+      client.delete(args);
+    }
+  });
+
+  const deleteContentObject = () => {
+    if (selectedContentObject === undefined) {
+      return;
+    }
+    mutate({ context, uri: contentObjects[selectedContentObject].uri });
+  };
+
+  const ref = useHotkeys(hotkeys.deleteContentObject.hotkey, () => deleteContentObject(), { scopes: ['global'], enabled: !readonly });
+
   return (
-    <Flex direction='column' onClick={() => selectRow(table)} className='cms-editor-main-content'>
+    <Flex direction='column' onClick={() => selectRow(table)} className='cms-editor-main-content' ref={ref}>
       <BasicField
         label={t('label.contentObjects')}
-        control={!readonly && <MainControl selectRow={(rowId: string) => selectRow(table, rowId)} />}
+        control={
+          !readonly && (
+            <MainControl
+              selectRow={(rowId: string) => selectRow(table, rowId)}
+              deleteContentObject={deleteContentObject}
+              hasSelection={table.getSelectedRowModel().flatRows.length !== 0}
+            />
+          )
+        }
         tabIndex={-1}
         ref={firstElement}
         onClick={event => event.stopPropagation()}
