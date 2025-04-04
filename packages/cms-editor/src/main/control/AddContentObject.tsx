@@ -28,6 +28,7 @@ import { CmsValueField } from '../../components/CmsValueField';
 import { useAppContext } from '../../context/AppContext';
 import { useClient } from '../../protocol/ClientContextProvider';
 import { genQueryKey, useQueryKeys } from '../../query/query-client';
+import { removeValue } from '../../utils/cms-utils';
 import { useKnownHotkeys } from '../../utils/hotkeys';
 import { useValidateAddContentObject } from './use-validate-add-content-object';
 
@@ -135,7 +136,8 @@ export const AddContentObject = ({ selectRow }: AddContentObjectProps) => {
           </BasicField>
           <CmsValueField
             values={values}
-            setValues={setValues}
+            updateValue={(languageTag: string, value: string) => setValues(values => ({ ...values, [languageTag]: value }))}
+            deleteValue={(languageTag: string) => setValues(values => removeValue(values, languageTag))}
             languageTag={defaultLanguageTag}
             disabled={isPending}
             message={valuesMessage}

@@ -11,39 +11,25 @@ import {
   type MessageData
 } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
-import { type ChangeEvent, type Dispatch, type SetStateAction } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAppContext } from '../context/AppContext';
 
 type CmsValueFieldProps = {
   values: MapStringString;
-  setValues: Dispatch<SetStateAction<MapStringString>>;
+  updateValue: (languageTag: string, value: string) => void;
+  deleteValue: (languageTag: string) => void;
   languageTag: string;
   disabled?: boolean;
+  disabledDelete?: boolean;
   message?: MessageData;
 };
 
-export const CmsValueField = ({ values, setValues, languageTag, disabled, message }: CmsValueFieldProps) => {
+export const CmsValueField = ({ values, updateValue, deleteValue, languageTag, disabled, disabledDelete, message }: CmsValueFieldProps) => {
   const { t } = useTranslation();
   const { languageDisplayName } = useAppContext();
 
   const value = values[languageTag];
   const isValuePresent = value !== undefined;
-
-  const deleteValue = () => {
-    setValues(values => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { [languageTag]: _, ...newValues } = { ...values };
-      return newValues;
-    });
-  };
-
-  const setValue = (event: ChangeEvent<HTMLTextAreaElement>) => {
-    setValues(values => ({
-      ...values,
-      [languageTag]: event.target.value
-    }));
-  };
 
   const readonly = useReadonly();
 
@@ -55,7 +41,12 @@ export const CmsValueField = ({ values, setValues, languageTag, disabled, messag
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button icon={IvyIcons.Trash} onClick={deleteValue} disabled={disabled || !isValuePresent} aria-label={t('value.delete')} />
+                <Button
+                  icon={IvyIcons.Trash}
+                  onClick={() => deleteValue(languageTag)}
+                  disabled={disabled || disabledDelete || !isValuePresent}
+                  aria-label={t('value.delete')}
+                />
               </TooltipTrigger>
               <TooltipContent>{t('value.delete')}</TooltipContent>
             </Tooltip>
@@ -68,7 +59,7 @@ export const CmsValueField = ({ values, setValues, languageTag, disabled, messag
       <Textarea
         value={isValuePresent ? value : ''}
         placeholder={isValuePresent ? undefined : t('value.noValue')}
-        onChange={setValue}
+        onChange={event => updateValue(languageTag, event.target.value)}
         disabled={disabled}
       />
     </BasicField>
