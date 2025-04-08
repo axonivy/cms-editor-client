@@ -36,9 +36,9 @@ export class CmsClientMock implements Client {
   }
 
   updateValue(args: CmsUpdateValueArgs): void {
-    const co = this.cmsData.data.find(co => co.uri === args.changeObject.uri);
+    const co = this.cmsData.data.find(co => co.uri === args.updateObject.uri);
     if (co) {
-      co.values = { ...co.values, [args.changeObject.languageTag]: args.changeObject.value };
+      co.values = { ...co.values, [args.updateObject.languageTag]: args.updateObject.value };
     }
   }
 
