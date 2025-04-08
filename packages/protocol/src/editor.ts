@@ -71,8 +71,8 @@ export interface CmsReadArgs {
   uri: string;
 }
 export interface CmsUpdateValueArgs {
-  changeObject: CmsUpdateValueObject;
   context: CmsEditorDataContext;
+  updateObject: CmsUpdateValueObject;
 }
 export interface CmsUpdateValueObject {
   languageTag: string;
