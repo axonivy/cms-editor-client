@@ -6,7 +6,9 @@ import type {
   CmsDataArgs,
   CmsDataObject,
   CmsDeleteArgs,
+  CmsDeleteValueArgs,
   CmsReadArgs,
+  CmsUpdateValueArgs,
   MetaRequestTypes,
   NotificationTypes,
   RequestTypes
@@ -24,6 +26,14 @@ export class ClientJsonRpc extends BaseRpcClient implements Client {
 
   read(args: CmsReadArgs): Promise<CmsDataObject> {
     return this.sendRequest('read', args);
+  }
+
+  updateValue(args: CmsUpdateValueArgs): void {
+    this.sendRequest('updateValue', args);
+  }
+
+  deleteValue(args: CmsDeleteValueArgs): void {
+    this.sendRequest('deleteValue', args);
   }
 
   delete(args: CmsDeleteArgs): void {

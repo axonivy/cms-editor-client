@@ -1,43 +1,39 @@
-import { fireEvent, screen } from '@testing-library/react';
-import { useState } from 'react';
+import type { MapStringString } from '@axonivy/cms-editor-protocol';
+import { screen } from '@testing-library/react';
 import { customRender } from '../context/test-utils/test-utils';
 import { CmsValueField } from './CmsValueField';
 
-test('value state', () => {
-  renderCmsValueField();
-
+test('state', () => {
+  const view = renderCmsValueField({});
   expect(screen.getByLabelText('English')).toHaveValue('');
   expect(screen.getByLabelText('English')).toHaveAttribute('placeholder', '[no value]');
   expect(screen.getByRole('button')).toBeDisabled();
 
-  fireEvent.change(screen.getByLabelText('English'), { target: { value: 'value' } });
-  expect(screen.getByLabelText('English')).toHaveValue('value');
+  view.rerenderWithValues({ en: '' });
+  expect(screen.getByLabelText('English')).toHaveValue('');
   expect(screen.getByLabelText('English')).not.toHaveAttribute('placeholder', expect.anything());
   expect(screen.getByRole('button')).toBeEnabled();
 
-  fireEvent.click(screen.getByRole('button'));
-  expect(screen.getByLabelText('English')).toHaveValue('');
-  expect(screen.getByLabelText('English')).toHaveAttribute('placeholder', '[no value]');
-  expect(screen.getByRole('button')).toBeDisabled();
+  view.rerenderWithValues({ en: 'value' });
+  expect(screen.getByLabelText('English')).toHaveValue('value');
+  expect(screen.getByLabelText('English')).not.toHaveAttribute('placeholder', expect.anything());
+  expect(screen.getByRole('button')).toBeEnabled();
 });
 
 test('readonly', () => {
-  renderCmsValueField(true);
+  renderCmsValueField({}, true);
 
   expect(screen.getByLabelText('English')).toBeDisabled();
   expect(screen.queryByRole('button')).not.toBeInTheDocument();
 });
 
-const renderCmsValueField = (readonly?: boolean) => {
-  return customRender(<TestWrapper />, {
+const renderCmsValueField = (values: MapStringString, readonly?: boolean) => {
+  const ui = (values: MapStringString) => <CmsValueField values={values} updateValue={() => {}} deleteValue={() => {}} languageTag='en' />;
+  const view = customRender(ui(values), {
     wrapperProps: {
       readonlyContext: { readonly },
       appContext: { languageDisplayName: new Intl.DisplayNames(['en'], { type: 'language' }) }
     }
   });
-};
-
-const TestWrapper = () => {
-  const [values, setValues] = useState({});
-  return <CmsValueField values={values} setValues={setValues} languageTag='en' />;
+  return { ...view, rerenderWithValues: (values: MapStringString) => view.rerender(ui(values)) };
 };

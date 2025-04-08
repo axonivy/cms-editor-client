@@ -1,3 +1,4 @@
+import { removeValue } from '@axonivy/cms-editor';
 import type {
   Client,
   CmsActionArgs,
@@ -5,7 +6,9 @@ import type {
   CmsData,
   CmsDataObject,
   CmsDeleteArgs,
-  CmsReadArgs
+  CmsDeleteValueArgs,
+  CmsReadArgs,
+  CmsUpdateValueArgs
 } from '@axonivy/cms-editor-protocol';
 import { contentObjects } from './data';
 import { locales } from './meta';
@@ -32,8 +35,22 @@ export class CmsClientMock implements Client {
     return Promise.resolve(this.cmsData.data.find(data => data.uri === args.uri) ?? ({} as CmsDataObject));
   }
 
+  updateValue(args: CmsUpdateValueArgs): void {
+    const co = this.cmsData.data.find(co => co.uri === args.changeObject.uri);
+    if (co) {
+      co.values = { ...co.values, [args.changeObject.languageTag]: args.changeObject.value };
+    }
+  }
+
+  deleteValue(args: CmsDeleteValueArgs): void {
+    const co = this.cmsData.data.find(co => co.uri === args.deleteObject.uri);
+    if (co) {
+      co.values = removeValue(co.values, args.deleteObject.languageTag);
+    }
+  }
+
   delete(args: CmsDeleteArgs): void {
-    this.cmsData = { ...this.cmsData, data: this.cmsData.data.filter(data => data.uri !== args.uri) };
+    this.cmsData = { ...this.cmsData, data: this.cmsData.data.filter(co => co.uri !== args.uri) };
   }
 
   meta(): Promise<Array<string>> {

@@ -15,8 +15,10 @@ export interface CMS {
   cmsDataArgs: CmsDataArgs;
   cmsDataObject: CmsDataObject;
   cmsDeleteArgs: CmsDeleteArgs;
+  cmsDeleteValueArgs: CmsDeleteValueArgs;
   cmsEditorDataContext: CmsEditorDataContext;
   cmsReadArgs: CmsReadArgs;
+  cmsUpdateValueArgs: CmsUpdateValueArgs;
   string: string[];
   void: Void;
   [k: string]: unknown;
@@ -56,8 +58,25 @@ export interface CmsDeleteArgs {
   context: CmsEditorDataContext;
   uri: string;
 }
+export interface CmsDeleteValueArgs {
+  context: CmsEditorDataContext;
+  deleteObject: CmsDeleteValueObject;
+}
+export interface CmsDeleteValueObject {
+  languageTag: string;
+  uri: string;
+}
 export interface CmsReadArgs {
   context: CmsEditorDataContext;
   uri: string;
+}
+export interface CmsUpdateValueArgs {
+  changeObject: CmsUpdateValueObject;
+  context: CmsEditorDataContext;
+}
+export interface CmsUpdateValueObject {
+  languageTag: string;
+  uri: string;
+  value: string;
 }
 export interface Void {}
