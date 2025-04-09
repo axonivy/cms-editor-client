@@ -1,23 +1,23 @@
 import type { CmsData, MapStringString } from '@axonivy/cms-editor-protocol';
-import { removeValueFromContentObjectInData } from './DetailContent';
+import { updateValuesOfContentObjectInData } from './DetailContent';
 
-test('removeValueFromContentObjectInData', () => {
+test('updateValuesOfContentObjectInData', () => {
   const data = {
     data: [
       { uri: 'uriOne', values: { en: 'englishOne', de: 'deutschEins' } as MapStringString },
       { uri: 'uriTwo', values: { en: 'englishTwo', de: 'deutschZwei' } as MapStringString }
     ]
   } as CmsData;
-  expect(removeValueFromContentObjectInData(data, 'uriOne', 'de')).toEqual({
+  expect(updateValuesOfContentObjectInData(data, 'uriOne', () => ({ new: 'values' }))).toEqual({
     data: [
-      { uri: 'uriOne', values: { en: 'englishOne' } },
+      { uri: 'uriOne', values: { new: 'values' } },
       { uri: 'uriTwo', values: { en: 'englishTwo', de: 'deutschZwei' } }
     ]
   });
-  expect(removeValueFromContentObjectInData(data, 'uriTwo', 'en')).toEqual({
+  expect(updateValuesOfContentObjectInData(data, 'uriTwo', () => ({ new: 'values' }))).toEqual({
     data: [
       { uri: 'uriOne', values: { en: 'englishOne', de: 'deutschEins' } },
-      { uri: 'uriTwo', values: { de: 'deutschZwei' } }
+      { uri: 'uriTwo', values: { new: 'values' } }
     ]
   });
 });

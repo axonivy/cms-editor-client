@@ -65,3 +65,17 @@ test('delete value', async () => {
   });
   await expect(row.column(1).content).toHaveText('');
 });
+
+test('update value', async () => {
+  const row = editor.main.table.row(2);
+  await row.locator.click();
+
+  const englishValue = editor.detail.value('English');
+
+  await expect(englishValue.textbox.locator).toHaveValue('Case');
+  await expect(row.column(1).content).toHaveText('Case');
+
+  await englishValue.textbox.locator.fill('New Value');
+  await expect(englishValue.textbox.locator).toHaveValue('New Value');
+  await expect(row.column(1).content).toHaveText('New Value');
+});
