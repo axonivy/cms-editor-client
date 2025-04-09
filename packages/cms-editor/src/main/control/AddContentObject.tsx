@@ -122,10 +122,10 @@ export const AddContentObject = ({ selectRow }: AddContentObjectProps) => {
         </DialogHeader>
         <DialogDescription>{t('dialog.addContentObject.description')}</DialogDescription>
         <Flex direction='column' gap={3} ref={enter} tabIndex={-1}>
-          <BasicField label={t('common:label.name')} message={nameMessage}>
+          <BasicField label={t('common.label.name')} message={nameMessage}>
             <Input value={name} onChange={event => setName(event.target.value)} disabled={isPending} />
           </BasicField>
-          <BasicField label={t('common:label.namespace')} message={{ variant: 'info', message: t('message.namespaceInfo') }}>
+          <BasicField label={t('common.label.namespace')} message={{ variant: 'info', message: t('message.namespaceInfo') }}>
             <Combobox
               value={namespace}
               onChange={setNamespace}

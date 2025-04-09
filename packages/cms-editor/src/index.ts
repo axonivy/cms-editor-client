@@ -5,6 +5,4 @@ export * from './query/query-client';
 export * from './query/QueryProvider';
 export { default as deTranslation } from './translation/cms-editor/de.json';
 export { default as enTranslation } from './translation/cms-editor/en.json';
-export { default as deCommonTranslation } from './translation/common/de.json';
-export { default as enCommonTranslation } from './translation/common/en.json';
 export * from './utils/cms-utils';

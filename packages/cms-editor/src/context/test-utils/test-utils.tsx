@@ -5,7 +5,7 @@ import { render, renderHook, type RenderHookOptions, type RenderOptions } from '
 import i18n from 'i18next';
 import type { ReactNode } from 'react';
 import { initReactI18next } from 'react-i18next';
-import { enCommonTranslation, enTranslation } from '../..';
+import { enTranslation } from '../..';
 import { ClientContextProvider } from '../../protocol/ClientContextProvider';
 import { QueryProvider } from '../../query/QueryProvider';
 import { AppProvider } from '../AppContext';
@@ -37,7 +37,7 @@ const initTranslation = (clientLanguage?: string) => {
     fallbackLng: 'en',
     ns: ['cms-editor'],
     defaultNS: 'cms-editor',
-    resources: { en: { 'cms-editor': enTranslation, common: enCommonTranslation } }
+    resources: { en: { 'cms-editor': enTranslation } }
   });
 };
 
