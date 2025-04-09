@@ -1,4 +1,19 @@
 {
+  "common": {
+    "hotkey": {
+      "focusInscription": "Fokus Inscription ({{hotkey}})",
+      "focusMain": "Fokus Main ({{hotkey}})",
+      "focusToolbar": "Fokus Toolbar ({{hotkey}})",
+      "help": "Hilfe öffnen ({{hotkey}})"
+    },
+    "label": {
+      "details": "Details",
+      "name": "Name",
+      "namespace": "Namensbereich",
+      "settings": "Einstellungen",
+      "theme": "Thema"
+    }
+  },
   "dialog": {
     "addContentObject": {
       "create": "Inhaltsobjekt erstellen",
