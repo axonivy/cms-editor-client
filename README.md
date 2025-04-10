@@ -1,5 +1,7 @@
 # CMS Editor
 
+[![translation-status](https://hosted.weblate.org/widget/axonivy/cms-editor/svg-badge.svg)](https://hosted.weblate.org/engage/axonivy/)
+
 This repo contains the web-based CMS Editor client.
 
 ### Available Scripts
@@ -14,7 +16,7 @@ This repo contains the web-based CMS Editor client.
 
 `npm run test`: Run unit tests
 
-`npm run webtest`: Run Playwright tests 
+`npm run webtest`: Run Playwright tests
 
 ### VSCode dev environment
 
