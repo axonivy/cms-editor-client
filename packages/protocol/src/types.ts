@@ -18,7 +18,7 @@ export type { CmsDataObject as ContentObject };
 
 export interface Client {
   data(args: CmsDataArgs): Promise<CmsData>;
-  create(args: CmsCreateArgs): void;
+  create(args: CmsCreateArgs): Promise<Void>;
   read(args: CmsReadArgs): Promise<CmsDataObject>;
   updateValue(args: CmsUpdateValueArgs): void;
   deleteValue(args: CmsDeleteValueArgs): void;

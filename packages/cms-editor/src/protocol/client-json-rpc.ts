@@ -11,7 +11,8 @@ import type {
   CmsUpdateValueArgs,
   MetaRequestTypes,
   NotificationTypes,
-  RequestTypes
+  RequestTypes,
+  Void
 } from '@axonivy/cms-editor-protocol';
 import { BaseRpcClient, createMessageConnection, urlBuilder, type Connection, type MessageConnection } from '@axonivy/jsonrpc';
 
@@ -20,8 +21,8 @@ export class ClientJsonRpc extends BaseRpcClient implements Client {
     return this.sendRequest('data', args);
   }
 
-  create(args: CmsCreateArgs): void {
-    this.sendRequest('create', args);
+  create(args: CmsCreateArgs): Promise<Void> {
+    return this.sendRequest('create', args);
   }
 
   read(args: CmsReadArgs): Promise<CmsDataObject> {
