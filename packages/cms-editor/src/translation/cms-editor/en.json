@@ -20,11 +20,20 @@
       "createTooltip": "Hold {{modifier}} to add an additional Content Object.",
       "description": "Choose the name, namespace, and values of the Content Object you want to add.",
       "title": "Add Content Object"
+    },
+    "languageTool": {
+      "description": "Edit the languages of the CMS.",
+      "label": {
+        "defaultLanguage": "Default Language"
+      },
+      "save": "Save",
+      "title": "Language Tool"
     }
   },
   "hotkey": {
     "addContentObject": "Add Content Object ({{hotkey}})",
-    "deleteContentObject": "Delete Content Object ({{hotkey}})"
+    "deleteContentObject": "Delete Content Object ({{hotkey}})",
+    "languageTool": "Language Tool ({{hotkey}})"
   },
   "label": {
     "contentObjects": "Content Objects"
