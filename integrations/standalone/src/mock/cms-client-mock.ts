@@ -8,7 +8,8 @@ import type {
   CmsDeleteArgs,
   CmsDeleteValueArgs,
   CmsReadArgs,
-  CmsUpdateValueArgs
+  CmsUpdateValueArgs,
+  Void
 } from '@axonivy/cms-editor-protocol';
 import { contentObjects } from './data';
 import { locales } from './meta';
@@ -20,7 +21,7 @@ export class CmsClientMock implements Client {
     return Promise.resolve(this.cmsData);
   }
 
-  async create(args: CmsCreateArgs): Promise<void> {
+  async create(args: CmsCreateArgs): Promise<Void> {
     const uri = args.contentObject.uri;
     if (uri.endsWith('IsPending')) {
       await new Promise(res => setTimeout(res, 1000));
@@ -29,6 +30,7 @@ export class CmsClientMock implements Client {
     }
     this.cmsData.data.push(args.contentObject);
     this.cmsData.data.sort((co1, co2) => co1.uri.localeCompare(co2.uri));
+    return Promise.resolve({});
   }
 
   read(args: CmsReadArgs): Promise<CmsDataObject> {

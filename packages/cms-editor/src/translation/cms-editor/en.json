@@ -32,7 +32,7 @@
   "message": {
     "emptyDetail": "Select a Content Object to edit its values.",
     "emptyName": "Name cannot be empty.",
-    "error": "An error has occurred: {{error}}",
+    "error": "An error has occurred: {{- error}}",
     "nameIsTaken": "Name is already present in this Namespace.",
     "namespaceInfo": "Folder structure of Content Object (e.g. '/Dialog/Label').",
     "notAllowedChar": "Character '{{- character}}' is not allowed.",
