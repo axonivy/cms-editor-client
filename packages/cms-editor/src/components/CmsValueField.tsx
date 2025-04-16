@@ -21,10 +21,20 @@ type CmsValueFieldProps = {
   languageTag: string;
   disabled?: boolean;
   disabledDelete?: boolean;
+  deleteTooltip?: string;
   message?: MessageData;
 };
 
-export const CmsValueField = ({ values, updateValue, deleteValue, languageTag, disabled, disabledDelete, message }: CmsValueFieldProps) => {
+export const CmsValueField = ({
+  values,
+  updateValue,
+  deleteValue,
+  languageTag,
+  disabled,
+  disabledDelete,
+  deleteTooltip,
+  message
+}: CmsValueFieldProps) => {
   const { t } = useTranslation();
   const { languageDisplayName } = useAppContext();
 
@@ -48,7 +58,7 @@ export const CmsValueField = ({ values, updateValue, deleteValue, languageTag, d
                   aria-label={t('value.delete')}
                 />
               </TooltipTrigger>
-              <TooltipContent>{t('value.delete')}</TooltipContent>
+              <TooltipContent>{deleteTooltip ?? t('value.delete')}</TooltipContent>
             </Tooltip>
           </TooltipProvider>
         )
