@@ -9,10 +9,11 @@ import type {
   CmsDeleteValueArgs,
   CmsReadArgs,
   CmsUpdateValueArgs,
+  MetaRequestTypes,
   Void
 } from '@axonivy/cms-editor-protocol';
 import { contentObjects } from './data';
-import { locales } from './meta';
+import { locales, supportedLocales } from './meta';
 
 export class CmsClientMock implements Client {
   private cmsData: CmsData = contentObjects;
@@ -55,8 +56,15 @@ export class CmsClientMock implements Client {
     this.cmsData = { ...this.cmsData, data: this.cmsData.data.filter(co => co.uri !== args.uri) };
   }
 
-  meta(): Promise<Array<string>> {
-    return Promise.resolve(locales);
+  meta<TMeta extends keyof MetaRequestTypes>(path: TMeta): Promise<Array<string>> {
+    switch (path) {
+      case 'meta/supportedLocales':
+        return Promise.resolve(supportedLocales);
+      case 'meta/locales':
+        return Promise.resolve(locales);
+      default:
+        throw Error('meta path not implemented');
+    }
   }
 
   action(action: CmsActionArgs): void {

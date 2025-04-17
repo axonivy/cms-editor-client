@@ -1,9 +1,24 @@
 import type { Client, CmsEditorDataContext } from '@axonivy/cms-editor-protocol';
 import { waitFor } from '@testing-library/react';
 import { customRenderHook } from './context/test-utils/test-utils';
-import { useLanguage } from './use-language';
+import { defaultLanguageTagKey, useLanguage } from './use-language';
 
-test('useLanguage', async () => {
+afterEach(() => localStorage.clear());
+
+test('default language set via local storage', async () => {
+  localStorage.setItem(defaultLanguageTagKey, 'en');
+  const view = renderLanguageHook('de', []);
+  expect(view.result.current.defaultLanguageTag).toEqual('en');
+  expect(view.result.current.languageDisplayName.resolvedOptions().locale).toEqual('de');
+
+  view.result.current.setDefaultLanguageTag('ja');
+  view.rerender();
+  expect(view.result.current.defaultLanguageTag).toEqual('ja');
+  expect(view.result.current.languageDisplayName.resolvedOptions().locale).toEqual('de');
+  expect(localStorage.getItem(defaultLanguageTagKey)).toEqual('ja');
+});
+
+test('default language not set via local storage', async () => {
   let result = renderLanguageHook('de', []).result;
   expect(result.current.defaultLanguageTag).toEqual('de');
   expect(result.current.languageDisplayName.resolvedOptions().locale).toEqual('de');

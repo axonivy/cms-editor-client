@@ -15,7 +15,7 @@ export class AddContentObject {
 
   constructor(page: Page, parent: Locator) {
     this.locator = page.getByRole('dialog');
-    this.trigger = parent.getByRole('button').first();
+    this.trigger = parent.getByRole('button', { name: 'Add Content Object' });
     this.name = new Textbox(this.locator, { name: 'Name' });
     this.namespace = new Combobox(this.locator, { name: 'Namespace' });
     this.value = new CmsValueField(page, this.locator);

@@ -32,15 +32,15 @@ test('default values', async () => {
 
 test('show field for value of default language', async ({ page }) => {
   editor = await CmsEditor.openMock(page, { lng: 'ja' });
-  await editor.main.control.add.trigger.click();
+  await editor.page.keyboard.press('a');
   await expect(editor.main.control.add.value.label).toHaveText('英語');
 
   editor = await CmsEditor.openMock(page, { lng: 'en' });
-  await editor.main.control.add.trigger.click();
+  await editor.page.keyboard.press('a');
   await expect(editor.main.control.add.value.label).toHaveText('English');
 
   editor = await CmsEditor.openMock(page, { lng: 'de' });
-  await editor.main.control.add.trigger.click();
+  await editor.page.keyboard.press('a');
   await expect(editor.main.control.add.value.label).toHaveText('Deutsch');
 });
 

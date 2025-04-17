@@ -26,6 +26,7 @@ type ContextHelperProps = {
     detail?: boolean;
     setDetail?: (visible: boolean) => void;
     defaultLanguageTag?: string;
+    setDefaultLanguageTag?: (languageTag: string) => void;
     languageDisplayName?: Intl.DisplayNames;
   };
 };
@@ -60,6 +61,7 @@ const ContextHelper = ({
     detail: appContext?.detail !== undefined ? appContext.detail : true,
     setDetail: appContext?.setDetail ?? (() => {}),
     defaultLanguageTag: appContext?.defaultLanguageTag ?? '',
+    setDefaultLanguageTag: appContext?.setDefaultLanguageTag ?? (() => {}),
     languageDisplayName: appContext?.languageDisplayName ?? ({} as Intl.DisplayNames)
   };
 
