@@ -113,11 +113,7 @@ export const DetailContent = () => {
             deleteValue={(languageTag: string) => deleteMutation.mutate({ context, deleteObject: { uri, languageTag } })}
             languageTag={languageTag}
             disabledDelete={hasExactlyOneValue}
-            message={
-              hasExactlyOneValue && contentObject.values[languageTag] !== undefined
-                ? { message: t('value.lastValue'), variant: 'info' }
-                : undefined
-            }
+            deleteTooltip={hasExactlyOneValue && contentObject.values[languageTag] !== undefined ? t('value.lastValue') : undefined}
           />
         ))}
       </Flex>

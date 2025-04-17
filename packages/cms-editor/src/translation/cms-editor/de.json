@@ -40,7 +40,7 @@
   },
   "value": {
     "delete": "Wert löschen",
-    "lastValue": "Der letzte Wert kann nicht gelöscht werden.",
+    "lastValue": "Der letzte Wert kann nicht gelöscht werden",
     "noValue": "[kein Wert]"
   }
 }

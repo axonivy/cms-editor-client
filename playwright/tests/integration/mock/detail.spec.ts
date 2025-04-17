@@ -38,30 +38,30 @@ test('delete value', async () => {
 
   await englishValue.expectToHaveState({
     isDeleteButtonEnabled: true,
+    deleteButtonTooltip: 'Delete value',
     value: 'Case',
-    placeholder: '',
-    message: ''
+    placeholder: ''
   });
   await germanValue.expectToHaveState({
     isDeleteButtonEnabled: true,
+    deleteButtonTooltip: 'Delete value',
     value: 'Fall',
-    placeholder: '',
-    message: ''
+    placeholder: ''
   });
   await expect(row.column(1).content).toHaveText('Case');
 
   await englishValue.delete.click();
   await englishValue.expectToHaveState({
     isDeleteButtonEnabled: false,
+    deleteButtonTooltip: 'Delete value',
     value: '',
-    placeholder: '[no value]',
-    message: ''
+    placeholder: '[no value]'
   });
   await germanValue.expectToHaveState({
     isDeleteButtonEnabled: false,
+    deleteButtonTooltip: 'The last value cannot be deleted',
     value: 'Fall',
-    placeholder: '',
-    message: 'The last value cannot be deleted.'
+    placeholder: ''
   });
   await expect(row.column(1).content).toHaveText('');
 });
