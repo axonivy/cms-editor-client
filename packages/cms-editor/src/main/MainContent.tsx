@@ -138,7 +138,7 @@ export const MainContent = () => {
   const ref = useHotkeys(hotkeys.deleteContentObject.hotkey, () => deleteContentObject(), { scopes: ['global'], enabled: !readonly });
 
   return (
-    <Flex direction='column' onClick={() => selectRow(table)} className='cms-editor-main-content' ref={ref}>
+    <Flex direction='column' onClick={() => table.resetRowSelection()} className='cms-editor-main-content' ref={ref}>
       <BasicField
         label={t('label.contentObjects')}
         control={
@@ -158,7 +158,7 @@ export const MainContent = () => {
         {globalFilter.filter}
         <div ref={tableContainer} className='cms-editor-main-table-container'>
           <Table onKeyDown={event => handleKeyDown(event, () => setDetail(!detail))} className='cms-editor-main-table'>
-            <TableResizableHeader headerGroups={table.getHeaderGroups()} onClick={() => selectRow(table)} />
+            <TableResizableHeader headerGroups={table.getHeaderGroups()} onClick={() => table.resetRowSelection()} />
             <TableBody style={{ height: `${virtualizer.getTotalSize()}px` }}>
               {virtualizer.getVirtualItems().map(virtualRow => {
                 const row = rows[virtualRow.index];

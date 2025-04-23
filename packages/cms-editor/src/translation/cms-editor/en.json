@@ -8,6 +8,7 @@
     },
     "label": {
       "details": "Details",
+      "languages": "Languages",
       "name": "Name",
       "namespace": "Namespace",
       "save": "Save",
@@ -33,6 +34,7 @@
   "hotkey": {
     "addContentObject": "Add Content Object ({{hotkey}})",
     "deleteContentObject": "Delete Content Object ({{hotkey}})",
+    "deleteLanguage": "Delete Language ({{hotkey}})",
     "languageTool": "Language Tool ({{hotkey}})"
   },
   "label": {
