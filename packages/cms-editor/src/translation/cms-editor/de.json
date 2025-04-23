@@ -10,6 +10,7 @@
       "details": "Details",
       "name": "Name",
       "namespace": "Namensbereich",
+      "save": "Speichern",
       "settings": "Einstellungen",
       "theme": "Thema"
     }
@@ -26,7 +27,6 @@
       "label": {
         "defaultLanguage": "Standardsprache"
       },
-      "save": "Speichern",
       "title": "Sprachwerkzeug"
     }
   },

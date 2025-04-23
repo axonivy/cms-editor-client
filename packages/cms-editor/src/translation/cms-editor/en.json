@@ -10,6 +10,7 @@
       "details": "Details",
       "name": "Name",
       "namespace": "Namespace",
+      "save": "Save",
       "settings": "Settings",
       "theme": "Theme"
     }
@@ -26,7 +27,6 @@
       "label": {
         "defaultLanguage": "Default Language"
       },
-      "save": "Save",
       "title": "Language Tool"
     }
   },

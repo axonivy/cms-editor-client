@@ -82,8 +82,8 @@ export const LanguageTool = () => {
           </BasicField>
         </Flex>
         <DialogFooter>
-          <Button variant='primary' size='large' aria-label={t('dialog.languageTool.save')} onClick={save}>
-            {t('dialog.languageTool.save')}
+          <Button variant='primary' size='large' aria-label={t('common.label.save')} onClick={save}>
+            {t('common.label.save')}
           </Button>
         </DialogFooter>
       </DialogContent>
