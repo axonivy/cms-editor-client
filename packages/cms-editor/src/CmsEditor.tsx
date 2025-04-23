@@ -29,7 +29,7 @@ function CmsEditor(props: EditorProps) {
   const client = useClient();
   const { dataKey } = useQueryKeys();
 
-  const { defaultLanguageTag, languageDisplayName } = useLanguage(context);
+  const { defaultLanguageTag, setDefaultLanguageTag, languageDisplayName } = useLanguage(context);
   const { data, isPending, isError, error } = useQuery({
     queryKey: dataKey({ context, languageTags: [defaultLanguageTag] }),
     queryFn: async () => await client.data({ context, languageTags: [defaultLanguageTag] }),
@@ -67,6 +67,7 @@ function CmsEditor(props: EditorProps) {
         detail,
         setDetail,
         defaultLanguageTag,
+        setDefaultLanguageTag,
         languageDisplayName
       }}
     >

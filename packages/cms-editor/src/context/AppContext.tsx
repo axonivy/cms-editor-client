@@ -9,6 +9,7 @@ type AppContext = {
   detail: boolean;
   setDetail: (visible: boolean) => void;
   defaultLanguageTag: string;
+  setDefaultLanguageTag: (languageTag: string) => void;
   languageDisplayName: Intl.DisplayNames;
 };
 
@@ -20,6 +21,7 @@ const appContext = createContext<AppContext>({
   detail: true,
   setDetail: () => {},
   defaultLanguageTag: '',
+  setDefaultLanguageTag: () => {},
   languageDisplayName: new Intl.DisplayNames(undefined, { type: 'language' })
 });
 

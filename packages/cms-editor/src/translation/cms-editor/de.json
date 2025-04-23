@@ -10,6 +10,7 @@
       "details": "Details",
       "name": "Name",
       "namespace": "Namensbereich",
+      "save": "Speichern",
       "settings": "Einstellungen",
       "theme": "Thema"
     }
@@ -20,11 +21,19 @@
       "createTooltip": "Halte {{modifier}} um ein weiteres Inhaltsobjekt zu erstellen.",
       "description": "Wählen Sie den Namen, den Namensbereich und die Werte des Inhaltsobjekts, das Sie hinzufügen möchten.",
       "title": "Inhaltsobjekt hinzufügen"
+    },
+    "languageTool": {
+      "description": "Bearbeite die Sprachen des CMS.",
+      "label": {
+        "defaultLanguage": "Standardsprache"
+      },
+      "title": "Sprachwerkzeug"
     }
   },
   "hotkey": {
     "addContentObject": "Inhaltsobjekt hinzufügen ({{hotkey}})",
-    "deleteContentObject": "Inhaltsobjekt löschen ({{hotkey}})"
+    "deleteContentObject": "Inhaltsobjekt löschen ({{hotkey}})",
+    "languageTool": "Sprachwerkzeug ({{hotkey}})"
   },
   "label": {
     "contentObjects": "Inhaltsobjekte"

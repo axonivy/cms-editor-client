@@ -32,6 +32,7 @@ export interface ClientContext {
 }
 
 export interface MetaRequestTypes {
+  'meta/supportedLocales': [null, Array<string>];
   'meta/locales': [CmsEditorDataContext, Array<string>];
 }
 
