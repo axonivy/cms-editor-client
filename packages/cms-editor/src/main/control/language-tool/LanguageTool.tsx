@@ -29,11 +29,12 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { flexRender, getCoreRowModel, useReactTable, type ColumnDef } from '@tanstack/react-table';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useAppContext } from '../../context/AppContext';
-import { useClient } from '../../protocol/ClientContextProvider';
-import { useMeta } from '../../protocol/use-meta';
-import { genQueryKey, useQueryKeys } from '../../query/query-client';
-import { useKnownHotkeys } from '../../utils/hotkeys';
+import { useAppContext } from '../../../context/AppContext';
+import { useClient } from '../../../protocol/ClientContextProvider';
+import { useMeta } from '../../../protocol/use-meta';
+import { genQueryKey, useQueryKeys } from '../../../query/query-client';
+import { useKnownHotkeys } from '../../../utils/hotkeys';
+import { LanguageToolControl } from './LanguageToolControl';
 
 export const LanguageTool = () => {
   const { context, defaultLanguageTag, setDefaultLanguageTag, languageDisplayName } = useAppContext();
@@ -145,22 +146,10 @@ export const LanguageTool = () => {
           <BasicField
             label={t('common.label.languages')}
             control={
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      icon={IvyIcons.Trash}
-                      onClick={event => {
-                        deleteSelectedLanguage();
-                        event.stopPropagation();
-                      }}
-                      disabled={table.getSelectedRowModel().flatRows.length === 0}
-                      aria-label={hotkeys.deleteLanguage.label}
-                    />
-                  </TooltipTrigger>
-                  <TooltipContent>{hotkeys.deleteLanguage.label}</TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+              <LanguageToolControl
+                deleteSelectedLanguage={deleteSelectedLanguage}
+                hasSelection={table.getSelectedRowModel().flatRows.length !== 0}
+              />
             }
           >
             <Table onKeyDown={handleKeyDown} onClick={event => event.stopPropagation()}>

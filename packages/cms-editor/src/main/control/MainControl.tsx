@@ -1,7 +1,7 @@
 import { Flex, Separator } from '@axonivy/ui-components';
 import { AddContentObject } from './AddContentObject';
 import { DeleteContentObject } from './DeleteContentObject';
-import { LanguageTool } from './LanguageTool';
+import { LanguageTool } from './language-tool/LanguageTool';
 
 type MainControlProps = {
   selectRow: (rowId: string) => void;
