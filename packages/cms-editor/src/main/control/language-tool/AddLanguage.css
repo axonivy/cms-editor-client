@@ -1,0 +1,5 @@
+.cms-editor-add-language-content {
+  height: 80vh;
+  display: flex;
+  flex-direction: column;
+}

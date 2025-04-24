@@ -1,4 +1,4 @@
-import type { CmsData, CmsRemoveLocalesArgs } from '@axonivy/cms-editor-protocol';
+import type { CmsAddLocalesArgs, CmsData, CmsRemoveLocalesArgs } from '@axonivy/cms-editor-protocol';
 import {
   BasicField,
   BasicSelect,
@@ -35,6 +35,7 @@ import { useMeta } from '../../../protocol/use-meta';
 import { genQueryKey, useQueryKeys } from '../../../query/query-client';
 import { useKnownHotkeys } from '../../../utils/hotkeys';
 import { LanguageToolControl } from './LanguageToolControl';
+import { sortLanguages, toLanguages, type Language } from './language-utils';
 
 export const LanguageTool = () => {
   const { context, defaultLanguageTag, setDefaultLanguageTag, languageDisplayName } = useAppContext();
@@ -51,6 +52,8 @@ export const LanguageTool = () => {
   const [defaultLanguage, setDefaultLanguage] = useState(defaultLanguageTag);
   const [languages, setLanguages] = useState<Array<Language>>([]);
 
+  const addLanguage = (language: Language) => setLanguages(languages => sortLanguages([...languages, language]));
+
   const deleteSelectedLanguage = () => {
     const { newData } = deleteFirstSelectedRow(table, languages);
     setLanguages(newData);
@@ -60,11 +63,7 @@ export const LanguageTool = () => {
 
   const initializeDialog = () => {
     setDefaultLanguage(defaultLanguageTag);
-    setLanguages(
-      locales
-        .map(locale => ({ value: locale, label: languageDisplayName.of(locale) ?? locale }))
-        .sort((option1, option2) => option1.label.localeCompare(option2.label))
-    );
+    setLanguages(toLanguages(locales, languageDisplayName));
     table.resetRowSelection();
   };
 
@@ -91,6 +90,15 @@ export const LanguageTool = () => {
   const queryClient = useQueryClient();
   const { dataKey } = useQueryKeys();
 
+  const addMutation = useMutation({
+    mutationFn: async (args: CmsAddLocalesArgs) => {
+      queryClient.setQueryData<Array<string>>(genQueryKey('meta/locales', context), locales =>
+        locales ? [...locales, ...args.locales] : undefined
+      );
+      client.addLocales({ context, locales: args.locales });
+    }
+  });
+
   const deleteMutation = useMutation({
     mutationFn: async (args: CmsRemoveLocalesArgs) => {
       queryClient.setQueryData<Array<string>>(genQueryKey('meta/locales', context), locales =>
@@ -114,6 +122,10 @@ export const LanguageTool = () => {
     if (localesToDelete) {
       deleteMutation.mutate({ context, locales: localesToDelete });
     }
+    const localesToAdd = languages.map(language => language.value).filter(locale => !locales.includes(locale));
+    if (localesToAdd) {
+      addMutation.mutate({ context, locales: localesToAdd });
+    }
     setOpen(false);
   };
 
@@ -128,7 +140,7 @@ export const LanguageTool = () => {
         <Tooltip>
           <TooltipTrigger asChild>
             <DialogTrigger asChild>
-              <Button icon={IvyIcons.WsStart} aria-label={hotkeys.languageTool.label} />
+              <Button icon={IvyIcons.Language} aria-label={hotkeys.languageTool.label} />
             </DialogTrigger>
           </TooltipTrigger>
           <TooltipContent>{hotkeys.languageTool.label}</TooltipContent>
@@ -147,6 +159,8 @@ export const LanguageTool = () => {
             label={t('common.label.languages')}
             control={
               <LanguageToolControl
+                languages={languages}
+                addLanguage={addLanguage}
                 deleteSelectedLanguage={deleteSelectedLanguage}
                 hasSelection={table.getSelectedRowModel().flatRows.length !== 0}
               />
@@ -173,9 +187,4 @@ export const LanguageTool = () => {
       </DialogContent>
     </Dialog>
   );
-};
-
-type Language = {
-  value: string;
-  label: string;
 };

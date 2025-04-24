@@ -1,6 +1,7 @@
 import type {
   Client,
   CmsActionArgs,
+  CmsAddLocalesArgs,
   CmsCreateArgs,
   CmsData,
   CmsDataArgs,
@@ -40,6 +41,10 @@ export class ClientJsonRpc extends BaseRpcClient implements Client {
 
   delete(args: CmsDeleteArgs): void {
     this.sendRequest('delete', args);
+  }
+
+  addLocales(args: CmsAddLocalesArgs): void {
+    this.sendRequest('addLocales', args);
   }
 
   removeLocales(args: CmsRemoveLocalesArgs): void {
