@@ -58,15 +58,16 @@ export class CmsClientMock implements Client {
     this.cmsData = { ...this.cmsData, data: this.cmsData.data.filter(co => co.uri !== args.uri) };
   }
 
-  meta<TMeta extends keyof MetaRequestTypes>(path: TMeta, args: MetaRequestTypes[TMeta][0]): Promise<MetaRequestTypes[TMeta][1]> {
+  removeLocales(args: CmsRemoveLocalesArgs): void {
+    this.localesData = this.localesData.filter(locale => !(args as CmsRemoveLocalesArgs).locales.includes(locale));
+  }
+
+  meta<TMeta extends keyof MetaRequestTypes>(path: TMeta): Promise<MetaRequestTypes[TMeta][1]> {
     switch (path) {
       case 'meta/supportedLocales':
         return Promise.resolve(supportedLocales);
       case 'meta/locales':
         return Promise.resolve(this.localesData);
-      case 'meta/removeLocales':
-        this.localesData = this.localesData.filter(locale => !(args as CmsRemoveLocalesArgs).locales.includes(locale));
-        return Promise.resolve({});
       default:
         throw Error('meta path not implemented');
     }

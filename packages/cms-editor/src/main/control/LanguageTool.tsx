@@ -103,7 +103,7 @@ export const LanguageTool = () => {
           return { ...data, data: data.data.map(co => ({ ...co, values: {} })) };
         });
       }
-      client.meta('meta/removeLocales', { context, locales: args.locales });
+      client.removeLocales({ context, locales: args.locales });
     }
   });
 

@@ -24,6 +24,7 @@ export interface Client {
   updateValue(args: CmsUpdateValueArgs): void;
   deleteValue(args: CmsDeleteValueArgs): void;
   delete(args: CmsDeleteArgs): void;
+  removeLocales(args: CmsRemoveLocalesArgs): void;
   meta<TMeta extends keyof MetaRequestTypes>(path: TMeta, args: MetaRequestTypes[TMeta][0]): Promise<MetaRequestTypes[TMeta][1]>;
   action(action: CmsActionArgs): void;
 }
@@ -35,7 +36,6 @@ export interface ClientContext {
 export interface MetaRequestTypes {
   'meta/supportedLocales': [null, Array<string>];
   'meta/locales': [CmsEditorDataContext, Array<string>];
-  'meta/removeLocales': [CmsRemoveLocalesArgs, Void];
 }
 
 export interface RequestTypes extends MetaRequestTypes {
@@ -45,6 +45,7 @@ export interface RequestTypes extends MetaRequestTypes {
   updateValue: [CmsUpdateValueArgs, Void];
   deleteValue: [CmsDeleteValueArgs, Void];
   delete: [CmsDeleteArgs, Void];
+  removeLocales: [CmsRemoveLocalesArgs, Void];
 }
 
 export interface NotificationTypes {
