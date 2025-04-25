@@ -8,6 +8,7 @@
     },
     "label": {
       "details": "Details",
+      "languages": "Sprachen",
       "name": "Name",
       "namespace": "Namensbereich",
       "save": "Speichern",
@@ -33,6 +34,7 @@
   "hotkey": {
     "addContentObject": "Inhaltsobjekt hinzufügen ({{hotkey}})",
     "deleteContentObject": "Inhaltsobjekt löschen ({{hotkey}})",
+    "deleteLanguage": "Sprache löschen ({{hotkey}})",
     "languageTool": "Sprachwerkzeug ({{hotkey}})"
   },
   "label": {

@@ -8,6 +8,7 @@ import type {
   CmsDeleteValueArgs,
   CmsEditorDataContext,
   CmsReadArgs,
+  CmsRemoveLocalesArgs,
   CmsUpdateValueArgs,
   Void
 } from './editor';
@@ -34,6 +35,7 @@ export interface ClientContext {
 export interface MetaRequestTypes {
   'meta/supportedLocales': [null, Array<string>];
   'meta/locales': [CmsEditorDataContext, Array<string>];
+  'meta/removeLocales': [CmsRemoveLocalesArgs, Void];
 }
 
 export interface RequestTypes extends MetaRequestTypes {

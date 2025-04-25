@@ -24,6 +24,13 @@ export class Table {
       await this.row(i).expectToBeUnselected();
     }
   }
+
+  async expectToHaveRows(...rows: Array<Array<string>>) {
+    for (let i = 0; i < rows.length; i++) {
+      const row = this.row(i);
+      await row.expectToHaveValues(...rows[i]);
+    }
+  }
 }
 
 export class Header {

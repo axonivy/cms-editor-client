@@ -10,6 +10,8 @@ export type ContentObjectType = ("STRING" | "FILE" | "FOLDER")
 
 export interface CMS {
   cmsActionArgs: CmsActionArgs;
+  cmsAddLocalesArgs: CmsAddLocalesArgs;
+  cmsCountLocaleValueArgs: CmsCountLocaleValueArgs;
   cmsCreateArgs: CmsCreateArgs;
   cmsData: CmsData;
   cmsDataArgs: CmsDataArgs;
@@ -18,7 +20,9 @@ export interface CMS {
   cmsDeleteValueArgs: CmsDeleteValueArgs;
   cmsEditorDataContext: CmsEditorDataContext;
   cmsReadArgs: CmsReadArgs;
+  cmsRemoveLocalesArgs: CmsRemoveLocalesArgs;
   cmsUpdateValueArgs: CmsUpdateValueArgs;
+  long: number;
   string: string[];
   void: Void;
   [k: string]: unknown;
@@ -32,6 +36,14 @@ export interface CmsEditorDataContext {
   app: string;
   file: string;
   pmv: string;
+}
+export interface CmsAddLocalesArgs {
+  context: CmsEditorDataContext;
+  locales: string[];
+}
+export interface CmsCountLocaleValueArgs {
+  context: CmsEditorDataContext;
+  locale: string;
 }
 export interface CmsCreateArgs {
   contentObject: CmsDataObject;
@@ -69,6 +81,10 @@ export interface CmsDeleteValueObject {
 export interface CmsReadArgs {
   context: CmsEditorDataContext;
   uri: string;
+}
+export interface CmsRemoveLocalesArgs {
+  context: CmsEditorDataContext;
+  locales: string[];
 }
 export interface CmsUpdateValueArgs {
   context: CmsEditorDataContext;

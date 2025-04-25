@@ -8,6 +8,7 @@ import type {
   CmsDeleteArgs,
   CmsDeleteValueArgs,
   CmsReadArgs,
+  CmsRemoveLocalesArgs,
   CmsUpdateValueArgs,
   MetaRequestTypes,
   Void
@@ -17,6 +18,7 @@ import { locales, supportedLocales } from './meta';
 
 export class CmsClientMock implements Client {
   private cmsData: CmsData = contentObjects;
+  private localesData: Array<string> = locales;
 
   data(): Promise<CmsData> {
     return Promise.resolve(this.cmsData);
@@ -56,12 +58,15 @@ export class CmsClientMock implements Client {
     this.cmsData = { ...this.cmsData, data: this.cmsData.data.filter(co => co.uri !== args.uri) };
   }
 
-  meta<TMeta extends keyof MetaRequestTypes>(path: TMeta): Promise<Array<string>> {
+  meta<TMeta extends keyof MetaRequestTypes>(path: TMeta, args: MetaRequestTypes[TMeta][0]): Promise<MetaRequestTypes[TMeta][1]> {
     switch (path) {
       case 'meta/supportedLocales':
         return Promise.resolve(supportedLocales);
       case 'meta/locales':
-        return Promise.resolve(locales);
+        return Promise.resolve(this.localesData);
+      case 'meta/removeLocales':
+        this.localesData = this.localesData.filter(locale => !(args as CmsRemoveLocalesArgs).locales.includes(locale));
+        return Promise.resolve({});
       default:
         throw Error('meta path not implemented');
     }
