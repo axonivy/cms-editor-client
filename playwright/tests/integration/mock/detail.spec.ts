@@ -48,7 +48,7 @@ test('delete value', async () => {
     value: 'Fall',
     placeholder: ''
   });
-  await expect(row.column(1).content).toHaveText('Case');
+  await expect(row.column(1).value(0)).toHaveText('Case');
 
   await englishValue.delete.click();
   await englishValue.expectToHaveState({
@@ -63,7 +63,7 @@ test('delete value', async () => {
     value: 'Fall',
     placeholder: ''
   });
-  await expect(row.column(1).content).toHaveText('');
+  await expect(row.column(1).value(0)).toHaveText('');
 });
 
 test('update value', async () => {
@@ -73,9 +73,9 @@ test('update value', async () => {
   const englishValue = editor.detail.value('English');
 
   await expect(englishValue.textbox.locator).toHaveValue('Case');
-  await expect(row.column(1).content).toHaveText('Case');
+  await expect(row.column(1).value(0)).toHaveText('Case');
 
   await englishValue.textbox.locator.fill('New Value');
   await expect(englishValue.textbox.locator).toHaveValue('New Value');
-  await expect(row.column(1).content).toHaveText('New Value');
+  await expect(row.column(1).value(0)).toHaveText('New Value');
 });

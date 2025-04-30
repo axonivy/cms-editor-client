@@ -10,7 +10,7 @@ test.beforeEach(async ({ page }) => {
 test('add', async () => {
   await editor.main.control.add.add('TestContentObject', '/A/TestNamespace', 'TestValue');
   await editor.main.table.row(0).expectToBeSelected();
-  await editor.main.table.row(0).expectToHaveValues('/A/TestNamespace/TestContentObject', 'TestValue');
+  await editor.main.table.row(0).expectToHaveColumns(['/A/TestNamespace/TestContentObject'], ['TestValue']);
   await editor.detail.expectToHaveValues('/A/TestNamespace/TestContentObject', { English: 'TestValue', German: '' });
 });
 
@@ -62,8 +62,8 @@ test('keyboard support', async () => {
   await add.name.locator.fill('TestContentObject');
   await keyboard.press('Enter');
   await expect(add.locator).toBeHidden();
-  await expect(editor.main.table.row(0).column(0).content).toHaveText('/A/NewContentObject');
-  await expect(editor.main.table.row(1).column(0).content).toHaveText('/A/TestContentObject');
+  await expect(editor.main.table.row(0).column(0).value(0)).toHaveText('/A/NewContentObject');
+  await expect(editor.main.table.row(1).column(0).value(0)).toHaveText('/A/TestContentObject');
 });
 
 test('disable dialog while create request is pending', async () => {
