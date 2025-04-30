@@ -16,6 +16,11 @@ export const useKnownHotkeys = () => {
     return { hotkey, label: t('hotkey.languageTool', { hotkey: hotkeyText(hotkey) }) };
   }, [t]);
 
+  const addLanguage = useMemo<KnownHotkey>(() => {
+    const hotkey = 'A';
+    return { hotkey, label: t('hotkey.addLanguage', { hotkey: hotkeyText(hotkey) }) };
+  }, [t]);
+
   const deleteLanguage = useMemo<KnownHotkey>(() => {
     const hotkey = 'Delete';
     return { hotkey, label: t('hotkey.deleteLanguage', { hotkey: hotkeyText(hotkey) }) };
@@ -46,5 +51,15 @@ export const useKnownHotkeys = () => {
     return { hotkey, label: t('common.hotkey.focusInscription', { hotkey: hotkeyText(hotkey) }) };
   }, [t]);
 
-  return { openHelp, languageTool, deleteLanguage, addContentObject, deleteContentObject, focusToolbar, focusMain, focusInscription };
+  return {
+    openHelp,
+    languageTool,
+    addLanguage,
+    deleteLanguage,
+    addContentObject,
+    deleteContentObject,
+    focusToolbar,
+    focusMain,
+    focusInscription
+  };
 };

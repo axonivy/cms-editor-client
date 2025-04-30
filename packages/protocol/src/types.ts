@@ -1,5 +1,6 @@
 import type {
   CmsActionArgs,
+  CmsAddLocalesArgs,
   CmsCreateArgs,
   CmsData,
   CmsDataArgs,
@@ -24,6 +25,7 @@ export interface Client {
   updateValue(args: CmsUpdateValueArgs): void;
   deleteValue(args: CmsDeleteValueArgs): void;
   delete(args: CmsDeleteArgs): void;
+  addLocales(args: CmsAddLocalesArgs): void;
   removeLocales(args: CmsRemoveLocalesArgs): void;
   meta<TMeta extends keyof MetaRequestTypes>(path: TMeta, args: MetaRequestTypes[TMeta][0]): Promise<MetaRequestTypes[TMeta][1]>;
   action(action: CmsActionArgs): void;
@@ -45,6 +47,7 @@ export interface RequestTypes extends MetaRequestTypes {
   updateValue: [CmsUpdateValueArgs, Void];
   deleteValue: [CmsDeleteValueArgs, Void];
   delete: [CmsDeleteArgs, Void];
+  addLocales: [CmsAddLocalesArgs, Void];
   removeLocales: [CmsRemoveLocalesArgs, Void];
 }
 

@@ -2,6 +2,7 @@ import { removeValue } from '@axonivy/cms-editor';
 import type {
   Client,
   CmsActionArgs,
+  CmsAddLocalesArgs,
   CmsCreateArgs,
   CmsData,
   CmsDataObject,
@@ -56,6 +57,10 @@ export class CmsClientMock implements Client {
 
   delete(args: CmsDeleteArgs): void {
     this.cmsData = { ...this.cmsData, data: this.cmsData.data.filter(co => co.uri !== args.uri) };
+  }
+
+  addLocales(args: CmsAddLocalesArgs): void {
+    this.localesData = [...this.localesData, ...(args as CmsAddLocalesArgs).locales];
   }
 
   removeLocales(args: CmsRemoveLocalesArgs): void {

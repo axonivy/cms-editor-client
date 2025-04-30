@@ -7,11 +7,15 @@
       "help": "Open Help ({{hotkey}})"
     },
     "label": {
+      "cancel": "Cancel",
       "details": "Details",
+      "info": "Info",
+      "language": "Language",
       "languages": "Languages",
       "name": "Name",
       "namespace": "Namespace",
       "save": "Save",
+      "search": "Search",
       "settings": "Settings",
       "theme": "Theme"
     }
@@ -28,11 +32,17 @@
       "label": {
         "defaultLanguage": "Default Language"
       },
+      "languageBrowser": {
+        "addLanguage": "Add Language",
+        "description": "Select the language you want to add to the CMS.",
+        "title": "Language Browser"
+      },
       "title": "Language Tool"
     }
   },
   "hotkey": {
     "addContentObject": "Add Content Object ({{hotkey}})",
+    "addLanguage": "Add Language ({{hotkey}})",
     "deleteContentObject": "Delete Content Object ({{hotkey}})",
     "deleteLanguage": "Delete Language ({{hotkey}})",
     "languageTool": "Language Tool ({{hotkey}})"
