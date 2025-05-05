@@ -30,6 +30,7 @@ import { useClient } from '../../protocol/ClientContextProvider';
 import { genQueryKey, useQueryKeys } from '../../query/query-client';
 import { removeValue } from '../../utils/cms-utils';
 import { useKnownHotkeys } from '../../utils/hotkeys';
+import './AddContentObject.css';
 import { toLanguages } from './language-tool/language-utils';
 import { useValidateAddContentObject } from './use-validate-add-content-object';
 
@@ -118,12 +119,16 @@ export const AddContentObject = ({ selectRow }: AddContentObjectProps) => {
           <TooltipContent>{shortcut.label}</TooltipContent>
         </Tooltip>
       </TooltipProvider>
-      <DialogContent onCloseAutoFocus={e => e.preventDefault()}>
+      <DialogContent
+        onCloseAutoFocus={e => e.preventDefault()}
+        style={{ display: 'flex', flexDirection: 'column' }}
+        className='cms-editor-add-content-object-content'
+      >
         <DialogHeader>
           <DialogTitle>{t('dialog.addContentObject.title')}</DialogTitle>
         </DialogHeader>
         <DialogDescription>{t('dialog.addContentObject.description')}</DialogDescription>
-        <Flex direction='column' gap={3} ref={enter} tabIndex={-1}>
+        <Flex direction='column' gap={3} ref={enter} tabIndex={-1} className='cms-editor-add-content-object-content-fields'>
           <BasicField label={t('common.label.name')} message={nameMessage}>
             <Input value={name} onChange={event => setName(event.target.value)} disabled={isPending} />
           </BasicField>
