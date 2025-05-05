@@ -6,6 +6,7 @@ import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CmsValueField } from '../components/CmsValueField';
 import { useAppContext } from '../context/AppContext';
+import { toLanguages } from '../main/control/language-tool/language-utils';
 import { useClient } from '../protocol/ClientContextProvider';
 import { useMeta } from '../protocol/use-meta';
 import { useQueryKeys } from '../query/query-client';
@@ -14,7 +15,7 @@ import './DetailContent.css';
 
 export const DetailContent = () => {
   const { t } = useTranslation();
-  const { context, contentObjects, selectedContentObject, defaultLanguageTag } = useAppContext();
+  const { context, contentObjects, selectedContentObject, defaultLanguageTags, languageDisplayName } = useAppContext();
 
   const client = useClient();
   const queryClient = useQueryClient();
@@ -35,20 +36,20 @@ export const DetailContent = () => {
 
   const updateValuesInDataQuery = useCallback(
     (uri: string, valueUpdater: Unary<MapStringString>) =>
-      queryClient.setQueryData<CmsData>(dataKey({ context, languageTags: [defaultLanguageTag] }), data => {
+      queryClient.setQueryData<CmsData>(dataKey({ context, languageTags: defaultLanguageTags }), data => {
         if (!data) {
           return;
         }
         return updateValuesOfContentObjectInData(data, uri, valueUpdater);
       }),
-    [context, dataKey, defaultLanguageTag, queryClient]
+    [context, dataKey, defaultLanguageTags, queryClient]
   );
 
   const updateMutation = useMutation({
     mutationFn: async (args: CmsUpdateValueArgs) => {
       const changeValueUpdater = (values: MapStringString) => ({ ...values, [args.updateObject.languageTag]: args.updateObject.value });
       updateValuesInReadQuery(args.updateObject.uri, changeValueUpdater);
-      if (args.updateObject.languageTag === defaultLanguageTag) {
+      if (defaultLanguageTags.includes(args.updateObject.languageTag)) {
         updateValuesInDataQuery(args.updateObject.uri, changeValueUpdater);
       }
       return client.updateValue(args);
@@ -59,7 +60,7 @@ export const DetailContent = () => {
     mutationFn: async (args: CmsDeleteValueArgs) => {
       const deleteValueUpdater = (values: MapStringString) => removeValue(values, args.deleteObject.languageTag);
       updateValuesInReadQuery(args.deleteObject.uri, deleteValueUpdater);
-      if (args.deleteObject.languageTag === defaultLanguageTag) {
+      if (defaultLanguageTags.includes(args.deleteObject.languageTag)) {
         updateValuesInDataQuery(args.deleteObject.uri, deleteValueUpdater);
       }
       return client.deleteValue(args);
@@ -103,17 +104,18 @@ export const DetailContent = () => {
         <BasicInput value={contentObject.uri} disabled />
       </BasicField>
       <Flex direction='column' gap={4}>
-        {locales.map(languageTag => (
+        {toLanguages(locales, languageDisplayName).map(language => (
           <CmsValueField
-            key={languageTag}
+            key={language.value}
             values={contentObject.values}
             updateValue={(languageTag: string, value: string) =>
               updateMutation.mutate({ context, updateObject: { uri, languageTag, value } })
             }
             deleteValue={(languageTag: string) => deleteMutation.mutate({ context, deleteObject: { uri, languageTag } })}
-            languageTag={languageTag}
+            label={language.label}
+            languageTag={language.value}
             disabledDelete={hasExactlyOneValue}
-            deleteTooltip={hasExactlyOneValue && contentObject.values[languageTag] !== undefined ? t('value.lastValue') : undefined}
+            deleteTooltip={hasExactlyOneValue && contentObject.values[language.value] !== undefined ? t('value.lastValue') : undefined}
           />
         ))}
       </Flex>

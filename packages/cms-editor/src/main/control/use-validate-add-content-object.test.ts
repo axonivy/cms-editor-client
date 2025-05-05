@@ -43,7 +43,7 @@ test('nameMessage', () => {
 
 test('valuesMessage', () => {
   expect(renderUseValidateAddContentObject().result.current.valuesMessage).toEqual({
-    message: 'Value cannot be empty.',
+    message: 'At least one value must be present.',
     variant: 'error'
   });
   expect(renderUseValidateAddContentObject({ values: { en: 'value' } }).result.current.valuesMessage).toBeUndefined();

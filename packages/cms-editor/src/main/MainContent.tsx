@@ -20,7 +20,7 @@ import {
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { flexRender, getCoreRowModel, useReactTable, type ColumnDef, type Row } from '@tanstack/react-table';
 import { useVirtualizer } from '@tanstack/react-virtual';
-import { useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAppContext } from '../context/AppContext';
 import { useClient } from '../protocol/ClientContextProvider';
@@ -28,6 +28,7 @@ import { useQueryKeys } from '../query/query-client';
 import { useKnownHotkeys } from '../utils/hotkeys';
 import './MainContent.css';
 import { MainControl } from './control/MainControl';
+import { toLanguages } from './control/language-tool/language-utils';
 
 export const MainContent = () => {
   const { t } = useTranslation();
@@ -38,7 +39,7 @@ export const MainContent = () => {
     setSelectedContentObject,
     detail,
     setDetail,
-    defaultLanguageTag,
+    defaultLanguageTags,
     languageDisplayName
   } = useAppContext();
 
@@ -54,25 +55,30 @@ export const MainContent = () => {
 
   const globalFilter = useTableGlobalFilter();
 
-  const columns: Array<ColumnDef<ContentObject, string>> = [
-    {
-      accessorKey: 'uri',
-      header: ({ column }) => <SortableHeader column={column} name='URI' />,
-      cell: cell => <span>{cell.getValue()}</span>,
-      minSize: 200,
-      size: 500,
-      maxSize: 1000
-    },
-    {
-      id: defaultLanguageTag,
-      accessorFn: co => co.values[defaultLanguageTag],
-      header: ({ column }) => <SortableHeader column={column} name={languageDisplayName.of(defaultLanguageTag) ?? defaultLanguageTag} />,
-      cell: cell => <span>{cell.getValue()}</span>,
-      minSize: 200,
-      size: 500,
-      maxSize: 1000
-    }
-  ];
+  const columns = useMemo(() => {
+    const columns: Array<ColumnDef<ContentObject, string>> = [
+      {
+        accessorKey: 'uri',
+        header: ({ column }) => <SortableHeader column={column} name='URI' />,
+        cell: cell => <span>{cell.getValue()}</span>,
+        minSize: 200,
+        size: 500,
+        maxSize: 1000
+      }
+    ];
+    toLanguages(defaultLanguageTags, languageDisplayName).forEach(language =>
+      columns.push({
+        id: language.value,
+        accessorFn: co => co.values[language.value],
+        header: ({ column }) => <SortableHeader column={column} name={language.label} />,
+        cell: cell => <span>{cell.getValue()}</span>,
+        minSize: 200,
+        size: 500,
+        maxSize: 1000
+      })
+    );
+    return columns;
+  }, [defaultLanguageTags, languageDisplayName]);
 
   const table = useReactTable({
     ...selection.options,
@@ -113,7 +119,7 @@ export const MainContent = () => {
 
   const { mutate } = useMutation({
     mutationFn: async (args: CmsDeleteArgs) => {
-      const data = queryClient.setQueryData<CmsData>(dataKey({ context, languageTags: [defaultLanguageTag] }), data => {
+      const data = queryClient.setQueryData<CmsData>(dataKey({ context, languageTags: defaultLanguageTags }), data => {
         if (!data) {
           return;
         }

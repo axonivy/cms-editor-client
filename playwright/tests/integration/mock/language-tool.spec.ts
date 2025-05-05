@@ -8,34 +8,41 @@ test.beforeEach(async ({ page }) => {
   editor = await CmsEditor.openMock(page);
 });
 
-test('default language', async () => {
+test('default languages', async () => {
   const languageTool = editor.main.control.languageTool;
+  const table = editor.main.table;
 
-  await expect(editor.main.table.header(1).content).toHaveText('English');
+  await expect(table.headers).toHaveCount(2);
+  await expect(table.header(1).content).toHaveText('English');
   await languageTool.trigger.click();
-  await expect(languageTool.defaultLanguage.locator).toHaveText('English');
+  await expect(languageTool.checkboxOfRow(0)).toBeChecked();
+  await expect(languageTool.checkboxOfRow(1)).not.toBeChecked();
 
-  await languageTool.defaultLanguage.select('German');
+  await languageTool.checkboxOfRow(1).check();
   await languageTool.save.click();
-  await expect(editor.main.table.header(1).content).toHaveText('German');
+  await expect(table.headers).toHaveCount(3);
+  await expect(table.header(1).content).toHaveText('English');
+  await expect(table.header(2).content).toHaveText('German');
 });
 
-test('open and save using keyboard', async () => {
+test('open, edit, and save using keyboard', async () => {
+  const languageTool = editor.main.control.languageTool;
+  const keyboard = editor.page.keyboard;
+
   await expect(editor.main.table.header(1).content).toHaveText('English');
-  await expect(editor.main.control.languageTool.locator).toBeHidden();
+  await expect(languageTool.locator).toBeHidden();
 
-  await editor.page.keyboard.press('l');
-  await expect(editor.main.control.languageTool.locator).toBeVisible();
+  await keyboard.press('l');
+  await expect(languageTool.locator).toBeVisible();
 
-  await editor.main.control.languageTool.defaultLanguage.select('German');
-  await editor.page.keyboard.press('Enter');
-  await expect(editor.main.control.languageTool.locator).toBeHidden();
+  await keyboard.press('Tab');
+  await keyboard.press('ArrowDown');
+  await keyboard.press('Space');
+  await keyboard.press('ArrowDown');
+  await keyboard.press('Space');
+  await keyboard.press('Enter');
+  await expect(languageTool.locator).toBeHidden();
   await expect(editor.main.table.header(1).content).toHaveText('German');
-});
-
-test('default language options', async () => {
-  await editor.main.control.languageTool.trigger.click();
-  await editor.main.control.languageTool.defaultLanguage.expectToHaveOptions('English', 'German');
 });
 
 describe('languages', () => {
@@ -44,13 +51,13 @@ describe('languages', () => {
 
     await editor.main.table.row(0).locator.click();
     await languageTool.trigger.click();
-    await languageTool.languages.expectToHaveRows([['English']], [['German']]);
+    await languageTool.expectToHaveLanguages('English', 'German');
 
     await languageTool.add.trigger.click();
     await languageTool.add.languages.row(1).locator.click();
     await languageTool.add.add.click();
 
-    await languageTool.languages.expectToHaveRows([['English']], [['French']], [['German']]);
+    await languageTool.expectToHaveLanguages('English', 'French', 'German');
     await languageTool.save.click();
 
     await expect(editor.detail.value('French').locator).toBeVisible();
@@ -61,16 +68,15 @@ describe('languages', () => {
 
     await editor.main.table.row(0).locator.click();
     await languageTool.trigger.click();
-    await languageTool.languages.expectToHaveRows([['English']], [['German']]);
+    await languageTool.expectToHaveLanguages('English', 'German');
 
     await languageTool.languages.row(0).locator.click();
     await languageTool.delete.click();
-    await languageTool.languages.expectToHaveRows([['German']]);
+    await languageTool.expectToHaveLanguages('German');
     await languageTool.languages.row(0).expectToBeSelected();
     await languageTool.save.click();
 
-    await expect(editor.main.table.row(0).column(1).locator).toHaveText('');
-    await expect(editor.detail.value('English').locator).toBeHidden();
+    await expect(editor.main.table.headers).toHaveCount(1);
   });
 
   test('keyboard support', async () => {
@@ -78,15 +84,19 @@ describe('languages', () => {
     const keyboard = editor.page.keyboard;
 
     await languageTool.trigger.click();
-    await languageTool.languages.expectToHaveRows([['English']], [['German']]);
+    await languageTool.expectToHaveLanguages('English', 'German');
 
     await keyboard.press('Tab');
-    await keyboard.press('Tab');
     await keyboard.press('ArrowDown');
+    await expect(languageTool.checkboxOfRow(0)).toBeChecked();
+    await keyboard.press('Space');
+    await expect(languageTool.checkboxOfRow(0)).not.toBeChecked();
+
     await keyboard.press('ArrowUp');
     await languageTool.languages.row(1).expectToBeSelected();
+
     await keyboard.press('Delete');
-    await languageTool.languages.expectToHaveRows([['English']]);
+    await languageTool.expectToHaveLanguages('English');
     await languageTool.languages.row(0).expectToBeSelected();
   });
 
@@ -154,17 +164,19 @@ test('initialize dialog', async () => {
   const languageTool = editor.main.control.languageTool;
 
   await languageTool.trigger.click();
-  await languageTool.defaultLanguage.select('German');
+  await languageTool.checkboxOfRow(0).uncheck();
+  await languageTool.checkboxOfRow(1).check();
   await languageTool.add.trigger.click();
   await languageTool.add.languages.row(1).locator.click();
   await languageTool.add.add.click();
   await languageTool.languages.row(0).locator.click();
   await languageTool.delete.click();
-  await languageTool.languages.expectToHaveRows([['French']], [['German']]);
+  await languageTool.expectToHaveLanguages('French', 'German');
   await editor.page.keyboard.press('Escape');
 
   await languageTool.trigger.click();
-  await expect(languageTool.defaultLanguage.locator).toHaveText('English');
-  await languageTool.languages.expectToHaveRows([['English']], [['German']]);
+  await expect(languageTool.checkboxOfRow(0)).toBeChecked();
+  await expect(languageTool.checkboxOfRow(1)).not.toBeChecked();
+  await languageTool.expectToHaveLanguages('English', 'German');
   await languageTool.languages.expectToHaveNoSelection();
 });

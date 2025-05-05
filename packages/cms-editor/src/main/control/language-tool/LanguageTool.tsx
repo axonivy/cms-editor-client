@@ -1,7 +1,7 @@
-import type { CmsAddLocalesArgs, CmsData, CmsRemoveLocalesArgs } from '@axonivy/cms-editor-protocol';
+import type { CmsAddLocalesArgs, CmsRemoveLocalesArgs } from '@axonivy/cms-editor-protocol';
 import {
+  BasicCheckbox,
   BasicField,
-  BasicSelect,
   Button,
   deleteFirstSelectedRow,
   Dialog,
@@ -27,18 +27,18 @@ import {
 import { IvyIcons } from '@axonivy/ui-icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { flexRender, getCoreRowModel, useReactTable, type ColumnDef } from '@tanstack/react-table';
-import { useState } from 'react';
+import { useState, type KeyboardEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAppContext } from '../../../context/AppContext';
 import { useClient } from '../../../protocol/ClientContextProvider';
 import { useMeta } from '../../../protocol/use-meta';
-import { genQueryKey, useQueryKeys } from '../../../query/query-client';
+import { genQueryKey } from '../../../query/query-client';
 import { useKnownHotkeys } from '../../../utils/hotkeys';
 import { LanguageToolControl } from './LanguageToolControl';
 import { sortLanguages, toLanguages, type Language } from './language-utils';
 
 export const LanguageTool = () => {
-  const { context, defaultLanguageTag, setDefaultLanguageTag, languageDisplayName } = useAppContext();
+  const { context, defaultLanguageTags, setDefaultLanguageTags, languageDisplayName } = useAppContext();
   const { t } = useTranslation();
 
   const [open, setOpen] = useState(false);
@@ -49,7 +49,7 @@ export const LanguageTool = () => {
     }
   };
 
-  const [defaultLanguage, setDefaultLanguage] = useState(defaultLanguageTag);
+  const [defaultLanguages, setDefaultLanguages] = useState(defaultLanguageTags);
   const [languages, setLanguages] = useState<Array<Language>>([]);
 
   const addLanguage = (language: Language) => setLanguages(languages => sortLanguages([...languages, language]));
@@ -57,21 +57,34 @@ export const LanguageTool = () => {
   const deleteSelectedLanguage = () => {
     const { newData } = deleteFirstSelectedRow(table, languages);
     setLanguages(newData);
+    removeDefaultLanguage(table.getSelectedRowModel().flatRows[0].original.value);
   };
 
   const locales = useMeta('meta/locales', context, []).data;
 
   const initializeDialog = () => {
-    setDefaultLanguage(defaultLanguageTag);
+    setDefaultLanguages(defaultLanguageTags);
     setLanguages(toLanguages(locales, languageDisplayName));
     table.resetRowSelection();
   };
+
+  const addDefaultLanguage = (languageTag: string) => setDefaultLanguages(languages => [...languages, languageTag]);
+  const removeDefaultLanguage = (languageTag: string) =>
+    setDefaultLanguages(languages => languages.filter(language => language !== languageTag));
+  const onCheckedChange = (checked: boolean, languageTag: string) =>
+    checked ? addDefaultLanguage(languageTag) : removeDefaultLanguage(languageTag);
 
   const selection = useTableSelect();
   const columns: Array<ColumnDef<Language, string>> = [
     {
       accessorKey: 'label',
-      cell: cell => <span>{cell.getValue()}</span>
+      cell: cell => (
+        <BasicCheckbox
+          label={cell.getValue()}
+          checked={defaultLanguages.includes(cell.row.original.value)}
+          onCheckedChange={(checked: boolean) => onCheckedChange(checked, cell.row.original.value)}
+        />
+      )
     }
   ];
   const table = useReactTable<Language>({
@@ -88,7 +101,6 @@ export const LanguageTool = () => {
 
   const client = useClient();
   const queryClient = useQueryClient();
-  const { dataKey } = useQueryKeys();
 
   const addMutation = useMutation({
     mutationFn: async (args: CmsAddLocalesArgs) => {
@@ -104,20 +116,12 @@ export const LanguageTool = () => {
       queryClient.setQueryData<Array<string>>(genQueryKey('meta/locales', context), locales =>
         locales?.filter(locale => !args.locales.includes(locale))
       );
-      if (args.locales.includes(defaultLanguageTag)) {
-        queryClient.setQueryData<CmsData>(dataKey({ context, languageTags: [defaultLanguageTag] }), data => {
-          if (!data) {
-            return;
-          }
-          return { ...data, data: data.data.map(co => ({ ...co, values: {} })) };
-        });
-      }
       client.removeLocales({ context, locales: args.locales });
     }
   });
 
   const save = () => {
-    setDefaultLanguageTag(defaultLanguage);
+    setDefaultLanguageTags(defaultLanguages);
     const localesToDelete = locales.filter(locale => !languages.some(language => language.value === locale));
     if (localesToDelete) {
       deleteMutation.mutate({ context, locales: localesToDelete });
@@ -133,6 +137,15 @@ export const LanguageTool = () => {
   useHotkeys(hotkeys.languageTool.hotkey, () => onOpenChange(true), { scopes: ['global'], keyup: true, enabled: !open });
   const deleteRef = useHotkeys(hotkeys.deleteLanguage.hotkey, () => deleteSelectedLanguage(), { scopes: ['global'] });
   const enter = useHotkeys(['Enter'], () => save(), { scopes: ['global'], enabled: open, enableOnFormTags: true });
+
+  const onKeyDown = (event: KeyboardEvent<HTMLTableElement>) => {
+    if (event.code === 'Space') {
+      const languageTag = table.getSelectedRowModel().flatRows[0].original.value;
+      onCheckedChange(!defaultLanguages.includes(languageTag), languageTag);
+    } else {
+      handleKeyDown(event);
+    }
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -152,9 +165,6 @@ export const LanguageTool = () => {
         </DialogHeader>
         <DialogDescription>{t('dialog.languageTool.description')}</DialogDescription>
         <Flex direction='column' gap={3} ref={enter}>
-          <BasicField label={t('dialog.languageTool.label.defaultLanguage')}>
-            <BasicSelect value={defaultLanguage} onValueChange={setDefaultLanguage} items={languages} />
-          </BasicField>
           <BasicField
             label={t('common.label.languages')}
             control={
@@ -166,7 +176,7 @@ export const LanguageTool = () => {
               />
             }
           >
-            <Table onKeyDown={handleKeyDown} onClick={event => event.stopPropagation()}>
+            <Table onKeyDown={onKeyDown} onClick={event => event.stopPropagation()}>
               <TableBody>
                 {table.getRowModel().rows.map(row => (
                   <SelectRow key={row.id} row={row}>

@@ -65,6 +65,9 @@ export class CmsClientMock implements Client {
 
   removeLocales(args: CmsRemoveLocalesArgs): void {
     this.localesData = this.localesData.filter(locale => !(args as CmsRemoveLocalesArgs).locales.includes(locale));
+    this.cmsData.data.forEach(
+      co => (co.values = Object.fromEntries(Object.entries(co.values).filter(entry => !args.locales.includes(entry[0]))))
+    );
   }
 
   meta<TMeta extends keyof MetaRequestTypes>(path: TMeta): Promise<MetaRequestTypes[TMeta][1]> {

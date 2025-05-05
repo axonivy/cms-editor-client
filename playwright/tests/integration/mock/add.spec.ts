@@ -8,7 +8,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 test('add', async () => {
-  await editor.main.control.add.add('TestContentObject', '/A/TestNamespace', 'TestValue');
+  await editor.main.control.add.add('TestContentObject', '/A/TestNamespace', { English: 'TestValue' });
   await editor.main.table.row(0).expectToBeSelected();
   await editor.main.table.row(0).expectToHaveColumns(['/A/TestNamespace/TestContentObject'], ['TestValue']);
   await editor.detail.expectToHaveValues('/A/TestNamespace/TestContentObject', { English: 'TestValue', German: '' });
@@ -27,21 +27,22 @@ test('default values', async () => {
     '/Dialogs/signal',
     '/Dialogs/trigger'
   );
-  await expect(editor.main.control.add.value.textbox.locator).toHaveValue('');
+  await expect(editor.main.control.add.value('English').textbox.locator).toHaveValue('');
 });
 
-test('show field for value of default language', async ({ page }) => {
-  editor = await CmsEditor.openMock(page, { lng: 'ja' });
+test('show fields for values of default languages', async ({ page }) => {
+  editor = await CmsEditor.openMock(page, { parameters: { lng: 'ja' } });
   await editor.page.keyboard.press('a');
-  await expect(editor.main.control.add.value.label).toHaveText('英語');
+  await expect(editor.main.control.add.value('英語').locator).toBeVisible();
 
-  editor = await CmsEditor.openMock(page, { lng: 'en' });
+  editor = await CmsEditor.openMock(page, { parameters: { lng: 'en' }, defaultLanguages: ['de'] });
   await editor.page.keyboard.press('a');
-  await expect(editor.main.control.add.value.label).toHaveText('English');
+  await expect(editor.main.control.add.value('German').locator).toBeVisible();
 
-  editor = await CmsEditor.openMock(page, { lng: 'de' });
+  editor = await CmsEditor.openMock(page, { parameters: { lng: 'de' }, defaultLanguages: ['en', 'de'] });
   await editor.page.keyboard.press('a');
-  await expect(editor.main.control.add.value.label).toHaveText('Deutsch');
+  await expect(editor.main.control.add.value('Englisch').locator).toBeVisible();
+  await expect(editor.main.control.add.value('Deutsch').locator).toBeVisible();
 });
 
 test('keyboard support', async () => {
@@ -73,8 +74,8 @@ test('disable dialog while create request is pending', async () => {
   await add.create.click();
   await expect(add.name.locator).toBeDisabled();
   await expect(add.namespace.locator).toBeDisabled();
-  await expect(add.value.delete).toBeDisabled();
-  await expect(add.value.textbox.locator).toBeDisabled();
+  await expect(add.value('English').delete).toBeDisabled();
+  await expect(add.value('English').textbox.locator).toBeDisabled();
   await expect(add.create).toBeDisabled();
   await editor.page.keyboard.press('Escape');
   await expect(add.locator).toBeVisible();
@@ -91,12 +92,12 @@ test('show error if create request is error', async () => {
   await add.error.expectToBeError('An error has occurred: Error: error message');
 });
 
-test('validation', async () => {
+test('validation', async ({ page }) => {
+  editor = await CmsEditor.openMock(page, { defaultLanguages: ['en', 'de'] });
   const add = editor.main.control.add;
   await add.trigger.click();
   const nameMessage = await add.name.message();
   const namespaceMessage = await add.namespace.message();
-  const valueMessage = await add.value.textbox.message();
 
   await namespaceMessage.expectToBeInfo("Folder structure of Content Object (e.g. '/Dialog/Label').");
   await expect(add.create).toBeEnabled();
@@ -108,12 +109,27 @@ test('validation', async () => {
   await expect(add.locator).toBeVisible();
 
   await add.name.locator.fill('name');
-  await add.value.delete.click();
-  await valueMessage.expectToBeError('Value cannot be empty.');
+  const englishValue = add.value('English');
+  const englishValueMessage = await englishValue.textbox.message();
+  const germanValue = add.value('German');
+  const germanValueMessage = await germanValue.textbox.message();
+  await expect(englishValueMessage.locator).toBeHidden();
+  await expect(germanValueMessage.locator).toBeHidden();
+
+  await englishValue.delete.click();
+  await expect(englishValueMessage.locator).toBeHidden();
+  await expect(germanValueMessage.locator).toBeHidden();
+
+  await germanValue.delete.click();
+  await englishValueMessage.expectToBeError('At least one value must be present.');
+  await germanValueMessage.expectToBeError('At least one value must be present.');
+
   await expect(add.create).toBeDisabled();
   await editor.page.keyboard.press('Enter');
   await expect(add.locator).toBeVisible();
 
-  await add.value.textbox.locator.fill('value');
+  await germanValue.textbox.locator.fill('value');
+  await expect(englishValueMessage.locator).toBeHidden();
+  await expect(germanValueMessage.locator).toBeHidden();
   await expect(add.create).toBeEnabled();
 });

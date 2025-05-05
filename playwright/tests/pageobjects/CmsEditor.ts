@@ -38,11 +38,19 @@ export class CmsEditor {
     return this.openUrl(page, url);
   }
 
-  static async openMock(page: Page, options?: { readonly?: boolean; app?: string; lng?: string }) {
+  static async openMock(
+    page: Page,
+    options?: { parameters?: { readonly?: boolean; app?: string; lng?: string }; defaultLanguages?: Array<string> }
+  ) {
     let params = '';
-    if (options) {
+    if (options?.parameters) {
       params = '?';
-      params += this.params(options);
+      params += this.params(options.parameters);
+    }
+    if (options?.defaultLanguages) {
+      await page.evaluate(languages => {
+        localStorage.setItem('defaultLanguageTags', JSON.stringify(languages));
+      }, options.defaultLanguages);
     }
     return this.openUrl(page, `/mock.html${params}`);
   }

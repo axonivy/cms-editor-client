@@ -29,9 +29,6 @@
     },
     "languageTool": {
       "description": "Edit the languages of the CMS.",
-      "label": {
-        "defaultLanguage": "Default Language"
-      },
       "languageBrowser": {
         "addLanguage": "Add Language",
         "description": "Select the language you want to add to the CMS.",
@@ -57,7 +54,7 @@
     "nameIsTaken": "Name is already present in this Namespace.",
     "namespaceInfo": "Folder structure of Content Object (e.g. '/Dialog/Label').",
     "notAllowedChar": "Character '{{- character}}' is not allowed.",
-    "noValues": "Value cannot be empty."
+    "noValues": "At least one value must be present."
   },
   "value": {
     "delete": "Delete value",
