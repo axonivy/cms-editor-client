@@ -45,7 +45,7 @@ export const AddLanguage = ({ languages, addLanguage }: AddLanguageProps) => {
           <TooltipContent>{shortcut.label}</TooltipContent>
         </Tooltip>
       </TooltipProvider>
-      <DialogContent className='cms-editor-add-language-content'>
+      <DialogContent style={{ display: 'flex', flexDirection: 'column' }} className='cms-editor-add-language-content'>
         <DialogHeader>
           <DialogTitle>{t('dialog.languageTool.languageBrowser.title')}</DialogTitle>
         </DialogHeader>
