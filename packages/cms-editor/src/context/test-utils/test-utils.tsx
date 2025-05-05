@@ -25,8 +25,8 @@ type ContextHelperProps = {
     setSelectedContentObject?: (index?: number) => void;
     detail?: boolean;
     setDetail?: (visible: boolean) => void;
-    defaultLanguageTag?: string;
-    setDefaultLanguageTag?: (languageTag: string) => void;
+    defaultLanguageTags?: Array<string>;
+    setDefaultLanguageTags?: (languageTags: Array<string>) => void;
     languageDisplayName?: Intl.DisplayNames;
   };
 };
@@ -60,8 +60,8 @@ const ContextHelper = ({
     setSelectedContentObject: appContext?.setSelectedContentObject ?? (() => {}),
     detail: appContext?.detail !== undefined ? appContext.detail : true,
     setDetail: appContext?.setDetail ?? (() => {}),
-    defaultLanguageTag: appContext?.defaultLanguageTag ?? '',
-    setDefaultLanguageTag: appContext?.setDefaultLanguageTag ?? (() => {}),
+    defaultLanguageTags: appContext?.defaultLanguageTags ?? [],
+    setDefaultLanguageTags: appContext?.setDefaultLanguageTags ?? (() => {}),
     languageDisplayName: appContext?.languageDisplayName ?? ({} as Intl.DisplayNames)
   };
 

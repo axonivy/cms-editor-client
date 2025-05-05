@@ -12,12 +12,12 @@ import {
 } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
 import { useTranslation } from 'react-i18next';
-import { useAppContext } from '../context/AppContext';
 
 type CmsValueFieldProps = {
   values: MapStringString;
   updateValue: (languageTag: string, value: string) => void;
   deleteValue: (languageTag: string) => void;
+  label: string;
   languageTag: string;
   disabled?: boolean;
   disabledDelete?: boolean;
@@ -29,6 +29,7 @@ export const CmsValueField = ({
   values,
   updateValue,
   deleteValue,
+  label,
   languageTag,
   disabled,
   disabledDelete,
@@ -36,7 +37,6 @@ export const CmsValueField = ({
   message
 }: CmsValueFieldProps) => {
   const { t } = useTranslation();
-  const { languageDisplayName } = useAppContext();
 
   const value = values[languageTag];
   const isValuePresent = value !== undefined;
@@ -45,7 +45,7 @@ export const CmsValueField = ({
 
   return (
     <BasicField
-      label={languageDisplayName.of(languageTag)}
+      label={label}
       control={
         readonly ? null : (
           <TooltipProvider>

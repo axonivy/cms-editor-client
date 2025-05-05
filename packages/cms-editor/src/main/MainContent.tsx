@@ -28,6 +28,7 @@ import { useQueryKeys } from '../query/query-client';
 import { useKnownHotkeys } from '../utils/hotkeys';
 import './MainContent.css';
 import { MainControl } from './control/MainControl';
+import { toLanguages } from './control/language-tool/language-utils';
 
 export const MainContent = () => {
   const { t } = useTranslation();
@@ -38,7 +39,7 @@ export const MainContent = () => {
     setSelectedContentObject,
     detail,
     setDetail,
-    defaultLanguageTag,
+    defaultLanguageTags,
     languageDisplayName
   } = useAppContext();
 
@@ -62,17 +63,19 @@ export const MainContent = () => {
       minSize: 200,
       size: 500,
       maxSize: 1000
-    },
-    {
-      id: defaultLanguageTag,
-      accessorFn: co => co.values[defaultLanguageTag],
-      header: ({ column }) => <SortableHeader column={column} name={languageDisplayName.of(defaultLanguageTag) ?? defaultLanguageTag} />,
+    }
+  ];
+  toLanguages(defaultLanguageTags, languageDisplayName).forEach(language =>
+    columns.push({
+      id: language.value,
+      accessorFn: co => co.values[language.value],
+      header: ({ column }) => <SortableHeader column={column} name={language.label} />,
       cell: cell => <span>{cell.getValue()}</span>,
       minSize: 200,
       size: 500,
       maxSize: 1000
-    }
-  ];
+    })
+  );
 
   const table = useReactTable({
     ...selection.options,
@@ -113,7 +116,7 @@ export const MainContent = () => {
 
   const { mutate } = useMutation({
     mutationFn: async (args: CmsDeleteArgs) => {
-      const data = queryClient.setQueryData<CmsData>(dataKey({ context, languageTags: [defaultLanguageTag] }), data => {
+      const data = queryClient.setQueryData<CmsData>(dataKey({ context, languageTags: defaultLanguageTags }), data => {
         if (!data) {
           return;
         }

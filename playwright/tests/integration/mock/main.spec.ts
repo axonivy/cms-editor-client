@@ -33,22 +33,24 @@ test.describe('table keyboard support', () => {
   });
 });
 
-test('show column for default language', async ({ page }) => {
-  editor = await CmsEditor.openMock(page, { lng: 'ja' });
+test('show columns for default languages', async ({ page }) => {
+  editor = await CmsEditor.openMock(page, { parameters: { lng: 'ja' } });
   await expect(editor.main.table.headers).toHaveCount(2);
   await expect(editor.main.table.header(0).content).toHaveText('URI');
   await expect(editor.main.table.header(1).content).toHaveText('英語');
   await expect(editor.main.table.row(2).column(1).value(0)).toHaveText('Case');
 
-  editor = await CmsEditor.openMock(page, { lng: 'en' });
+  editor = await CmsEditor.openMock(page, { parameters: { lng: 'en' }, defaultLanguages: ['de'] });
   await expect(editor.main.table.headers).toHaveCount(2);
   await expect(editor.main.table.header(0).content).toHaveText('URI');
-  await expect(editor.main.table.header(1).content).toHaveText('English');
-  await expect(editor.main.table.row(2).column(1).value(0)).toHaveText('Case');
+  await expect(editor.main.table.header(1).content).toHaveText('German');
+  await expect(editor.main.table.row(2).column(1).value(0)).toHaveText('Fall');
 
-  editor = await CmsEditor.openMock(page, { lng: 'de' });
-  await expect(editor.main.table.headers).toHaveCount(2);
+  editor = await CmsEditor.openMock(page, { parameters: { lng: 'de' }, defaultLanguages: ['en', 'de'] });
+  await expect(editor.main.table.headers).toHaveCount(3);
   await expect(editor.main.table.header(0).content).toHaveText('URI');
   await expect(editor.main.table.header(1).content).toHaveText('Deutsch');
+  await expect(editor.main.table.header(2).content).toHaveText('Englisch');
   await expect(editor.main.table.row(2).column(1).value(0)).toHaveText('Fall');
+  await expect(editor.main.table.row(2).column(2).value(0)).toHaveText('Case');
 });

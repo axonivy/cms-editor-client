@@ -13,7 +13,7 @@ import { MainToolbar } from './main/MainToolbar';
 import { useClient } from './protocol/ClientContextProvider';
 import { useAction } from './protocol/use-action';
 import { useQueryKeys } from './query/query-client';
-import { useLanguage } from './use-language';
+import { useLanguages } from './use-languages';
 import { useKnownHotkeys } from './utils/hotkeys';
 
 function CmsEditor(props: EditorProps) {
@@ -29,10 +29,10 @@ function CmsEditor(props: EditorProps) {
   const client = useClient();
   const { dataKey } = useQueryKeys();
 
-  const { defaultLanguageTag, setDefaultLanguageTag, languageDisplayName } = useLanguage(context);
+  const { defaultLanguageTags, setDefaultLanguageTags, languageDisplayName } = useLanguages(context);
   const { data, isPending, isError, error } = useQuery({
-    queryKey: dataKey({ context, languageTags: [defaultLanguageTag] }),
-    queryFn: async () => await client.data({ context, languageTags: [defaultLanguageTag] }),
+    queryKey: dataKey({ context, languageTags: defaultLanguageTags }),
+    queryFn: async () => await client.data({ context, languageTags: defaultLanguageTags }),
     structuralSharing: false
   });
 
@@ -66,8 +66,8 @@ function CmsEditor(props: EditorProps) {
         setSelectedContentObject,
         detail,
         setDetail,
-        defaultLanguageTag,
-        setDefaultLanguageTag,
+        defaultLanguageTags,
+        setDefaultLanguageTags,
         languageDisplayName
       }}
     >

@@ -29,9 +29,6 @@
     },
     "languageTool": {
       "description": "Bearbeite die Sprachen des CMS.",
-      "label": {
-        "defaultLanguage": "Standardsprache"
-      },
       "languageBrowser": {
         "addLanguage": "Sprache hinzufügen",
         "description": "Wählen Sie die Sprache aus, die Sie dem CMS hinzufügen möchten.",
@@ -57,7 +54,7 @@
     "nameIsTaken": "Name ist bereits vorhanden in diesem Namensbereich.",
     "namespaceInfo": "Ordnerstruktur des Inhaltsobjekts (z.B. '/Dialog/Label').",
     "notAllowedChar": "Zeichen '{{- character}}' ist nicht erlaubt.",
-    "noValues": "Wert darf nicht leer sein."
+    "noValues": "Mindestens ein Wert muss vorhanden sein."
   },
   "value": {
     "delete": "Wert löschen",

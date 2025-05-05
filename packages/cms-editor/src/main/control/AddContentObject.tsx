@@ -30,6 +30,7 @@ import { useClient } from '../../protocol/ClientContextProvider';
 import { genQueryKey, useQueryKeys } from '../../query/query-client';
 import { removeValue } from '../../utils/cms-utils';
 import { useKnownHotkeys } from '../../utils/hotkeys';
+import { toLanguages } from './language-tool/language-utils';
 import { useValidateAddContentObject } from './use-validate-add-content-object';
 
 type AddContentObjectProps = {
@@ -38,7 +39,8 @@ type AddContentObjectProps = {
 
 export const AddContentObject = ({ selectRow }: AddContentObjectProps) => {
   const { t } = useTranslation();
-  const { context, contentObjects, selectedContentObject, setSelectedContentObject, defaultLanguageTag } = useAppContext();
+  const { context, contentObjects, selectedContentObject, setSelectedContentObject, defaultLanguageTags, languageDisplayName } =
+    useAppContext();
 
   const [open, setOpen] = useState(false);
   const onOpenChange = (open: boolean) => {
@@ -58,7 +60,7 @@ export const AddContentObject = ({ selectRow }: AddContentObjectProps) => {
   const initializeDialog = () => {
     setName('NewContentObject');
     setNamespace(initialNamespace(contentObjects, selectedContentObject));
-    setValues({ [defaultLanguageTag]: '' });
+    setValues(Object.fromEntries(defaultLanguageTags.map(tag => [tag, ''])));
   };
 
   const client = useClient();
@@ -76,7 +78,7 @@ export const AddContentObject = ({ selectRow }: AddContentObjectProps) => {
       { context, contentObject: { uri, type: 'STRING', values } },
       {
         onSuccess: () => {
-          const data: CmsData | undefined = queryClient.getQueryData(dataKey({ context, languageTags: [defaultLanguageTag] }));
+          const data: CmsData | undefined = queryClient.getQueryData(dataKey({ context, languageTags: defaultLanguageTags }));
           const selectedContentObject = data?.data
             .filter((contentObject: ContentObject) => contentObject.type !== 'FOLDER')
             .findIndex(co => co.uri === uri);
@@ -134,14 +136,18 @@ export const AddContentObject = ({ selectRow }: AddContentObjectProps) => {
               disabled={isPending}
             />
           </BasicField>
-          <CmsValueField
-            values={values}
-            updateValue={(languageTag: string, value: string) => setValues(values => ({ ...values, [languageTag]: value }))}
-            deleteValue={(languageTag: string) => setValues(values => removeValue(values, languageTag))}
-            languageTag={defaultLanguageTag}
-            disabled={isPending}
-            message={valuesMessage}
-          />
+          {toLanguages(defaultLanguageTags, languageDisplayName).map(language => (
+            <CmsValueField
+              key={language.value}
+              values={values}
+              updateValue={(languageTag: string, value: string) => setValues(values => ({ ...values, [languageTag]: value }))}
+              deleteValue={(languageTag: string) => setValues(values => removeValue(values, languageTag))}
+              label={language.label}
+              languageTag={language.value}
+              disabled={isPending}
+              message={valuesMessage}
+            />
+          ))}
           {isError && <Message variant='error' message={t('message.error', { error })} className='cms-editor-add-dialog-error-message' />}
         </Flex>
         <DialogFooter>
