@@ -29,7 +29,6 @@ test('readonly', () => {
 
 const renderCmsValueField = (values: MapStringString, readonly?: boolean) => {
   const ui = (values: MapStringString) => (
-    // eslint-disable-next-line i18next/no-literal-string
     <CmsValueField values={values} updateValue={() => {}} deleteValue={() => {}} label='English' languageTag='en' />
   );
   const view = customRender(ui(values), {
