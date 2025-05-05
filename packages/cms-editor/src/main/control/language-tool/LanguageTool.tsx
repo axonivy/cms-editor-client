@@ -139,7 +139,7 @@ export const LanguageTool = () => {
   const enter = useHotkeys(['Enter'], () => save(), { scopes: ['global'], enabled: open, enableOnFormTags: true });
 
   const onKeyDown = (event: KeyboardEvent<HTMLTableElement>) => {
-    if (event.key === ' ') {
+    if (event.code === 'Space') {
       const languageTag = table.getSelectedRowModel().flatRows[0].original.value;
       onCheckedChange(!defaultLanguages.includes(languageTag), languageTag);
     } else {

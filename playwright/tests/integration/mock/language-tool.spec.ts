@@ -37,9 +37,9 @@ test('open, edit, and save using keyboard', async () => {
 
   await keyboard.press('Tab');
   await keyboard.press('ArrowDown');
-  await keyboard.press(' ');
+  await keyboard.press('Space');
   await keyboard.press('ArrowDown');
-  await keyboard.press(' ');
+  await keyboard.press('Space');
   await keyboard.press('Enter');
   await expect(languageTool.locator).toBeHidden();
   await expect(editor.main.table.header(1).content).toHaveText('German');
@@ -89,7 +89,7 @@ describe('languages', () => {
     await keyboard.press('Tab');
     await keyboard.press('ArrowDown');
     await expect(languageTool.checkboxOfRow(0)).toBeChecked();
-    await keyboard.press(' ');
+    await keyboard.press('Space');
     await expect(languageTool.checkboxOfRow(0)).not.toBeChecked();
 
     await keyboard.press('ArrowUp');
