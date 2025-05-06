@@ -121,14 +121,22 @@ export const LanguageTool = () => {
   });
 
   const save = () => {
-    setDefaultLanguageTags(defaultLanguages);
     const localesToDelete = locales.filter(locale => !languages.some(language => language.value === locale));
-    if (localesToDelete) {
+    if (localesToDelete.length !== 0) {
       deleteMutation.mutate({ context, locales: localesToDelete });
     }
     const localesToAdd = languages.map(language => language.value).filter(locale => !locales.includes(locale));
-    if (localesToAdd) {
-      addMutation.mutate({ context, locales: localesToAdd });
+    if (localesToAdd.length !== 0) {
+      addMutation.mutate(
+        { context, locales: localesToAdd },
+        {
+          onSuccess: () => {
+            setDefaultLanguageTags(defaultLanguages);
+          }
+        }
+      );
+    } else {
+      setDefaultLanguageTags(defaultLanguages);
     }
     setOpen(false);
   };

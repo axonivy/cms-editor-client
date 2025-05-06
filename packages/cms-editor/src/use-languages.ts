@@ -13,7 +13,7 @@ export const useLanguages = (context: CmsEditorDataContext) => {
   const [defaultLanguageTags, setDefaultLanguageTagsState] = useState(defaultLanguages(locales.data, clientLanguageTag));
   const setDefaultLanguageTags = (languageTags: Array<string>) => {
     setDefaultLanguageTagsState(languageTags);
-    localStorage.setItem(defaultLanguageTagsKey, JSON.stringify(languageTags));
+    setDefaultLanguageTagsLocalStorage(languageTags);
   };
   useEffect(() => setDefaultLanguageTagsState(defaultLanguages(locales.data, clientLanguageTag)), [locales.data, clientLanguageTag]);
 
@@ -21,11 +21,14 @@ export const useLanguages = (context: CmsEditorDataContext) => {
 };
 
 const defaultLanguages = (locales: Array<string>, clientLanguageTag: string): Array<string> => {
+  if (locales.length == 0) {
+    return [clientLanguageTag];
+  }
   const defaultLanguageTags = localStorage.getItem(defaultLanguageTagsKey);
   if (defaultLanguageTags) {
-    return JSON.parse(defaultLanguageTags);
+    return updateDefaultLanguageTags(JSON.parse(defaultLanguageTags), locales);
   }
-  if (locales.includes(clientLanguageTag) || locales.length === 0) {
+  if (locales.includes(clientLanguageTag)) {
     return [clientLanguageTag];
   }
   if (locales.includes('en')) {
@@ -33,3 +36,15 @@ const defaultLanguages = (locales: Array<string>, clientLanguageTag: string): Ar
   }
   return [locales[0]];
 };
+
+const updateDefaultLanguageTags = (defaultLanguageTags: Array<string>, locales: Array<string>) => {
+  if (defaultLanguageTags.every(languageTag => locales.includes(languageTag))) {
+    return defaultLanguageTags;
+  }
+  const defaultLanguages = defaultLanguageTags.filter(languageTag => locales.includes(languageTag));
+  setDefaultLanguageTagsLocalStorage(defaultLanguages);
+  return defaultLanguages;
+};
+
+const setDefaultLanguageTagsLocalStorage = (languageTags: Array<string>) =>
+  localStorage.setItem(defaultLanguageTagsKey, JSON.stringify(languageTags));

@@ -6,10 +6,11 @@ import { defaultLanguageTagsKey, useLanguages } from './use-languages';
 afterEach(() => localStorage.clear());
 
 test('default languages set via local storage', async () => {
-  localStorage.setItem(defaultLanguageTagsKey, '["en", "fr"]');
-  const view = renderLanguageHook('de', []);
-  expect(view.result.current.defaultLanguageTags).toEqual(['en', 'fr']);
+  localStorage.setItem(defaultLanguageTagsKey, '["de","en","fr"]');
+  const view = renderLanguageHook('de', ['en', 'fr', 'ja']);
+  await waitFor(() => expect(view.result.current.defaultLanguageTags).toEqual(['en', 'fr']));
   expect(view.result.current.languageDisplayName.resolvedOptions().locale).toEqual('de');
+  expect(localStorage.getItem(defaultLanguageTagsKey)).toEqual('["en","fr"]');
 
   view.result.current.setDefaultLanguageTags(['ja']);
   view.rerender();
