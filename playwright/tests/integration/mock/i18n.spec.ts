@@ -11,7 +11,7 @@ test('translation', async ({ page }) => {
 
   editor = await CmsEditor.openMock(page, { parameters: { lng: 'de' } });
   await expect(editor.main.label).toHaveText('Inhaltsobjekte');
-  await expect(editor.main.table.header(1).content).toHaveText('Deutsch');
+  await expect(editor.main.table.header(1).content).toHaveText('Englisch');
   await expect(editor.detail.message).toHaveText('Wähle ein Inhaltsobjekt aus um es zu bearbeiten.');
   await editor.main.table.row(0).locator.click();
   await expect(editor.detail.value('Deutsch').locator).toBeVisible();

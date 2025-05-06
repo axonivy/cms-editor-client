@@ -22,19 +22,22 @@ export const useLanguages = (context: CmsEditorDataContext) => {
 
 const defaultLanguages = (locales: Array<string>, clientLanguageTag: string): Array<string> => {
   if (locales.length == 0) {
-    return [clientLanguageTag];
+    return [];
   }
   const defaultLanguageTags = localStorage.getItem(defaultLanguageTagsKey);
   if (defaultLanguageTags) {
     return updateDefaultLanguageTags(JSON.parse(defaultLanguageTags), locales);
   }
+  const defaultLanguages: Array<string> = [];
   if (locales.includes(clientLanguageTag)) {
-    return [clientLanguageTag];
+    defaultLanguages.push(clientLanguageTag);
+  } else if (locales.includes('en')) {
+    defaultLanguages.push('en');
+  } else {
+    defaultLanguages.push(locales[0]);
   }
-  if (locales.includes('en')) {
-    return ['en'];
-  }
-  return [locales[0]];
+  setDefaultLanguageTagsLocalStorage(defaultLanguages);
+  return defaultLanguages;
 };
 
 const updateDefaultLanguageTags = (defaultLanguageTags: Array<string>, locales: Array<string>) => {

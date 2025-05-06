@@ -21,20 +21,24 @@ test('default languages set via local storage', async () => {
 
 test('default languages not set via local storage', async () => {
   let result = renderLanguageHook('de', []).result;
-  expect(result.current.defaultLanguageTags).toEqual(['de']);
+  expect(result.current.defaultLanguageTags).toEqual([]);
   expect(result.current.languageDisplayName.resolvedOptions().locale).toEqual('de');
+  expect(localStorage.getItem(defaultLanguageTagsKey)).toBeNull();
 
   result = renderLanguageHook('de', ['ja', 'en']).result;
   await waitFor(() => {
     expect(result.current.defaultLanguageTags).toEqual(['en']);
   });
   expect(result.current.languageDisplayName.resolvedOptions().locale).toEqual('de');
+  expect(localStorage.getItem(defaultLanguageTagsKey)).toEqual('["en"]');
 
+  localStorage.removeItem(defaultLanguageTagsKey);
   result = renderLanguageHook('de', ['ja', 'fr']).result;
   await waitFor(() => {
     expect(result.current.defaultLanguageTags).toEqual(['ja']);
   });
   expect(result.current.languageDisplayName.resolvedOptions().locale).toEqual('de');
+  expect(localStorage.getItem(defaultLanguageTagsKey)).toEqual('["ja"]');
 });
 
 const renderLanguageHook = (clientLanguage: string, locales: Array<string>) => {
