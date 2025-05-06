@@ -1,6 +1,5 @@
 import type { Client, CmsEditorDataContext } from '@axonivy/cms-editor-protocol';
-import { waitFor } from '@testing-library/react';
-import { act } from 'react';
+import { act, waitFor } from '@testing-library/react';
 import { customRenderHook } from './context/test-utils/test-utils';
 import { defaultLanguageTagsKey, useLanguages } from './use-languages';
 
