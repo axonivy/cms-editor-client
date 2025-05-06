@@ -1,5 +1,6 @@
 import type { Client, CmsEditorDataContext } from '@axonivy/cms-editor-protocol';
 import { waitFor } from '@testing-library/react';
+import { act } from 'react';
 import { customRenderHook } from './context/test-utils/test-utils';
 import { defaultLanguageTagsKey, useLanguages } from './use-languages';
 
@@ -12,7 +13,7 @@ test('default languages set via local storage', async () => {
   expect(view.result.current.languageDisplayName.resolvedOptions().locale).toEqual('de');
   expect(localStorage.getItem(defaultLanguageTagsKey)).toEqual('["en","fr"]');
 
-  view.result.current.setDefaultLanguageTags(['ja']);
+  act(() => view.result.current.setDefaultLanguageTags(['ja']));
   view.rerender();
   expect(view.result.current.defaultLanguageTags).toEqual(['ja']);
   expect(view.result.current.languageDisplayName.resolvedOptions().locale).toEqual('de');
