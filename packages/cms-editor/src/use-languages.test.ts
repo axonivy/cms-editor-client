@@ -1,17 +1,18 @@
 import type { Client, CmsEditorDataContext } from '@axonivy/cms-editor-protocol';
-import { waitFor } from '@testing-library/react';
+import { act, waitFor } from '@testing-library/react';
 import { customRenderHook } from './context/test-utils/test-utils';
 import { defaultLanguageTagsKey, useLanguages } from './use-languages';
 
 afterEach(() => localStorage.clear());
 
 test('default languages set via local storage', async () => {
-  localStorage.setItem(defaultLanguageTagsKey, '["en", "fr"]');
-  const view = renderLanguageHook('de', []);
-  expect(view.result.current.defaultLanguageTags).toEqual(['en', 'fr']);
+  localStorage.setItem(defaultLanguageTagsKey, '["de","en","fr"]');
+  const view = renderLanguageHook('de', ['en', 'fr', 'ja']);
+  await waitFor(() => expect(view.result.current.defaultLanguageTags).toEqual(['en', 'fr']));
   expect(view.result.current.languageDisplayName.resolvedOptions().locale).toEqual('de');
+  expect(localStorage.getItem(defaultLanguageTagsKey)).toEqual('["en","fr"]');
 
-  view.result.current.setDefaultLanguageTags(['ja']);
+  act(() => view.result.current.setDefaultLanguageTags(['ja']));
   view.rerender();
   expect(view.result.current.defaultLanguageTags).toEqual(['ja']);
   expect(view.result.current.languageDisplayName.resolvedOptions().locale).toEqual('de');
