@@ -48,9 +48,12 @@ export class CmsEditor {
       params += this.params(options.parameters);
     }
     if (options?.defaultLanguages) {
-      await page.evaluate(languages => {
-        localStorage.setItem('defaultLanguageTags', JSON.stringify(languages));
-      }, options.defaultLanguages);
+      await page.evaluate(options => {
+        localStorage.setItem(
+          `${options.parameters?.app ?? 'app-name'}:pmv-name:defaultLanguageTags`,
+          JSON.stringify(options.defaultLanguages)
+        );
+      }, options);
     }
     return this.openUrl(page, `/mock.html${params}`);
   }

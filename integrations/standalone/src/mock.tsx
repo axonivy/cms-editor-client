@@ -28,7 +28,7 @@ root.render(
         <QueryProvider client={queryClient}>
           <ReadonlyProvider readonly={readonly}>
             <HotkeysProvider initiallyActiveScopes={['global']}>
-              <CmsEditor context={{ app: '', pmv: 'pmv-name', file: '' }} />
+              <CmsEditor context={{ app: 'app-name', pmv: 'pmv-name', file: '' }} />
             </HotkeysProvider>
           </ReadonlyProvider>
         </QueryProvider>

@@ -1,7 +1,7 @@
-import type { Client, CmsEditorDataContext } from '@axonivy/cms-editor-protocol';
+import type { Client } from '@axonivy/cms-editor-protocol';
 import { act, waitFor } from '@testing-library/react';
 import { customRenderHook } from './context/test-utils/test-utils';
-import { defaultLanguageTagsKey, useLanguages } from './use-languages';
+import { useLanguages } from './use-languages';
 
 afterEach(() => localStorage.clear());
 
@@ -41,8 +41,10 @@ test('default languages not set via local storage', async () => {
   expect(localStorage.getItem(defaultLanguageTagsKey)).toEqual('["ja"]');
 });
 
+const defaultLanguageTagsKey = 'test-app:test-pmv:defaultLanguageTags' as const;
+const context = { app: 'test-app', pmv: 'test-pmv', file: 'test-file' } as const;
 const renderLanguageHook = (clientLanguage: string, locales: Array<string>) => {
-  return customRenderHook(() => useLanguages({} as CmsEditorDataContext), {
+  return customRenderHook(() => useLanguages(context), {
     wrapperProps: { clientLanguage: clientLanguage, clientContext: { client: new TestClient(locales) } }
   });
 };
