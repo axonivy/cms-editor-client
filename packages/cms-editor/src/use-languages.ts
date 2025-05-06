@@ -24,9 +24,9 @@ const defaultLanguages = (locales: Array<string>, clientLanguageTag: string): Ar
   if (locales.length == 0) {
     return [];
   }
-  const defaultLanguageTags = localStorage.getItem(defaultLanguageTagsKey);
+  const defaultLanguageTags = getDefaultLanguageTagsLocalStorage();
   if (defaultLanguageTags) {
-    return updateDefaultLanguageTags(JSON.parse(defaultLanguageTags), locales);
+    return defaultLanguageTags.filter(languageTag => locales.includes(languageTag));
   }
   const defaultLanguages: Array<string> = [];
   if (locales.includes(clientLanguageTag)) {
@@ -40,13 +40,12 @@ const defaultLanguages = (locales: Array<string>, clientLanguageTag: string): Ar
   return defaultLanguages;
 };
 
-const updateDefaultLanguageTags = (defaultLanguageTags: Array<string>, locales: Array<string>) => {
-  if (defaultLanguageTags.every(languageTag => locales.includes(languageTag))) {
-    return defaultLanguageTags;
+export const getDefaultLanguageTagsLocalStorage = (): Array<string> | undefined => {
+  const defaultLanguageTags = localStorage.getItem(defaultLanguageTagsKey);
+  if (!defaultLanguageTags) {
+    return undefined;
   }
-  const defaultLanguages = defaultLanguageTags.filter(languageTag => locales.includes(languageTag));
-  setDefaultLanguageTagsLocalStorage(defaultLanguages);
-  return defaultLanguages;
+  return JSON.parse(defaultLanguageTags);
 };
 
 const setDefaultLanguageTagsLocalStorage = (languageTags: Array<string>) =>
