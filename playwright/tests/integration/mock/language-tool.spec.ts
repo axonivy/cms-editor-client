@@ -8,21 +8,59 @@ test.beforeEach(async ({ page }) => {
   editor = await CmsEditor.openMock(page);
 });
 
-test('default languages', async () => {
-  const languageTool = editor.main.control.languageTool;
-  const table = editor.main.table;
+describe('default languages', () => {
+  test('add and remove', async () => {
+    const languageTool = editor.main.control.languageTool;
+    const table = editor.main.table;
 
-  await expect(table.headers).toHaveCount(2);
-  await expect(table.header(1).content).toHaveText('English');
-  await languageTool.trigger.click();
-  await expect(languageTool.checkboxOfRow(0)).toBeChecked();
-  await expect(languageTool.checkboxOfRow(1)).not.toBeChecked();
+    await expect(table.headers).toHaveCount(2);
+    await expect(table.header(1).content).toHaveText('English');
+    await languageTool.trigger.click();
+    await expect(languageTool.checkboxOfRow(0)).toBeChecked();
+    await expect(languageTool.checkboxOfRow(1)).not.toBeChecked();
 
-  await languageTool.checkboxOfRow(1).check();
-  await languageTool.save.click();
-  await expect(table.headers).toHaveCount(3);
-  await expect(table.header(1).content).toHaveText('English');
-  await expect(table.header(2).content).toHaveText('German');
+    await languageTool.checkboxOfRow(1).check();
+    await languageTool.save.click();
+    await expect(table.headers).toHaveCount(3);
+    await expect(table.header(1).content).toHaveText('English');
+    await expect(table.header(2).content).toHaveText('German');
+
+    await languageTool.trigger.click();
+    await languageTool.checkboxOfRow(0).uncheck();
+    await languageTool.save.click();
+    await expect(table.headers).toHaveCount(2);
+    await expect(table.header(1).content).toHaveText('German');
+  });
+
+  test('local storage', async ({ page }) => {
+    editor = await CmsEditor.openMock(page, { defaultLanguages: ['de', 'en', 'fr'] });
+    const languageTool = editor.main.control.languageTool;
+    const table = editor.main.table;
+
+    await expect(table.headers).toHaveCount(3);
+    await expect(table.header(1).content).toHaveText('English');
+    await expect(table.header(2).content).toHaveText('German');
+
+    await languageTool.trigger.click();
+    await expect(languageTool.checkboxOfRow(0)).toBeChecked();
+    await expect(languageTool.checkboxOfRow(1)).toBeChecked();
+
+    await languageTool.add.trigger.click();
+    await languageTool.add.languages.row(1).locator.click();
+    await languageTool.add.add.click();
+    await expect(languageTool.checkboxOfRow(0)).toBeChecked();
+    await expect(languageTool.checkboxOfRow(1)).toBeChecked();
+    await expect(languageTool.checkboxOfRow(2)).toBeChecked();
+
+    await languageTool.checkboxOfRow(0).uncheck();
+    await languageTool.languages.row(2).locator.click();
+    await languageTool.delete.click();
+    await languageTool.save.click();
+    await expect(table.headers).toHaveCount(2);
+    await expect(table.header(1).content).toHaveText('French');
+    const defaultLanguageTags = await editor.page.evaluate(() => localStorage.getItem('defaultLanguageTags'));
+    expect(defaultLanguageTags).toEqual('["de","fr"]');
+  });
 });
 
 test('open, edit, and save using keyboard', async () => {

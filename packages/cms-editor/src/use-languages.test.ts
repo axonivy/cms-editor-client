@@ -1,7 +1,7 @@
 import type { Client, CmsEditorDataContext } from '@axonivy/cms-editor-protocol';
 import { act, waitFor } from '@testing-library/react';
 import { customRenderHook } from './context/test-utils/test-utils';
-import { defaultLanguageTagsKey, useLanguages } from './use-languages';
+import { defaultLanguageTagsKey, getDefaultLanguageTagsLocalStorage, useLanguages } from './use-languages';
 
 afterEach(() => localStorage.clear());
 
@@ -10,27 +10,27 @@ test('default languages set via local storage', async () => {
   const view = renderLanguageHook('de', ['en', 'fr', 'ja']);
   await waitFor(() => expect(view.result.current.defaultLanguageTags).toEqual(['en', 'fr']));
   expect(view.result.current.languageDisplayName.resolvedOptions().locale).toEqual('de');
-  expect(localStorage.getItem(defaultLanguageTagsKey)).toEqual('["en","fr"]');
+  expect(getDefaultLanguageTagsLocalStorage()).toEqual(['de', 'en', 'fr']);
 
   act(() => view.result.current.setDefaultLanguageTags(['ja']));
   view.rerender();
   expect(view.result.current.defaultLanguageTags).toEqual(['ja']);
   expect(view.result.current.languageDisplayName.resolvedOptions().locale).toEqual('de');
-  expect(localStorage.getItem(defaultLanguageTagsKey)).toEqual('["ja"]');
+  expect(getDefaultLanguageTagsLocalStorage()).toEqual(['ja']);
 });
 
 test('default languages not set via local storage', async () => {
   let result = renderLanguageHook('de', []).result;
   expect(result.current.defaultLanguageTags).toEqual([]);
   expect(result.current.languageDisplayName.resolvedOptions().locale).toEqual('de');
-  expect(localStorage.getItem(defaultLanguageTagsKey)).toBeNull();
+  expect(getDefaultLanguageTagsLocalStorage()).toBeUndefined();
 
   result = renderLanguageHook('de', ['ja', 'en']).result;
   await waitFor(() => {
     expect(result.current.defaultLanguageTags).toEqual(['en']);
   });
   expect(result.current.languageDisplayName.resolvedOptions().locale).toEqual('de');
-  expect(localStorage.getItem(defaultLanguageTagsKey)).toEqual('["en"]');
+  expect(getDefaultLanguageTagsLocalStorage()).toEqual(['en']);
 
   localStorage.removeItem(defaultLanguageTagsKey);
   result = renderLanguageHook('de', ['ja', 'fr']).result;
@@ -38,7 +38,7 @@ test('default languages not set via local storage', async () => {
     expect(result.current.defaultLanguageTags).toEqual(['ja']);
   });
   expect(result.current.languageDisplayName.resolvedOptions().locale).toEqual('de');
-  expect(localStorage.getItem(defaultLanguageTagsKey)).toEqual('["ja"]');
+  expect(getDefaultLanguageTagsLocalStorage()).toEqual(['ja']);
 });
 
 const renderLanguageHook = (clientLanguage: string, locales: Array<string>) => {

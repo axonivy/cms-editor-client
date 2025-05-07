@@ -33,12 +33,13 @@ import { useAppContext } from '../../../context/AppContext';
 import { useClient } from '../../../protocol/ClientContextProvider';
 import { useMeta } from '../../../protocol/use-meta';
 import { genQueryKey } from '../../../query/query-client';
+import { getDefaultLanguageTagsLocalStorage } from '../../../use-languages';
 import { useKnownHotkeys } from '../../../utils/hotkeys';
 import { LanguageToolControl } from './LanguageToolControl';
 import { sortLanguages, toLanguages, type Language } from './language-utils';
 
 export const LanguageTool = () => {
-  const { context, defaultLanguageTags, setDefaultLanguageTags, languageDisplayName } = useAppContext();
+  const { context, setDefaultLanguageTags, languageDisplayName } = useAppContext();
   const { t } = useTranslation();
 
   const [open, setOpen] = useState(false);
@@ -49,7 +50,15 @@ export const LanguageTool = () => {
     }
   };
 
-  const [defaultLanguages, setDefaultLanguages] = useState(defaultLanguageTags);
+  const initialDefaultLanguages = () => {
+    const defaultLanguageTags = getDefaultLanguageTagsLocalStorage();
+    if (!defaultLanguageTags) {
+      return [];
+    }
+    return defaultLanguageTags;
+  };
+
+  const [defaultLanguages, setDefaultLanguages] = useState(initialDefaultLanguages());
   const [languages, setLanguages] = useState<Array<Language>>([]);
 
   const addLanguage = (language: Language) => setLanguages(languages => sortLanguages([...languages, language]));
@@ -57,13 +66,12 @@ export const LanguageTool = () => {
   const deleteSelectedLanguage = () => {
     const { newData } = deleteFirstSelectedRow(table, languages);
     setLanguages(newData);
-    removeDefaultLanguage(table.getSelectedRowModel().flatRows[0].original.value);
   };
 
   const locales = useMeta('meta/locales', context, []).data;
 
   const initializeDialog = () => {
-    setDefaultLanguages(defaultLanguageTags);
+    setDefaultLanguages(initialDefaultLanguages());
     setLanguages(toLanguages(locales, languageDisplayName));
     table.resetRowSelection();
   };
