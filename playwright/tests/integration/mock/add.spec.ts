@@ -14,6 +14,27 @@ test('add', async () => {
   await editor.detail.expectToHaveValues('/A/TestNamespace/TestContentObject', { English: 'TestValue', German: '' });
 });
 
+test('disable if no languages are present in the CMS', async () => {
+  const add = editor.main.control.add;
+  const languageTool = editor.main.control.languageTool;
+
+  await expect(add.trigger).toBeEnabled();
+
+  await languageTool.trigger.click();
+  await languageTool.languages.row(0).locator.click();
+  await languageTool.delete.click();
+  await languageTool.delete.click();
+  await languageTool.save.click();
+  await expect(add.trigger).toBeDisabled();
+
+  await languageTool.trigger.click();
+  await languageTool.add.trigger.click();
+  await languageTool.add.languages.row(0).locator.click();
+  await languageTool.add.add.click();
+  await languageTool.save.click();
+  await expect(add.trigger).toBeEnabled();
+});
+
 test('default values', async () => {
   await editor.main.table.row(0).locator.click();
   await editor.main.control.add.trigger.click();
