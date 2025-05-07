@@ -28,7 +28,7 @@
       "title": "Add Content Object"
     },
     "languageTool": {
-      "description": "Edit the languages of the CMS.",
+      "description": "Edit the languages of the CMS. Check the languages you want to be displayed.",
       "languageBrowser": {
         "addLanguage": "Add Language",
         "description": "Select the language you want to add to the CMS.",

@@ -28,7 +28,7 @@
       "title": "Inhaltsobjekt hinzufügen"
     },
     "languageTool": {
-      "description": "Bearbeite die Sprachen des CMS.",
+      "description": "Bearbeite die Sprachen des CMS. Markiere die Sprachen, die angezeigt werden sollen.",
       "languageBrowser": {
         "addLanguage": "Sprache hinzufügen",
         "description": "Wählen Sie die Sprache aus, die Sie dem CMS hinzufügen möchten.",
