@@ -31,13 +31,17 @@ test('default values', async () => {
 });
 
 test('show fields for values of default languages', async ({ page }) => {
-  editor = await CmsEditor.openMock(page, { parameters: { lng: 'ja' } });
+  editor = await CmsEditor.openMock(page, { parameters: { lng: 'en' }, defaultLanguages: [] });
   await editor.page.keyboard.press('a');
-  await expect(editor.main.control.add.value('英語').locator).toBeVisible();
+  await expect(editor.main.control.add.value('English').locator).toBeVisible();
+  await (
+    await editor.main.control.add.value('English').textbox.message()
+  ).expectToBeInfo('No languages are checked to be displayed in the Language Tool. This is the first language found.');
 
   editor = await CmsEditor.openMock(page, { parameters: { lng: 'en' }, defaultLanguages: ['de'] });
   await editor.page.keyboard.press('a');
   await expect(editor.main.control.add.value('German').locator).toBeVisible();
+  await expect((await editor.main.control.add.value('German').textbox.message()).locator).toBeHidden();
 
   editor = await CmsEditor.openMock(page, { parameters: { lng: 'de' }, defaultLanguages: ['en', 'de'] });
   await editor.page.keyboard.press('a');
