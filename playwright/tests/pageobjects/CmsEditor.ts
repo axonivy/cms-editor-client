@@ -49,7 +49,7 @@ export class CmsEditor {
     }
     if (options?.defaultLanguages) {
       await page.evaluate(languages => {
-        localStorage.setItem('defaultLanguageTags', JSON.stringify(languages));
+        localStorage.setItem('cms-editor-default-language-tags', JSON.stringify(languages));
       }, options.defaultLanguages);
     }
     return this.openUrl(page, `/mock.html${params}`);

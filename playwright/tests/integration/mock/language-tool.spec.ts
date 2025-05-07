@@ -58,7 +58,7 @@ describe('default languages', () => {
     await languageTool.save.click();
     await expect(table.headers).toHaveCount(2);
     await expect(table.header(1).content).toHaveText('French');
-    const defaultLanguageTags = await editor.page.evaluate(() => localStorage.getItem('defaultLanguageTags'));
+    const defaultLanguageTags = await editor.page.evaluate(() => localStorage.getItem('cms-editor-default-language-tags'));
     expect(defaultLanguageTags).toEqual('["de","fr"]');
   });
 });
