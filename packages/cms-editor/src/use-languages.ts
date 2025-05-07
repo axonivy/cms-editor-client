@@ -3,7 +3,7 @@ import i18next from 'i18next';
 import { useEffect, useMemo, useState } from 'react';
 import { useMeta } from './protocol/use-meta';
 
-export const defaultLanguageTagsKey = 'defaultLanguageTags' as const;
+export const defaultLanguageTagsKey = 'cms-editor-default-language-tags' as const;
 
 export const useLanguages = (context: CmsEditorDataContext) => {
   const clientLanguageTag = i18next.language;
