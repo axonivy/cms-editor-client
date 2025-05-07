@@ -50,7 +50,7 @@
   "message": {
     "emptyDetail": "Wähle ein Inhaltsobjekt aus um es zu bearbeiten.",
     "emptyName": "Name darf nicht leer sein.",
-    "error": "Ein fehler ist aufgetreten: {{- error}}",
+    "error": "Ein Fehler ist aufgetreten: {{- error}}",
     "nameIsTaken": "Name ist bereits vorhanden in diesem Namensbereich.",
     "namespaceInfo": "Ordnerstruktur des Inhaltsobjekts (z.B. '/Dialog/Label').",
     "notAllowedChar": "Zeichen '{{- character}}' ist nicht erlaubt.",
