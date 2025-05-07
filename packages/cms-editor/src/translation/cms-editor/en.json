@@ -25,6 +25,7 @@
       "create": "Create Content Object",
       "createTooltip": "Hold {{modifier}} to add an additional Content Object.",
       "description": "Choose the name, namespace, and values of the Content Object you want to add.",
+      "noDefaultLanguages": "No languages are checked to be displayed in the Language Tool. This is the first language found.",
       "title": "Add Content Object"
     },
     "languageTool": {

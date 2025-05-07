@@ -18,15 +18,17 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-  useHotkeys
+  useHotkeys,
+  type MessageData
 } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CmsValueField } from '../../components/CmsValueField';
 import { useAppContext } from '../../context/AppContext';
 import { useClient } from '../../protocol/ClientContextProvider';
+import { useMeta } from '../../protocol/use-meta';
 import { genQueryKey, useQueryKeys } from '../../query/query-client';
 import { removeValue } from '../../utils/cms-utils';
 import { useKnownHotkeys } from '../../utils/hotkeys';
@@ -58,10 +60,12 @@ export const AddContentObject = ({ selectRow }: AddContentObjectProps) => {
   const [namespace, setNamespace] = useState('');
   const [values, setValues] = useState<MapStringString>({});
 
+  const { languageTags, languageTagsMessage } = useLanguageTags();
+
   const initializeDialog = () => {
     setName('NewContentObject');
     setNamespace(initialNamespace(contentObjects, selectedContentObject));
-    setValues(Object.fromEntries(defaultLanguageTags.map(tag => [tag, ''])));
+    setValues(Object.fromEntries(languageTags.map(tag => [tag, ''])));
   };
 
   const client = useClient();
@@ -141,7 +145,7 @@ export const AddContentObject = ({ selectRow }: AddContentObjectProps) => {
               disabled={isPending}
             />
           </BasicField>
-          {toLanguages(defaultLanguageTags, languageDisplayName).map(language => (
+          {toLanguages(languageTags, languageDisplayName).map(language => (
             <CmsValueField
               key={language.value}
               values={values}
@@ -150,7 +154,7 @@ export const AddContentObject = ({ selectRow }: AddContentObjectProps) => {
               label={language.label}
               languageTag={language.value}
               disabled={isPending}
-              message={valuesMessage}
+              message={valuesMessage ?? languageTagsMessage}
             />
           ))}
           {isError && <Message variant='error' message={t('message.error', { error })} className='cms-editor-add-dialog-error-message' />}
@@ -186,6 +190,27 @@ export const initialNamespace = (contentObjects: Array<ContentObject>, selectedC
   }
   const uri = contentObjects[selectedContentObject].uri;
   return uri.substring(0, uri.lastIndexOf('/'));
+};
+
+export const useLanguageTags = () => {
+  const { t } = useTranslation();
+  const { context, defaultLanguageTags } = useAppContext();
+
+  const locales = useMeta('meta/locales', context, []).data;
+
+  return useMemo(() => {
+    let languageTags: Array<string> = [];
+    let languageTagsMessage: MessageData | undefined;
+
+    if (defaultLanguageTags.length !== 0) {
+      languageTags = defaultLanguageTags;
+    } else if (locales.length !== 0) {
+      languageTags = [locales[0]];
+      languageTagsMessage = { message: t('dialog.addContentObject.noDefaultLanguages'), variant: 'info' };
+    }
+
+    return { languageTags, languageTagsMessage };
+  }, [defaultLanguageTags, locales, t]);
 };
 
 export const namespaceOptions = (contentObjects: Array<ContentObject>) => {
