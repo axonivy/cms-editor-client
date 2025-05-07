@@ -11,7 +11,6 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  Flex,
   SelectRow,
   Table,
   TableBody,
@@ -35,8 +34,9 @@ import { useMeta } from '../../../protocol/use-meta';
 import { genQueryKey } from '../../../query/query-client';
 import { getDefaultLanguageTagsLocalStorage } from '../../../use-languages';
 import { useKnownHotkeys } from '../../../utils/hotkeys';
-import { LanguageToolControl } from './LanguageToolControl';
 import { sortLanguages, toLanguages, type Language } from './language-utils';
+import './LanguageTool.css';
+import { LanguageToolControl } from './LanguageToolControl';
 
 export const LanguageTool = () => {
   const { context, setDefaultLanguageTags, languageDisplayName } = useAppContext();
@@ -175,36 +175,40 @@ export const LanguageTool = () => {
           <TooltipContent>{hotkeys.languageTool.label}</TooltipContent>
         </Tooltip>
       </TooltipProvider>
-      <DialogContent ref={deleteRef} onClick={() => table.resetRowSelection()}>
+      <DialogContent
+        ref={enter}
+        onClick={() => table.resetRowSelection()}
+        style={{ display: 'flex', flexDirection: 'column' }}
+        className='cms-editor-language-tool-content'
+      >
         <DialogHeader>
           <DialogTitle>{t('dialog.languageTool.title')}</DialogTitle>
         </DialogHeader>
         <DialogDescription>{t('dialog.languageTool.description')}</DialogDescription>
-        <Flex direction='column' gap={3} ref={enter}>
-          <BasicField
-            label={t('common.label.languages')}
-            control={
-              <LanguageToolControl
-                languages={languages}
-                addLanguage={addLanguage}
-                deleteSelectedLanguage={deleteSelectedLanguage}
-                hasSelection={table.getSelectedRowModel().flatRows.length !== 0}
-              />
-            }
-          >
-            <Table onKeyDown={onKeyDown} onClick={event => event.stopPropagation()}>
-              <TableBody>
-                {table.getRowModel().rows.map(row => (
-                  <SelectRow key={row.id} row={row}>
-                    {row.getVisibleCells().map(cell => (
-                      <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
-                    ))}
-                  </SelectRow>
-                ))}
-              </TableBody>
-            </Table>
-          </BasicField>
-        </Flex>
+        <BasicField
+          className='cms-editor-language-tool-languages-field'
+          label={t('common.label.languages')}
+          control={
+            <LanguageToolControl
+              languages={languages}
+              addLanguage={addLanguage}
+              deleteSelectedLanguage={deleteSelectedLanguage}
+              hasSelection={table.getSelectedRowModel().flatRows.length !== 0}
+            />
+          }
+        >
+          <Table onKeyDown={onKeyDown} onClick={event => event.stopPropagation()} ref={deleteRef}>
+            <TableBody>
+              {table.getRowModel().rows.map(row => (
+                <SelectRow key={row.id} row={row}>
+                  {row.getVisibleCells().map(cell => (
+                    <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+                  ))}
+                </SelectRow>
+              ))}
+            </TableBody>
+          </Table>
+        </BasicField>
         <DialogFooter>
           <Button variant='primary' size='large' aria-label={t('common.label.save')} onClick={save}>
             {t('common.label.save')}
