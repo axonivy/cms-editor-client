@@ -14,8 +14,10 @@ describe('default languages', () => {
     const languageTool = editor.main.control.languageTool;
     const table = editor.main.table;
 
+    await table.row(0).locator.click();
     await expect(table.headers).toHaveCount(2);
     await expect(table.header(1).content).toHaveText('English');
+
     await languageTool.trigger.click();
     await expect(languageTool.checkboxOfRow(0)).toBeChecked();
     await expect(languageTool.checkboxOfRow(1)).not.toBeChecked();
@@ -25,12 +27,14 @@ describe('default languages', () => {
     await expect(table.headers).toHaveCount(3);
     await expect(table.header(1).content).toHaveText('English');
     await expect(table.header(2).content).toHaveText('German');
+    await table.row(0).expectToBeSelected();
 
     await languageTool.trigger.click();
     await languageTool.checkboxOfRow(0).uncheck();
     await languageTool.save.click();
     await expect(table.headers).toHaveCount(2);
     await expect(table.header(1).content).toHaveText('German');
+    await table.row(0).expectToBeSelected();
   });
 
   test('local storage', async ({ page }) => {
