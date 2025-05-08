@@ -98,8 +98,10 @@ export const AddContentObject = ({ selectRow }: AddContentObjectProps) => {
   const { nameMessage, valuesMessage } = useValidateAddContentObject(name, namespace, values, contentObjects);
   const allInputsValid = !nameMessage && !valuesMessage;
 
+  const locales = useMeta('meta/locales', context, []).data;
+
   const { addContentObject: shortcut } = useKnownHotkeys();
-  useHotkeys(shortcut.hotkey, () => onOpenChange(true), { scopes: ['global'], keyup: true, enabled: !open });
+  useHotkeys(shortcut.hotkey, () => onOpenChange(true), { scopes: ['global'], keyup: true, enabled: locales.length > 0 && !open });
   const enter = useHotkeys(
     ['Enter', 'mod+Enter'],
     e => {
@@ -117,10 +119,10 @@ export const AddContentObject = ({ selectRow }: AddContentObjectProps) => {
         <Tooltip>
           <TooltipTrigger asChild>
             <DialogTrigger asChild>
-              <Button icon={IvyIcons.Plus} aria-label={shortcut.label} />
+              <Button icon={IvyIcons.Plus} aria-label={shortcut.label} disabled={locales.length === 0} />
             </DialogTrigger>
           </TooltipTrigger>
-          <TooltipContent>{shortcut.label}</TooltipContent>
+          <TooltipContent>{locales.length === 0 ? t('dialog.addContentObject.noLanguages') : shortcut.label}</TooltipContent>
         </Tooltip>
       </TooltipProvider>
       <DialogContent

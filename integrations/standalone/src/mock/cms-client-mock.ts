@@ -11,6 +11,7 @@ import type {
   CmsReadArgs,
   CmsRemoveLocalesArgs,
   CmsUpdateValueArgs,
+  ContentObject,
   MetaRequestTypes,
   Void
 } from '@axonivy/cms-editor-protocol';
@@ -65,10 +66,16 @@ export class CmsClientMock implements Client {
 
   removeLocales(args: CmsRemoveLocalesArgs): void {
     this.localesData = this.localesData.filter(locale => !(args as CmsRemoveLocalesArgs).locales.includes(locale));
-    this.cmsData.data.forEach(
-      co => (co.values = Object.fromEntries(Object.entries(co.values).filter(entry => !args.locales.includes(entry[0]))))
-    );
+    this.cmsData = {
+      ...this.cmsData,
+      data: this.cmsData.data.map(co => this.removeLocaleValues(co, args.locales)).filter(co => Object.entries(co.values).length !== 0)
+    };
   }
+
+  private removeLocaleValues = (co: ContentObject, locales: Array<string>) => ({
+    ...co,
+    values: Object.fromEntries(Object.entries(co.values).filter(entry => !locales.includes(entry[0])))
+  });
 
   meta<TMeta extends keyof MetaRequestTypes>(path: TMeta): Promise<MetaRequestTypes[TMeta][1]> {
     switch (path) {
