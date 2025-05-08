@@ -118,6 +118,23 @@ describe('languages', () => {
     await expect(editor.main.table.headers).toHaveCount(1);
   });
 
+  test('remove deleted content objects after removing language', async () => {
+    const languageTool = editor.main.control.languageTool;
+
+    await editor.main.table.row(0).locator.click();
+    await expect(editor.main.table.row(0).column(0).value(0)).toHaveText('/Dialogs/agileBPM/define_WF/AddTask');
+    await expect(editor.detail.uri.locator).toHaveValue('/Dialogs/agileBPM/define_WF/AddTask');
+
+    await editor.detail.value('English').delete.click();
+    await languageTool.trigger.click();
+    await languageTool.languages.row(1).locator.click();
+    await languageTool.delete.click();
+    await languageTool.save.click();
+    await editor.main.table.row(0).expectToBeSelected();
+    await expect(editor.main.table.row(0).column(0).value(0)).toHaveText('/Dialogs/agileBPM/define_WF/AdhocWorkflowTasks');
+    await expect(editor.detail.uri.locator).toHaveValue('/Dialogs/agileBPM/define_WF/AdhocWorkflowTasks');
+  });
+
   test('keyboard support', async () => {
     const languageTool = editor.main.control.languageTool;
     const keyboard = editor.page.keyboard;

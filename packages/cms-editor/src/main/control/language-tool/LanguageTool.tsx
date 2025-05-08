@@ -3,6 +3,7 @@ import {
   BasicCheckbox,
   BasicField,
   Button,
+  deepEqual,
   deleteFirstSelectedRow,
   Dialog,
   DialogContent,
@@ -31,7 +32,7 @@ import { useTranslation } from 'react-i18next';
 import { useAppContext } from '../../../context/AppContext';
 import { useClient } from '../../../protocol/ClientContextProvider';
 import { useMeta } from '../../../protocol/use-meta';
-import { genQueryKey } from '../../../query/query-client';
+import { genQueryKey, useQueryKeys } from '../../../query/query-client';
 import { getDefaultLanguageTagsLocalStorage } from '../../../use-languages';
 import { useKnownHotkeys } from '../../../utils/hotkeys';
 import { sortLanguages, toLanguages, type Language } from './language-utils';
@@ -39,7 +40,7 @@ import './LanguageTool.css';
 import { LanguageToolControl } from './LanguageToolControl';
 
 export const LanguageTool = () => {
-  const { context, setDefaultLanguageTags, languageDisplayName } = useAppContext();
+  const { context, defaultLanguageTags, setDefaultLanguageTags, languageDisplayName } = useAppContext();
   const { t } = useTranslation();
 
   const [open, setOpen] = useState(false);
@@ -109,6 +110,7 @@ export const LanguageTool = () => {
 
   const client = useClient();
   const queryClient = useQueryClient();
+  const { dataKey } = useQueryKeys();
 
   const addMutation = useMutation({
     mutationFn: async (args: CmsAddLocalesArgs) => {
@@ -125,6 +127,11 @@ export const LanguageTool = () => {
         locales?.filter(locale => !args.locales.includes(locale))
       );
       client.removeLocales({ context, locales: args.locales });
+    },
+    onSuccess: () => {
+      if (deepEqual(initialDefaultLanguages().sort(), defaultLanguages.sort())) {
+        queryClient.invalidateQueries({ queryKey: dataKey({ context, languageTags: defaultLanguageTags }) });
+      }
     }
   });
 
@@ -135,14 +142,7 @@ export const LanguageTool = () => {
     }
     const localesToAdd = languages.map(language => language.value).filter(locale => !locales.includes(locale));
     if (localesToAdd.length !== 0) {
-      addMutation.mutate(
-        { context, locales: localesToAdd },
-        {
-          onSuccess: () => {
-            setDefaultLanguageTags(defaultLanguages);
-          }
-        }
-      );
+      addMutation.mutate({ context, locales: localesToAdd }, { onSuccess: () => setDefaultLanguageTags(defaultLanguages) });
     } else {
       setDefaultLanguageTags(defaultLanguages);
     }
