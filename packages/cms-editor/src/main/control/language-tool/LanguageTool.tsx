@@ -3,6 +3,7 @@ import {
   BasicCheckbox,
   BasicField,
   Button,
+  deepEqual,
   deleteFirstSelectedRow,
   Dialog,
   DialogContent,
@@ -128,7 +129,7 @@ export const LanguageTool = () => {
       client.removeLocales({ context, locales: args.locales });
     },
     onSuccess: () => {
-      if (JSON.stringify(initialDefaultLanguages().sort()) === JSON.stringify(defaultLanguages.sort())) {
+      if (deepEqual(initialDefaultLanguages().sort(), defaultLanguages.sort())) {
         queryClient.invalidateQueries({ queryKey: dataKey({ context, languageTags: defaultLanguageTags }) });
       }
     }
