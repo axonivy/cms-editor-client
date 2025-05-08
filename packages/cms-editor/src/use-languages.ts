@@ -12,7 +12,7 @@ export const useLanguages = (context: CmsEditorDataContext) => {
   const locales = useMeta('meta/locales', context, []);
   const [defaultLanguageTags, setDefaultLanguageTagsState] = useState(defaultLanguages(locales.data, clientLanguageTag));
   const setDefaultLanguageTags = (languageTags: Array<string>) => {
-    setDefaultLanguageTagsState(languageTags);
+    setDefaultLanguageTagsState(filterNotPresentDefaultLanugageTags(languageTags, locales.data));
     setDefaultLanguageTagsLocalStorage(languageTags);
   };
   useEffect(() => setDefaultLanguageTagsState(defaultLanguages(locales.data, clientLanguageTag)), [locales.data, clientLanguageTag]);
@@ -26,7 +26,7 @@ const defaultLanguages = (locales: Array<string>, clientLanguageTag: string): Ar
   }
   const defaultLanguageTags = getDefaultLanguageTagsLocalStorage();
   if (defaultLanguageTags) {
-    return defaultLanguageTags.filter(languageTag => locales.includes(languageTag));
+    return filterNotPresentDefaultLanugageTags(defaultLanguageTags, locales);
   }
   const defaultLanguages: Array<string> = [];
   if (locales.includes(clientLanguageTag)) {
@@ -47,6 +47,9 @@ export const getDefaultLanguageTagsLocalStorage = (): Array<string> | undefined 
   }
   return JSON.parse(defaultLanguageTags);
 };
+
+const filterNotPresentDefaultLanugageTags = (defaultLanguageTags: Array<string>, locales: Array<string>) =>
+  defaultLanguageTags.filter(languageTag => locales.includes(languageTag));
 
 const setDefaultLanguageTagsLocalStorage = (languageTags: Array<string>) =>
   localStorage.setItem(defaultLanguageTagsKey, JSON.stringify(languageTags));

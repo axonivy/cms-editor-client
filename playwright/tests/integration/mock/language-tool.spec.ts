@@ -9,7 +9,8 @@ test.beforeEach(async ({ page }) => {
 });
 
 describe('default languages', () => {
-  test('add and remove', async () => {
+  test('add and remove', async ({ page }) => {
+    editor = await CmsEditor.openMock(page, { defaultLanguages: ['en', 'fr'] });
     const languageTool = editor.main.control.languageTool;
     const table = editor.main.table;
 
