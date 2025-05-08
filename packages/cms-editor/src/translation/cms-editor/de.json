@@ -34,7 +34,7 @@
       "languageBrowser": {
         "addLanguage": "Sprache hinzufügen",
         "description": "Wählen Sie die Sprache aus, die Sie dem CMS hinzufügen möchten.",
-        "title": "Sprach-Browser"
+        "title": "Sprachenübersicht"
       },
       "title": "Sprachwerkzeug"
     }
