@@ -91,7 +91,8 @@ export const MainContent = () => {
     state: {
       ...selection.tableState,
       ...sort.tableState,
-      ...globalFilter.tableState
+      ...globalFilter.tableState,
+      rowSelection: { [String(selectedContentObject)]: true }
     }
   });
 
