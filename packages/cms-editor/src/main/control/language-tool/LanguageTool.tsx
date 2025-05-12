@@ -83,7 +83,7 @@ export const LanguageTool = () => {
   const onCheckedChange = (checked: boolean, languageTag: string) =>
     checked ? addDefaultLanguage(languageTag) : removeDefaultLanguage(languageTag);
 
-  const selection = useTableSelect();
+  const selection = useTableSelect<Language>();
   const columns: Array<ColumnDef<Language, string>> = [
     {
       accessorKey: 'label',
@@ -156,8 +156,10 @@ export const LanguageTool = () => {
 
   const onKeyDown = (event: KeyboardEvent<HTMLTableElement>) => {
     if (event.code === 'Space') {
-      const languageTag = table.getSelectedRowModel().flatRows[0].original.value;
-      onCheckedChange(!defaultLanguages.includes(languageTag), languageTag);
+      const languageTag = table.getSelectedRowModel().flatRows[0]?.original.value;
+      if (languageTag !== undefined) {
+        onCheckedChange(!defaultLanguages.includes(languageTag), languageTag);
+      }
     } else {
       handleKeyDown(event);
     }

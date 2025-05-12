@@ -50,7 +50,8 @@ export class Table {
 
   async expectToHaveRows(...rows: Array<Array<Array<string>>>) {
     for (let i = 0; i < rows.length; i++) {
-      await this.row(i).expectToHaveColumns(...rows[i]);
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      await this.row(i).expectToHaveColumns(...rows[i]!);
     }
   }
 }
@@ -109,7 +110,8 @@ export class Row {
 
   async expectToHaveColumns(...values: Array<Array<string>>) {
     for (let i = 0; i < values.length; i++) {
-      await this.column(i).expectToHaveValues(...values[i]);
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      await this.column(i).expectToHaveValues(...values[i]!);
     }
   }
 }
@@ -129,7 +131,8 @@ export class Cell {
 
   async expectToHaveValues(...values: Array<string>) {
     for (let i = 0; i < values.length; i++) {
-      await expect(this.values.nth(i)).toHaveText(values[i]);
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      await expect(this.values.nth(i)).toHaveText(values[i]!);
     }
   }
 }

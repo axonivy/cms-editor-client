@@ -21,7 +21,7 @@ export const DetailContent = () => {
   const queryClient = useQueryClient();
   const { dataKey, readKey } = useQueryKeys();
 
-  const uri = selectedContentObject !== undefined ? contentObjects[selectedContentObject].uri : '';
+  const uri = selectedContentObject !== undefined ? (contentObjects[selectedContentObject]?.uri ?? '') : '';
 
   const updateValuesInReadQuery = useCallback(
     (uri: string, valueUpdater: Unary<MapStringString>) =>
@@ -128,7 +128,8 @@ export const updateValuesOfContentObjectInData = (data: CmsData, uri: string, va
   if (index === -1) {
     return;
   }
-  const co = data.data[index];
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const co = data.data[index]!;
   const newCo = { ...co, values: valueUpdater(co.values) };
   const newData = [...data.data];
   newData[index] = newCo;

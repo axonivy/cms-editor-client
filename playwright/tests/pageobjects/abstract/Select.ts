@@ -23,7 +23,8 @@ export class Select {
     await this.locator.click();
     await expect(this.options).toHaveCount(options.length);
     for (let i = 0; i < options.length; i++) {
-      await expect(this.options.nth(i)).toHaveText(options[i]);
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      await expect(this.options.nth(i)).toHaveText(options[i]!);
     }
   }
 }

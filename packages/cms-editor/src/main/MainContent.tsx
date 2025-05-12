@@ -69,7 +69,7 @@ export const MainContent = () => {
     toLanguages(defaultLanguageTags, languageDisplayName).forEach(language =>
       columns.push({
         id: language.value,
-        accessorFn: co => co.values[language.value],
+        accessorFn: co => co.values[language.value] ?? '',
         header: ({ column }) => <SortableHeader column={column} name={language.label} />,
         cell: cell => <span>{cell.getValue()}</span>,
         minSize: 200,
@@ -139,7 +139,11 @@ export const MainContent = () => {
     if (selectedContentObject === undefined) {
       return;
     }
-    mutate({ context, uri: contentObjects[selectedContentObject].uri });
+    const uri = contentObjects[selectedContentObject]?.uri;
+    if (uri === undefined) {
+      return;
+    }
+    mutate({ context, uri });
   };
 
   const ref = useHotkeys(hotkeys.deleteContentObject.hotkey, () => deleteContentObject(), { scopes: ['global'], enabled: !readonly });
@@ -169,6 +173,9 @@ export const MainContent = () => {
             <TableBody style={{ height: `${virtualizer.getTotalSize()}px` }}>
               {virtualizer.getVirtualItems().map(virtualRow => {
                 const row = rows[virtualRow.index];
+                if (row === undefined) {
+                  return null;
+                }
                 return (
                   <SelectRow key={row.id} row={row} style={{ transform: `translateY(${virtualRow.start}px)` }} vindex={virtualRow.index}>
                     {row.getVisibleCells().map(cell => (
