@@ -3,6 +3,7 @@ import type {
   Client,
   CmsActionArgs,
   CmsAddLocalesArgs,
+  CmsCountLocaleValuesArgs,
   CmsCreateArgs,
   CmsData,
   CmsDataObject,
@@ -77,16 +78,32 @@ export class CmsClientMock implements Client {
     values: Object.fromEntries(Object.entries(co.values).filter(entry => !locales.includes(entry[0])))
   });
 
-  meta<TMeta extends keyof MetaRequestTypes>(path: TMeta): Promise<MetaRequestTypes[TMeta][1]> {
+  meta<TMeta extends keyof MetaRequestTypes>(path: TMeta, args: MetaRequestTypes[TMeta][0]): Promise<MetaRequestTypes[TMeta][1]> {
     switch (path) {
       case 'meta/supportedLocales':
         return Promise.resolve(supportedLocales);
       case 'meta/locales':
         return Promise.resolve(this.localesData);
+      case 'meta/countLocaleValues':
+        return Promise.resolve(this.countLocaleValues((args as CmsCountLocaleValuesArgs).locales));
       default:
         throw Error('meta path not implemented');
     }
   }
+
+  private countLocaleValues = (locales: Array<string>) => {
+    return this.cmsData.data.reduce(
+      (localeValuesAmount, co) => {
+        locales.forEach(locale => {
+          if (co.values[locale] !== undefined) {
+            localeValuesAmount[locale] = ++localeValuesAmount[locale];
+          }
+        });
+        return localeValuesAmount;
+      },
+      Object.fromEntries(locales.map(locale => [locale, 0]))
+    );
+  };
 
   action(action: CmsActionArgs): void {
     console.log(`Action: ${JSON.stringify(action)}`);

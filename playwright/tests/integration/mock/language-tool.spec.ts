@@ -23,7 +23,7 @@ describe('default languages', () => {
     await expect(languageTool.checkboxOfRow(1)).not.toBeChecked();
 
     await languageTool.checkboxOfRow(1).check();
-    await languageTool.save.click();
+    await languageTool.save.trigger.click();
     await expect(table.headers).toHaveCount(3);
     await expect(table.header(1).content).toHaveText('English');
     await expect(table.header(2).content).toHaveText('German');
@@ -31,7 +31,7 @@ describe('default languages', () => {
 
     await languageTool.trigger.click();
     await languageTool.checkboxOfRow(0).uncheck();
-    await languageTool.save.click();
+    await languageTool.save.trigger.click();
     await expect(table.headers).toHaveCount(2);
     await expect(table.header(1).content).toHaveText('German');
     await table.row(0).expectToBeSelected();
@@ -60,7 +60,8 @@ describe('default languages', () => {
     await languageTool.checkboxOfRow(0).uncheck();
     await languageTool.languages.row(2).locator.click();
     await languageTool.delete.click();
-    await languageTool.save.click();
+    await languageTool.save.trigger.click();
+    await languageTool.save.save.click();
     await expect(table.headers).toHaveCount(2);
     await expect(table.header(1).content).toHaveText('French');
     const defaultLanguageTags = await editor.page.evaluate(() => localStorage.getItem('cms-editor-default-language-tags'));
@@ -101,7 +102,7 @@ describe('languages', () => {
     await languageTool.add.add.click();
 
     await languageTool.expectToHaveLanguages('English', 'French', 'German');
-    await languageTool.save.click();
+    await languageTool.save.trigger.click();
 
     await expect(editor.detail.value('French').locator).toBeVisible();
   });
@@ -117,7 +118,8 @@ describe('languages', () => {
     await languageTool.delete.click();
     await languageTool.expectToHaveLanguages('German');
     await languageTool.languages.row(0).expectToBeSelected();
-    await languageTool.save.click();
+    await languageTool.save.trigger.click();
+    await languageTool.save.save.click();
 
     await expect(editor.main.table.headers).toHaveCount(1);
   });
@@ -133,7 +135,8 @@ describe('languages', () => {
     await languageTool.trigger.click();
     await languageTool.languages.row(1).locator.click();
     await languageTool.delete.click();
-    await languageTool.save.click();
+    await languageTool.save.trigger.click();
+    await languageTool.save.save.click();
     await editor.main.table.row(0).expectToBeSelected();
     await expect(editor.main.table.row(0).column(0).value(0)).toHaveText('/Dialogs/agileBPM/define_WF/AdhocWorkflowTasks');
     await expect(editor.detail.uri.locator).toHaveValue('/Dialogs/agileBPM/define_WF/AdhocWorkflowTasks');

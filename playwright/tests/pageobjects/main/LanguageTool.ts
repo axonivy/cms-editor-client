@@ -1,5 +1,6 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 import { AddLanguage } from './AddLanguage';
+import { LanguageToolSaveConfirmation } from './LanguageToolSaveConfirmation';
 import { Table } from './Table';
 
 export class LanguageTool {
@@ -8,7 +9,7 @@ export class LanguageTool {
   readonly add: AddLanguage;
   readonly delete: Locator;
   readonly languages: Table;
-  readonly save: Locator;
+  readonly save: LanguageToolSaveConfirmation;
 
   constructor(page: Page, parent: Locator) {
     this.locator = page.getByRole('dialog');
@@ -16,7 +17,7 @@ export class LanguageTool {
     this.add = new AddLanguage(page, this.locator);
     this.delete = this.locator.getByRole('button', { name: 'Delete Language' });
     this.languages = new Table(this.locator);
-    this.save = this.locator.getByRole('button', { name: 'Save' });
+    this.save = new LanguageToolSaveConfirmation(page, this.locator);
   }
 
   async expectToHaveLanguages(...languages: Array<string>) {

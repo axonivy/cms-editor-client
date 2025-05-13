@@ -1,6 +1,7 @@
 import type {
   CmsActionArgs,
   CmsAddLocalesArgs,
+  CmsCountLocaleValuesArgs,
   CmsCreateArgs,
   CmsData,
   CmsDataArgs,
@@ -11,6 +12,7 @@ import type {
   CmsReadArgs,
   CmsRemoveLocalesArgs,
   CmsUpdateValueArgs,
+  MapStringLong,
   Void
 } from './editor';
 
@@ -38,6 +40,7 @@ export interface ClientContext {
 export interface MetaRequestTypes {
   'meta/supportedLocales': [null, Array<string>];
   'meta/locales': [CmsEditorDataContext, Array<string>];
+  'meta/countLocaleValues': [CmsCountLocaleValuesArgs, MapStringLong];
 }
 
 export interface RequestTypes extends MetaRequestTypes {
