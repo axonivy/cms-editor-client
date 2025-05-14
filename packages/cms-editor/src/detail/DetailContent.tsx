@@ -21,7 +21,8 @@ export const DetailContent = () => {
   const queryClient = useQueryClient();
   const { dataKey, readKey } = useQueryKeys();
 
-  const uri = selectedContentObject !== undefined ? contentObjects[selectedContentObject].uri : '';
+  const uri =
+    selectedContentObject !== undefined && selectedContentObject < contentObjects.length ? contentObjects[selectedContentObject].uri : '';
 
   const updateValuesInReadQuery = useCallback(
     (uri: string, valueUpdater: Unary<MapStringString>) =>
@@ -80,7 +81,7 @@ export const DetailContent = () => {
 
   const locales = useMeta('meta/locales', context, []).data;
 
-  if (selectedContentObject == undefined) {
+  if (!uri) {
     return <PanelMessage message={t('message.emptyDetail')} />;
   }
 
