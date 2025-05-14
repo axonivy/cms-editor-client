@@ -243,3 +243,90 @@ test('initialize dialog', async () => {
   await languageTool.expectToHaveLanguages('English', 'German');
   await languageTool.languages.expectToHaveNoSelection();
 });
+
+describe('save confirmation', () => {
+  test('show amount of values to delete', async () => {
+    const languageTool = editor.main.control.languageTool;
+
+    await languageTool.trigger.click();
+    await languageTool.add.trigger.click();
+    await languageTool.add.languages.row(1).locator.click();
+    await languageTool.add.add.click();
+    await languageTool.save.trigger.click();
+
+    await editor.main.table.row(0).locator.click();
+    await editor.detail.value('French').textbox.locator.fill('valeur');
+
+    await languageTool.trigger.click();
+    await languageTool.languages.row(0).locator.click();
+    await languageTool.delete.click();
+    await languageTool.delete.click();
+    await languageTool.delete.click();
+    await languageTool.save.trigger.click();
+    await expect(languageTool.save.valueAmounts.nth(0)).toHaveText('English: 99 values');
+    await expect(languageTool.save.valueAmounts.nth(1)).toHaveText('German: 99 values');
+    await expect(languageTool.save.valueAmounts.nth(2)).toHaveText('French: 1 value');
+  });
+
+  test('do not require confirmation when no values are deleted', async () => {
+    const languageTool = editor.main.control.languageTool;
+
+    await languageTool.trigger.click();
+    await languageTool.add.trigger.click();
+    await languageTool.add.languages.row(1).locator.click();
+    await languageTool.add.add.click();
+    await languageTool.save.trigger.click();
+
+    await languageTool.trigger.click();
+    await languageTool.languages.row(1).locator.click();
+    await languageTool.delete.click();
+    await languageTool.save.trigger.click();
+    await expect(languageTool.locator).toBeHidden();
+  });
+
+  test('cancel', async () => {
+    const languageTool = editor.main.control.languageTool;
+
+    await languageTool.trigger.click();
+    await expect(languageTool.languages.rows).toHaveCount(2);
+
+    await languageTool.languages.row(1).locator.click();
+    await languageTool.delete.click();
+    await languageTool.save.trigger.click();
+    await expect(languageTool.save.locator).toBeVisible();
+
+    await languageTool.save.cancel.click();
+    await expect(languageTool.save.locator).toBeHidden();
+    await expect(languageTool.languages.rows).toHaveCount(1);
+
+    await languageTool.add.trigger.click();
+    await languageTool.add.languages.row(2).locator.click();
+    await languageTool.add.add.click();
+    await languageTool.save.trigger.click();
+    await expect(languageTool.locator).toBeHidden();
+  });
+
+  test('works with keyboard', async () => {
+    const languageTool = editor.main.control.languageTool;
+    const keyboard = editor.page.keyboard;
+
+    await keyboard.press('l');
+    await expect(languageTool.languages.rows).toHaveCount(2);
+
+    await languageTool.languages.row(1).locator.click();
+    await keyboard.press('Delete');
+    await keyboard.press('Enter');
+    await expect(languageTool.save.locator).toBeVisible();
+
+    await keyboard.press('Escape');
+    await expect(languageTool.save.locator).toBeHidden();
+    await expect(languageTool.languages.rows).toHaveCount(1);
+
+    await keyboard.press('Enter');
+    await expect(languageTool.save.locator).toBeVisible();
+
+    await keyboard.press('Shift+Tab');
+    await keyboard.press('Enter');
+    await expect(languageTool.locator).toBeHidden();
+  });
+});
