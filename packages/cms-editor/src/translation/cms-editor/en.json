@@ -17,7 +17,9 @@
       "save": "Save",
       "search": "Search",
       "settings": "Settings",
-      "theme": "Theme"
+      "theme": "Theme",
+      "value": "value",
+      "values": "values"
     }
   },
   "dialog": {
@@ -35,6 +37,10 @@
         "addLanguage": "Add Language",
         "description": "Select the language you want to add to the CMS.",
         "title": "Language Browser"
+      },
+      "saveConfirmation": {
+        "description": "Saving will delete the following languages and all their values. Are you sure?",
+        "title": "Confirm Save"
       },
       "title": "Language Tool"
     }

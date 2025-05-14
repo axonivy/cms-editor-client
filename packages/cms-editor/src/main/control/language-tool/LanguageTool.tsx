@@ -38,6 +38,7 @@ import { useKnownHotkeys } from '../../../utils/hotkeys';
 import { sortLanguages, toLanguages, type Language } from './language-utils';
 import './LanguageTool.css';
 import { LanguageToolControl } from './LanguageToolControl';
+import { LanguageToolSaveConfirmation } from './LanguageToolSaveConfirmation';
 
 export const LanguageTool = () => {
   const { context, defaultLanguageTags, setDefaultLanguageTags, languageDisplayName } = useAppContext();
@@ -135,8 +136,7 @@ export const LanguageTool = () => {
     }
   });
 
-  const save = () => {
-    const localesToDelete = locales.filter(locale => !languages.some(language => language.value === locale));
+  const save = (localesToDelete: Array<string>) => {
     if (localesToDelete.length !== 0) {
       deleteMutation.mutate({ context, locales: localesToDelete });
     }
@@ -152,7 +152,6 @@ export const LanguageTool = () => {
   const hotkeys = useKnownHotkeys();
   useHotkeys(hotkeys.languageTool.hotkey, () => onOpenChange(true), { scopes: ['global'], keyup: true, enabled: !open });
   const deleteRef = useHotkeys(hotkeys.deleteLanguage.hotkey, () => deleteSelectedLanguage(), { scopes: ['global'] });
-  const enter = useHotkeys(['Enter'], () => save(), { scopes: ['global'], enabled: open, enableOnFormTags: true });
 
   const onKeyDown = (event: KeyboardEvent<HTMLTableElement>) => {
     if (event.code === 'Space') {
@@ -176,7 +175,6 @@ export const LanguageTool = () => {
         </Tooltip>
       </TooltipProvider>
       <DialogContent
-        ref={enter}
         onClick={() => table.resetRowSelection()}
         style={{ display: 'flex', flexDirection: 'column' }}
         className='cms-editor-language-tool-content'
@@ -210,9 +208,10 @@ export const LanguageTool = () => {
           </Table>
         </BasicField>
         <DialogFooter>
-          <Button variant='primary' size='large' aria-label={t('common.label.save')} onClick={save}>
-            {t('common.label.save')}
-          </Button>
+          <LanguageToolSaveConfirmation
+            localesToDelete={locales.filter(locale => !languages.some(language => language.value === locale))}
+            save={save}
+          />
         </DialogFooter>
       </DialogContent>
     </Dialog>

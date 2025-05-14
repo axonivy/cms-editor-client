@@ -17,7 +17,9 @@
       "save": "Speichern",
       "search": "Suchen",
       "settings": "Einstellungen",
-      "theme": "Thema"
+      "theme": "Thema",
+      "value": "Wert",
+      "values": "Werte"
     }
   },
   "dialog": {
@@ -35,6 +37,10 @@
         "addLanguage": "Sprache hinzufügen",
         "description": "Wählen Sie die Sprache aus, die Sie dem CMS hinzufügen möchten.",
         "title": "Sprachenübersicht"
+      },
+      "saveConfirmation": {
+        "description": "Speichern löscht die folgenden Sprachen und alle ihre Werte. Bist du sicher?",
+        "title": "Speichern bestätigen"
       },
       "title": "Sprachwerkzeug"
     }

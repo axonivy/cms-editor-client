@@ -11,7 +11,7 @@ export type ContentObjectType = ("STRING" | "FILE" | "FOLDER")
 export interface CMS {
   cmsActionArgs: CmsActionArgs;
   cmsAddLocalesArgs: CmsAddLocalesArgs;
-  cmsCountLocaleValueArgs: CmsCountLocaleValueArgs;
+  cmsCountLocaleValuesArgs: CmsCountLocaleValuesArgs;
   cmsCreateArgs: CmsCreateArgs;
   cmsData: CmsData;
   cmsDataArgs: CmsDataArgs;
@@ -22,7 +22,7 @@ export interface CMS {
   cmsReadArgs: CmsReadArgs;
   cmsRemoveLocalesArgs: CmsRemoveLocalesArgs;
   cmsUpdateValueArgs: CmsUpdateValueArgs;
-  long: number;
+  long: MapStringLong;
   string: string[];
   void: Void;
   [k: string]: unknown;
@@ -41,9 +41,9 @@ export interface CmsAddLocalesArgs {
   context: CmsEditorDataContext;
   locales: string[];
 }
-export interface CmsCountLocaleValueArgs {
+export interface CmsCountLocaleValuesArgs {
   context: CmsEditorDataContext;
-  locale: string;
+  locales: string[];
 }
 export interface CmsCreateArgs {
   contentObject: CmsDataObject;
@@ -94,5 +94,8 @@ export interface CmsUpdateValueObject {
   languageTag: string;
   uri: string;
   value: string;
+}
+export interface MapStringLong {
+  [k: string]: number;
 }
 export interface Void {}
