@@ -1,9 +1,7 @@
-import type { CmsAddLocalesArgs, CmsRemoveLocalesArgs } from '@axonivy/cms-editor-protocol';
 import {
   BasicCheckbox,
   BasicField,
   Button,
-  deepEqual,
   deleteFirstSelectedRow,
   Dialog,
   DialogContent,
@@ -33,7 +31,7 @@ import { useAppContext } from '../../../context/AppContext';
 import { useClient } from '../../../protocol/ClientContextProvider';
 import { useMeta } from '../../../protocol/use-meta';
 import { genQueryKey, useQueryKeys } from '../../../query/query-client';
-import { getDefaultLanguageTagsLocalStorage } from '../../../use-languages';
+import { filterNotPresentDefaultLanugageTags, getDefaultLanguageTagsLocalStorage } from '../../../use-languages';
 import { useKnownHotkeys } from '../../../utils/hotkeys';
 import { sortLanguages, toLanguages, type Language } from './language-utils';
 import './LanguageTool.css';
@@ -41,7 +39,7 @@ import { LanguageToolControl } from './LanguageToolControl';
 import { LanguageToolSaveConfirmation } from './LanguageToolSaveConfirmation';
 
 export const LanguageTool = () => {
-  const { context, defaultLanguageTags, setDefaultLanguageTags, languageDisplayName } = useAppContext();
+  const { context, setDefaultLanguageTags, languageDisplayName } = useAppContext();
   const { t } = useTranslation();
 
   const [open, setOpen] = useState(false);
@@ -114,40 +112,42 @@ export const LanguageTool = () => {
   const queryClient = useQueryClient();
   const { dataKey } = useQueryKeys();
 
-  const addMutation = useMutation({
-    mutationFn: async (args: CmsAddLocalesArgs) => {
-      queryClient.setQueryData<Array<string>>(genQueryKey('meta/locales', context), locales =>
-        locales ? [...locales, ...args.locales] : undefined
-      );
-      client.addLocales({ context, locales: args.locales });
-    }
-  });
-
-  const deleteMutation = useMutation({
-    mutationFn: async (args: CmsRemoveLocalesArgs) => {
-      queryClient.setQueryData<Array<string>>(genQueryKey('meta/locales', context), locales =>
-        locales?.filter(locale => !args.locales.includes(locale))
-      );
-      client.removeLocales({ context, locales: args.locales });
+  const saveMutation = useMutation({
+    mutationFn: async (args: { localesToAdd: Array<string>; localesToRemove: Array<string> }) => {
+      queryClient.setQueryData<Array<string>>(genQueryKey('meta/locales', context), locales => {
+        if (!locales) {
+          return undefined;
+        }
+        let newLocales = locales;
+        if (args.localesToRemove.length > 0) {
+          newLocales = newLocales.filter(locale => !args.localesToRemove.includes(locale));
+          client.removeLocales({ context, locales: args.localesToRemove });
+        }
+        if (args.localesToAdd.length > 0) {
+          newLocales = [...newLocales, ...args.localesToAdd];
+          client.addLocales({ context, locales: args.localesToAdd });
+        }
+        return newLocales;
+      });
     },
     onSuccess: () => {
-      if (deepEqual(initialDefaultLanguages().sort(), defaultLanguages.sort())) {
-        queryClient.invalidateQueries({ queryKey: dataKey({ context, languageTags: defaultLanguageTags }) });
-      }
+      queryClient.invalidateQueries({
+        queryKey: dataKey({ context, languageTags: filterNotPresentDefaultLanugageTags(defaultLanguages, locales) })
+      });
     }
   });
 
-  const save = (localesToDelete: Array<string>) => {
-    if (localesToDelete.length !== 0) {
-      deleteMutation.mutate({ context, locales: localesToDelete });
-    }
+  const save = (localesToRemove: Array<string>) => {
     const localesToAdd = languages.map(language => language.value).filter(locale => !locales.includes(locale));
-    if (localesToAdd.length !== 0) {
-      addMutation.mutate({ context, locales: localesToAdd }, { onSuccess: () => setDefaultLanguageTags(defaultLanguages) });
-    } else {
-      setDefaultLanguageTags(defaultLanguages);
-    }
-    setOpen(false);
+    saveMutation.mutate(
+      { localesToAdd, localesToRemove },
+      {
+        onSuccess: () => {
+          setDefaultLanguageTags(defaultLanguages);
+          onOpenChange(false);
+        }
+      }
+    );
   };
 
   const hotkeys = useKnownHotkeys();
