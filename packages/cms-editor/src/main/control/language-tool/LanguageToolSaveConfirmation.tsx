@@ -77,7 +77,7 @@ export const LanguageToolSaveConfirmation = ({ localesToDelete, save }: Language
               aria-label={t('common.label.cancel')}
               // workaround since prop `autoFocus` is broken in dialogs (https://github.com/facebook/react/issues/23301)
               ref={button => {
-                setTimeout(() => button?.focus(), 10);
+                setTimeout(() => button?.focus(), 0);
               }}
             >
               {t('common.label.cancel')}
