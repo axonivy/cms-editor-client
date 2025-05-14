@@ -84,6 +84,7 @@ test('open, edit, and save using keyboard', async () => {
   await keyboard.press('Space');
   await keyboard.press('ArrowDown');
   await keyboard.press('Space');
+  await keyboard.press('Tab');
   await keyboard.press('Enter');
   await expect(languageTool.locator).toBeHidden();
   await expect(editor.main.table.header(1).content).toHaveText('German');
@@ -315,8 +316,10 @@ describe('save confirmation', () => {
 
     await languageTool.languages.row(1).locator.click();
     await keyboard.press('Delete');
+    await keyboard.press('Tab');
     await keyboard.press('Enter');
     await expect(languageTool.save.locator).toBeVisible();
+    await expect(languageTool.save.cancel).toBeFocused();
 
     await keyboard.press('Escape');
     await expect(languageTool.save.locator).toBeHidden();
