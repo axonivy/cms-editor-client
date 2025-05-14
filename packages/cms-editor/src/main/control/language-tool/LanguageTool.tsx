@@ -93,6 +93,7 @@ export const LanguageTool = () => {
           label={cell.getValue()}
           checked={defaultLanguages.includes(cell.row.original.value)}
           onCheckedChange={(checked: boolean) => onCheckedChange(checked, cell.row.original.value)}
+          tabIndex={-1}
         />
       )
     }

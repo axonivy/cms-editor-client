@@ -8,8 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  Flex,
-  useHotkeys
+  Flex
 } from '@axonivy/ui-components';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -37,8 +36,6 @@ export const LanguageToolSaveConfirmation = ({ localesToDelete, save }: Language
       setOpen(open);
     }
   };
-
-  useHotkeys(['Enter'], () => onOpenChange(true), { scopes: ['global'], keyup: true, enableOnFormTags: true });
 
   const languageValuesDisplayString = (languageTag: string, amount: number) => {
     const valueDisplayString = amount === 1 ? t('common.label.value') : t('common.label.values');
