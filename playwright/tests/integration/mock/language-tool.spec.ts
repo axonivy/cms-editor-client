@@ -333,3 +333,66 @@ describe('save confirmation', () => {
     await expect(languageTool.locator).toBeHidden();
   });
 });
+
+// In these cases the main table did not update properly at some point
+describe('table updates after save', () => {
+  test('removing default language and deleting language', async ({ page }) => {
+    editor = await CmsEditor.openMock(page, { defaultLanguages: ['de', 'en'] });
+    const languageTool = editor.main.control.languageTool;
+    const table = editor.main.table;
+
+    await table.row(0).locator.click();
+    await editor.detail.value('English').delete.click();
+
+    await languageTool.trigger.click();
+    await languageTool.checkboxOfRow(1).uncheck();
+    await languageTool.languages.row(1).locator.click();
+    await languageTool.delete.click();
+    await languageTool.save.trigger.click();
+    await languageTool.save.save.click();
+
+    await expect(table.headers).toHaveCount(2);
+    await expect(table.header(1).content).toHaveText('English');
+    await expect(table.row(0).column(0).value(0)).toHaveText('/Dialogs/agileBPM/define_WF/AdhocWorkflowTasks');
+    await table.row(0).expectToBeSelected();
+  });
+
+  test('deleting language with non-visible default language', async ({ page }) => {
+    editor = await CmsEditor.openMock(page, { defaultLanguages: ['en', 'fr'] });
+    const languageTool = editor.main.control.languageTool;
+    const table = editor.main.table;
+
+    await table.row(0).locator.click();
+    await editor.detail.value('English').delete.click();
+
+    await languageTool.trigger.click();
+    await languageTool.languages.row(1).locator.click();
+    await languageTool.delete.click();
+    await languageTool.save.trigger.click();
+    await languageTool.save.save.click();
+
+    await expect(table.headers).toHaveCount(2);
+    await expect(table.header(1).content).toHaveText('English');
+    await expect(table.row(0).column(0).value(0)).toHaveText('/Dialogs/agileBPM/define_WF/AdhocWorkflowTasks');
+    await table.row(0).expectToBeSelected();
+  });
+
+  test('selection being out of bounds after deleting language', async ({ page }) => {
+    editor = await CmsEditor.openMock(page, { defaultLanguages: ['de', 'en'] });
+    const languageTool = editor.main.control.languageTool;
+    const table = editor.main.table;
+
+    await table.row(0).locator.click();
+    await editor.page.keyboard.press('ArrowUp');
+    await editor.detail.value('English').delete.click();
+
+    await languageTool.trigger.click();
+    await languageTool.languages.row(1).locator.click();
+    await languageTool.delete.click();
+    await languageTool.save.trigger.click();
+    await languageTool.save.save.click();
+
+    await table.expectToHaveNoSelection();
+    await expect(editor.detail.message).toBeVisible();
+  });
+});

@@ -48,7 +48,7 @@ export const getDefaultLanguageTagsLocalStorage = (): Array<string> | undefined 
   return JSON.parse(defaultLanguageTags);
 };
 
-const filterNotPresentDefaultLanugageTags = (defaultLanguageTags: Array<string>, locales: Array<string>) =>
+export const filterNotPresentDefaultLanugageTags = (defaultLanguageTags: Array<string>, locales: Array<string>) =>
   defaultLanguageTags.filter(languageTag => locales.includes(languageTag));
 
 const setDefaultLanguageTagsLocalStorage = (languageTags: Array<string>) =>
