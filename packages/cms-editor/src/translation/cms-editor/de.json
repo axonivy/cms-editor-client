@@ -28,7 +28,7 @@
       "createTooltip": "Halte {{modifier}} um ein weiteres Inhaltsobjekt zu erstellen.",
       "description": "Wählen Sie den Namen, den Namensbereich und die Werte des Inhaltsobjekts, das Sie hinzufügen möchten.",
       "noDefaultLanguages": "Es sind keine Sprachen im Sprachwerkzeug markiert, die angezeigt werden sollen. Dies ist die erste gefundene Sprache.",
-      "noLanguages": "Es sind keine Sprachen im CMS vorhanden. Füge Sprachen mit dem Sprachwerkzeug hinzu.",
+      "noLanguages": "Es sind keine Sprachen im CMS vorhanden. Füge Sprachen mit dem Sprachenwerkzeug hinzu.",
       "title": "Inhaltsobjekt hinzufügen"
     },
     "languageTool": {
@@ -39,10 +39,10 @@
         "title": "Sprachenübersicht"
       },
       "saveConfirmation": {
-        "description": "Speichern löscht die folgenden Sprachen und alle ihre Werte. Bist du sicher?",
+        "description": "Speichern löscht die folgenden Sprachen und deren Werte. Soll der Vorgang fortgesetzt werden?",
         "title": "Speichern bestätigen"
       },
-      "title": "Sprachwerkzeug"
+      "title": "Sprachenwerkzeug"
     }
   },
   "hotkey": {
